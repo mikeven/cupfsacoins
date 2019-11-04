@@ -13,7 +13,7 @@ a:focus,
 
 a:active,
 .btn-link:active {
-	color: #0077b3;
+	color: #FFF;/* #0077b3; */
 }
 /* Sidebar Left */
 .sidebar-left .sidebar-header .sidebar-toggle:hover i {
@@ -86,11 +86,11 @@ a:active,
 }
 /* Sign Screens - Wrappers */
 .body-sign .panel-sign .panel-title-sign .title {
-	background-color: #0088cc;
+	background-color: #000; /*#0088cc;*/
 }
 
 .body-sign .panel-sign .panel-body {
-	border-top-color: #0088cc;
+	border-top-color: #000; /*#0088cc;*/
 }
 /* Lock Screen */
 .body-locked .current-user .user-image {

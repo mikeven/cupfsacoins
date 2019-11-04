@@ -67,6 +67,7 @@
 	</head>
 	<?php 
 		$roles = obtenerRolesRegistrados( $dbh );
+		$departamentos = obtenerDepartamentos( $dbh );
 	?>
 	<body>
 		<section class="body">
@@ -150,6 +151,36 @@
 											</div>
 
 											<div class="form-group">
+												<label class="col-sm-3 control-label">Contraseña <span class="required">*</span></label>
+												<div class="col-sm-9">
+													<div class="input-group">
+														<span class="input-group-addon">
+															<i class="fa fa-lock"></i>
+														</span>
+														<input type="password" name="password" class="form-control" placeholder="Contraseña" required/>
+													</div>
+												</div>
+												<div class="col-sm-9">
+
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label">Departamento <span class="required">*</span></label>
+												<div class="col-sm-9">
+													<div class="input-group">
+														<select name="departamento" class="form-control">
+															<?php foreach ( $departamentos as $d ) { ?>
+															<option value="<?php echo $d["idDepartamento"]?>">
+																<?php echo $d["nombre"]; ?>
+															</option>
+															<?php } ?>
+														</select>
+													</div>
+												</div>
+											</div>
+
+											<div class="form-group hidden">
 												<label class="col-sm-3 control-label">Cargo </label>
 												<div class="col-sm-9">
 													<div class="input-group">

@@ -107,33 +107,31 @@
 								listado_usuarios_gral" id="datatable-default">
 									<thead>
 										<tr>
-											<th>ID</th>
+											
 											<th>Nombre</th>
 											<th>Apellido</th>
 											<th>Email</th>
 											<th>Rol</th>
-											<th>Activo</th>
+											<th>Departamento</th>
 											<th>Acciones</th>
 										</tr>
 									</thead>
 									<tbody>
 										<?php 
 											foreach ( $usuarios as $u ) {
-												$roles = obtenerRolesUsuario( 
-													$dbh, $u["idUSUARIO"] ); 
+												$roles = obtenerRolesUsuario( $dbh, $u["idUSUARIO"] ); 
 										?>
 										<tr class="gradeX">
-											<td><?php echo $u["idUSUARIO"] ?></td>
+											
 											<td><?php echo $u["nombre"] ?></td>
 											<td><?php echo $u["apellido"] ?></td>
 											<td><?php echo $u["email"] ?></td>
 											<td>
 												<?php foreach ( $roles as $r ) { ?>
-													<div>
-													<?php echo $r["nombre"] ?></div>
+													<div> <?php echo $r["nombre"] ?></div>
 												<?php } ?>
 											</td>
-											<td><?php echo $u["activo"] ?></td>
+											<td><?php echo $u["departamento"] ?></td>
 											<td>
 												<a href="editar_usuario.php?id=<?php 
 												echo $u["idUSUARIO"] ?>" 

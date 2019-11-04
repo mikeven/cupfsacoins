@@ -18,9 +18,14 @@
     if( isset( $_GET["id"] ) && ( is_numeric( $_GET["id"] ) ) ){
     	$id_u = $_GET["id"];
     	$usuario = obtenerUsuarioPorId( $dbh, $id_u );
-    	$roles_u = rolesUsuario( $dbh, $id_u );
-    	$ids_roles_u = arr_claves( $roles_u, "idROL" );
-    } else $usuario = NULL;
+    	if( $usuario ){
+	    	$roles_u = rolesUsuario( $dbh, $id_u );
+	    	$ids_roles_u = arr_claves( $roles_u, "idROL" );
+    	}else 
+    		header( "Location: usuarios.php" );
+
+    } else 
+    	$usuario = NULL;
 
 ?>
 <!doctype html>
@@ -76,6 +81,7 @@
 	</head>
 	<?php 
 		$roles = obtenerRolesRegistrados( $dbh );
+		$departamentos = obtenerDepartamentos( $dbh );
 	?>
 	<body>
 		<section class="body">
@@ -159,7 +165,7 @@
 												</div>
 											</div>
 
-											<div class="form-group">
+											<div class="form-group hidden">
 												<label class="col-sm-3 control-label">Cargo </label>
 												<div class="col-sm-9">
 													<div class="input-group">
@@ -168,6 +174,20 @@
 														</span>
 														<input type="text" name="cargo" class="form-control" placeholder="Ej.: Ejecutivo de negocios" value="<?php echo $usuario["cargo"]?>" />
 													</div>
+												</div>
+											</div>
+
+											<div class="form-group">
+												<label class="col-sm-3 control-label">Departamento <span class="required">*</span></label>
+												<div class="col-sm-9">
+													<select name="departamento" class="form-control">
+														<?php foreach ( $departamentos as $d ) { ?>
+														<option value="<?php echo $d["idDepartamento"] ?>" 
+															<?php echo sop( $d["idDepartamento"], $usuario["idDepartamento"] ); ?>>
+															<?php echo $d["nombre"] ?>
+														</option>
+														<?php } ?>
+													</select>
 												</div>
 											</div>
 

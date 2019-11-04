@@ -5,7 +5,7 @@
 	/* --------------------------------------------------------- */
 	function obtenerUsuarioPorId( $dbh, $id_u ){
 		// Devuelve el registro de un usuario dado su id
-		$q = "select idUSUARIO, nombre, apellido, email, cargo, 
+		$q = "select idUSUARIO, nombre, apellido, email, cargo, idDepartamento, 
 		activo, date_format(fecha_creacion,'%d/%m/%Y') as fregistro 
 		from usuario where idUSUARIO = $id_u";
 
@@ -14,9 +14,9 @@
 	/* --------------------------------------------------------- */
 	function obtenerUsuariosRegistrados( $dbh ){
 		// Devuelve todos los registros de usuarios
-		$q = "select idUSUARIO, nombre, apellido, email, cargo, 
-		activo, date_format(fecha_creacion,'%d/%m/%Y') as fregistro 
-		from usuario order by nombre asc";
+		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.cargo, d.nombre as departamento,  
+		u.activo, date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro 
+		from usuario u, departamento d where u.idDepartamento = d.idDepartamento order by nombre asc";
 		
 		$data = mysqli_query( $dbh, $q );
 
@@ -26,6 +26,15 @@
 	function obtenerRolesRegistrados( $dbh ){
 		// Devuelve todos los registros de usuarios
 		$q = "select idROL, nombre, descripcion from rol";
+		
+		$data = mysqli_query( $dbh, $q );
+
+		return obtenerListaRegistros( $data );
+	}
+	/* --------------------------------------------------------- */
+	function obtenerDepartamentos( $dbh ){
+		// Devuelve todos los departamentos registrados
+		$q = "select idDepartamento, nombre from departamento";
 		
 		$data = mysqli_query( $dbh, $q );
 
@@ -52,10 +61,10 @@
 	/* --------------------------------------------------------- */
 	function agregarUsuario( $dbh, $usuario ){
 		// Guarda el registro de un usuario nuevo
-		$q = "insert into usuario ( nombre, apellido, email, cargo, activo, 
+		$q = "insert into usuario ( nombre, apellido, email, password, cargo, activo, idDepartamento,  
 		fecha_creacion ) values ( '$usuario[nombre]', '$usuario[apellido]', 
-		'$usuario[email]', '$usuario[cargo]', 1, NOW() )";
-
+		'$usuario[email]', '$usuario[password]', '$usuario[cargo]', 1, $usuario[departamento], NOW() )";
+		
 		$data = mysqli_query( $dbh, $q );
 		return mysqli_insert_id( $dbh );
 	}
@@ -63,8 +72,8 @@
 	function editarUsuario( $dbh, $usuario ){
 		// Actualiza los datos de un usuario
 		$q = "update usuario set nombre = '$usuario[nombre]', apellido = '$usuario[apellido]', 
-		email = '$usuario[email]', cargo = '$usuario[cargo]', fecha_modificado = NOW() 
-		where idUSUARIO = $usuario[idusuario]";
+		email = '$usuario[email]', idDepartamento = $usuario[departamento], cargo = '$usuario[cargo]', 
+		fecha_modificado = NOW() where idUSUARIO = $usuario[idusuario]";
 		
 		$data = mysqli_query( $dbh, $q );
 		return mysqli_affected_rows( $dbh );

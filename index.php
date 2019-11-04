@@ -21,8 +21,6 @@
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
-		
-
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
 		<link rel="stylesheet" href="assets/vendor/font-awesome/css/font-awesome.css" />
@@ -40,6 +38,13 @@
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
+		<style type="text/css">
+			body {
+				background: #222;
+				width: 100%;
+			}
+			/*.alert{ display: none; margin-top: 20px; }*/
+		</style>
 	</head>
 	<?php 
 		$usuarios = obtenerUsuariosRegistrados( $dbh );
@@ -60,22 +65,17 @@
 						<form id="loginform">
 							<div class="form-group mb-lg">
 								<input name="login" type="hidden" value="1"/>
-								<label>ROL</label>
-								<select name="rol" class="form-control input-lg mb-md">
-									<?php foreach ( $usuarios as $u ) { 
-										$roles = rolesUsuario( 
-													$dbh, $u["idUSUARIO"] );
-										$ru = "";
-										foreach ( $roles as $r ) {
-											$ru .= $r["nombre"]." ";
-										}
-									?>
-									<option value="<?php echo $u["idUSUARIO"]?>">
-										<?php 
-										echo $u["nombre"]." (".$ru.")" ?>
-									</option>
-									<?php } ?>
-								</select>
+								<label class="col-sm-3 control-label">Email</label>
+								<div class="col-sm-9">
+									<input type="email" name="email" class="form-control" placeholder="Email" required/>
+								</div>
+							</div>
+							<div class="form-group mb-lg">
+								<input name="login" type="hidden" value="1"/>
+								<label class="col-sm-3 control-label">Contraseña</label>
+								<div class="col-sm-9">
+									<input type="password" name="password" class="form-control" placeholder="Password" required/>
+								</div>
 							</div>
 
 							<div class="row">

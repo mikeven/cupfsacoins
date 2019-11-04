@@ -63,10 +63,10 @@
 		return $lista;
 	}
 	/* --------------------------------------------------------- */
-	function iniciarSesion( $idu, $dbh ){
+	function iniciarSesion( $usuario, $dbh ){
 		session_start();
 		$idresult = 0; 
-		$q = "select * from usuario where idUSUARIO = $idu";
+		$q = "select * from usuario where email = '$usuario[email]' and password = '$usuario[password]'";
 		//echo $q;
 		$data 	= mysqli_query ( $dbh, $q );
 		$data_u = mysqli_fetch_array( $data );
@@ -74,7 +74,7 @@
 		
 		if( $nrows > 0 ){
 			$_SESSION["login"] 	= 1;
-			$data_u["roles"] 	= obtenerRolesUsuario( $dbh, $idu );
+			$data_u["roles"] 	= obtenerRolesUsuario( $dbh, $data_u["idUSUARIO"] );
 			$data_u["acciones"] = obtenerAccionesUsuario( $dbh, $data_u["roles"] );
 			$data_u["accesos"] 	= obtenerAccesosUsuario( $dbh, $data_u["acciones"] );
 			$_SESSION["user"] 	= $data_u;
@@ -97,7 +97,8 @@
 	if( isset( $_POST["login"] ) ){ 
 		// Invocación desde: js/fn-acceso.js
 		include( "bd.php" );
-		$usuario = $_POST["rol"];
+		$usuario["email"] 		= $_POST["email"];
+		$usuario["password"] 	= $_POST["password"];
 		
 		echo iniciarSesion( $usuario, $dbh );
 	}
