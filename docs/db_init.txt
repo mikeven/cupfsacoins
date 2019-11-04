@@ -1,0 +1,199 @@
+-- MySQL Workbench Forward Engineering
+
+SET @OLD_UNIQUE_CHECKS=@@UNIQUE_CHECKS, UNIQUE_CHECKS=0;
+SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0;
+SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='ONLY_FULL_GROUP_BY,STRICT_TRANS_TABLES,NO_ZERO_IN_DATE,NO_ZERO_DATE,ERROR_FOR_DIVISION_BY_ZERO,NO_ENGINE_SUBSTITUTION';
+
+-- -----------------------------------------------------
+-- Schema coins
+-- -----------------------------------------------------
+
+-- -----------------------------------------------------
+-- Schema coins
+-- -----------------------------------------------------
+CREATE SCHEMA IF NOT EXISTS `coins` DEFAULT CHARACTER SET latin1 ;
+USE `coins` ;
+
+-- -----------------------------------------------------
+-- Table `coins`.`USUARIO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`USUARIO` (
+  `idUSUARIO` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `apellido` VARCHAR(45) NOT NULL,
+  `email` VARCHAR(45) NULL,
+  `cargo` VARCHAR(45) NULL,
+  `fecha_creacion` DATETIME NULL,
+  `fecha_modificado` DATETIME NULL,
+  PRIMARY KEY (`idUSUARIO`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`ROL`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`ROL` (
+  `idROL` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NULL,
+  `descripcion` VARCHAR(45) NULL,
+  PRIMARY KEY (`idROL`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`USUARIO_ROL`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`USUARIO_ROL` (
+  `idUSUARIO` INT NOT NULL,
+  `idROL` INT NOT NULL,
+  PRIMARY KEY (`idUSUARIO`, `idROL`),
+  CONSTRAINT `fk_USUARIO_has_ROL_USUARIO`
+    FOREIGN KEY (`idUSUARIO`)
+    REFERENCES `coins`.`USUARIO` (`idUSUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_USUARIO_has_ROL_ROL1`
+    FOREIGN KEY (`idROL`)
+    REFERENCES `coins`.`ROL` (`idROL`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`ACCION`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`ACCION` (
+  `idACCION` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `descripcion` VARCHAR(100) NULL,
+  PRIMARY KEY (`idACCION`),
+  UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`PERMISO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`PERMISO` (
+  `idROL` INT NOT NULL,
+  `idACCION` INT NOT NULL,
+  PRIMARY KEY (`idROL`, `idACCION`),
+  CONSTRAINT `fk_ROL_has_ACCION_ROL1`
+    FOREIGN KEY (`idROL`)
+    REFERENCES `coins`.`ROL` (`idROL`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_ROL_has_ACCION_ACCION1`
+    FOREIGN KEY (`idACCION`)
+    REFERENCES `coins`.`ACCION` (`idACCION`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`ATRIBUTO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`ATRIBUTO` (
+  `idATRIBUTO` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `valor` INT NOT NULL,
+  PRIMARY KEY (`idATRIBUTO`),
+  UNIQUE INDEX `nombre_UNIQUE` (`nombre` ASC) )
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`NOMINACION`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`NOMINACION` (
+  `idNOMINACION` INT NOT NULL AUTO_INCREMENT,
+  `idNOMINADOR` INT NOT NULL,
+  `idNOMINADO` INT NOT NULL,
+  `idATRIBUTO` INT NOT NULL,
+  `valor_atributo` INT NOT NULL,
+  `estado` VARCHAR(15) NOT NULL,
+  `motivo` VARCHAR(80) NULL,
+  `sustento` VARCHAR(45) NULL,
+  `fecha_nominacion` DATETIME NULL,
+  `fecha_cierre` DATETIME NULL,
+  PRIMARY KEY (`idNOMINACION`),
+  CONSTRAINT `fk_USUARIO_has_EMPLEADO_USUARIO1`
+    FOREIGN KEY (`idNOMINADOR`)
+    REFERENCES `coins`.`USUARIO` (`idUSUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NOMINACION_ATRIBUTO1`
+    FOREIGN KEY (`idATRIBUTO`)
+    REFERENCES `coins`.`ATRIBUTO` (`idATRIBUTO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_NOMINACION_USUARIO1`
+    FOREIGN KEY (`idNOMINADO`)
+    REFERENCES `coins`.`USUARIO` (`idUSUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`VOTO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`VOTO` (
+  `idUSUARIO` INT NOT NULL,
+  `idNOMINACION` INT NOT NULL,
+  `valor` VARCHAR(2) NOT NULL,
+  `fecha_voto` DATETIME NULL,
+  PRIMARY KEY (`idUSUARIO`, `idNOMINACION`),
+  CONSTRAINT `fk_USUARIO_has_NOMINACION_USUARIO1`
+    FOREIGN KEY (`idUSUARIO`)
+    REFERENCES `coins`.`USUARIO` (`idUSUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_USUARIO_has_NOMINACION_NOMINACION1`
+    FOREIGN KEY (`idNOMINACION`)
+    REFERENCES `coins`.`NOMINACION` (`idNOMINACION`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`PRODUCTO`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`PRODUCTO` (
+  `idPRODUCTO` INT NOT NULL AUTO_INCREMENT,
+  `nombre` VARCHAR(45) NOT NULL,
+  `descripcion` VARCHAR(80) NULL,
+  `valor` INT NOT NULL,
+  PRIMARY KEY (`idPRODUCTO`))
+ENGINE = InnoDB;
+
+
+-- -----------------------------------------------------
+-- Table `coins`.`CANJE`
+-- -----------------------------------------------------
+CREATE TABLE IF NOT EXISTS `coins`.`CANJE` (
+  `idCANJE` INT NOT NULL,
+  `idUSUARIO` INT NOT NULL,
+  `idPRODUCTO` INT NOT NULL,
+  `valor` INT NOT NULL,
+  `fecha_canje` DATETIME NOT NULL,
+  PRIMARY KEY (`idCANJE`),
+  CONSTRAINT `fk_CANJE_USUARIO1`
+    FOREIGN KEY (`idUSUARIO`)
+    REFERENCES `coins`.`USUARIO` (`idUSUARIO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION,
+  CONSTRAINT `fk_CANJE_PRODUCTO1`
+    FOREIGN KEY (`idPRODUCTO`)
+    REFERENCES `coins`.`PRODUCTO` (`idPRODUCTO`)
+    ON DELETE NO ACTION
+    ON UPDATE NO ACTION)
+ENGINE = InnoDB;
+
+
+SET SQL_MODE=@OLD_SQL_MODE;
+SET FOREIGN_KEY_CHECKS=@OLD_FOREIGN_KEY_CHECKS;
+SET UNIQUE_CHECKS=@OLD_UNIQUE_CHECKS;
