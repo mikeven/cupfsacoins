@@ -8,10 +8,10 @@
 	/* en_ : enlaces
 	/* mp_ : opción de menú principal
 	/* pg_ : página completa
-	/* 
+	/* pan_: sección de página
 	*/ 
 
-	//Rol: ADMINISTRADOR - ACCIONES:
+	//Rol: ADMINISTRADOR - ACCIONES: Acciones de administradores en su mayoría
 	$esq_secciones["agregar_usuario"] = array(
 		array('id' => 'mp_titm_us', 'desc' => 'Menu ppal Usuarios'),
 		array('id' => 'pg_usuarios', 'desc' => 'Página consulta de usuarios'),
@@ -92,9 +92,9 @@
 	/* --------------------------------------------------------- */
 	/* --------------------------------------------------------- */
 
-	//Rol: COLABORADOR - ACCIONES:
+	//Rol: COLABORADOR - ACCIONES: Acciones de colaboradores en su mayoría
 	$esq_secciones["agregar_nominacion"] = array(
-		array('id' => 'mp_nom_pers', 'desc' => 'Menu ppal Nueva nominación'),
+		array('id' => 'mp_nva_nom', 'desc' => 'Menu ppal Nueva nominación'),
 		array('id' => 'pg_nvo_nominacion', 'desc' => 'Página nueva nominación')
 	);
 

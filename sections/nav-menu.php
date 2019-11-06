@@ -28,8 +28,10 @@
 				<?php if( isV( 'mp_ver_nom' ) ) { ?>
 				<li> <a href="nominaciones.php"> Ver nominaciones </a> </li>
 				<?php } ?>
-				<?php if( isV( 'mp_nom_pers' ) ) { ?>
+				<?php if( isV( 'mp_nva_nom' ) ) { ?>
 				<li> <a href="nuevo_nominacion.php"> Nueva nominación </a> </li>
+				<?php } ?>
+				<?php if( isV( 'mp_nom_pers' ) ) { ?>
 				<li> <a href="nominaciones.php?param=hechas">Nominaciones hechas</a> </li>
 				<li> <a href="nominaciones.php?param=recibidas">Nominaciones recibidas</a> </li>
 				<?php } ?>
