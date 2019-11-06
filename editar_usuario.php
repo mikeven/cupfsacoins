@@ -43,7 +43,7 @@
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- Web Fonts  -->
-		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
+		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">-->
 
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
@@ -126,7 +126,7 @@
 										
 											<div class="form-group">
 												<input id="idua" type="hidden" name="idusuario" 
-												value="<?php echo $usuario["idUSUARIO"]?>">
+												value="<?php echo $usuario['idUSUARIO']?>">
 												<label class="col-sm-3 control-label">Nombre <span class="required">*</span></label>
 												<div class="col-sm-9">
 													<div class="input-group">

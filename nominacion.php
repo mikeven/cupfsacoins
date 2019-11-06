@@ -235,8 +235,9 @@
 									}
 									if( isV( 'en_aprob_nom' ) ) { 	//Administrador
 										if( $nominacion["estado"] != "aprobada" 
-											&& $nominacion["estado"] != "rechazada" )
+											&& $nominacion["estado"] != "rechazada" ){
 											include( "sections/panel_aprobacion.php" );
+										}
 									}
 									if( isV( 'pan_nom_apoyo' ) ) { 	//Colaborador 
 										include( "sections/panel_soporte_nominacion.php" );

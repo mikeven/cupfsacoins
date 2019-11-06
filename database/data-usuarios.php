@@ -74,6 +74,7 @@
 		$q = "update usuario set nombre = '$usuario[nombre]', apellido = '$usuario[apellido]', 
 		email = '$usuario[email]', idDepartamento = $usuario[departamento], cargo = '$usuario[cargo]', 
 		fecha_modificado = NOW() where idUSUARIO = $usuario[idusuario]";
+		//echo $q;
 		
 		$data = mysqli_query( $dbh, $q );
 		return mysqli_affected_rows( $dbh );

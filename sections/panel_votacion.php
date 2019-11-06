@@ -26,6 +26,6 @@
 	</div>
 <?php } else { ?>
 	<hr class="solid short">
-	<i class="fa fa-lock"></i> Nominación cerrada para votacion
+	<i class="fa fa-lock"></i> Nominación cerrada para votación
 <?php } ?>	
 <?php } ?>

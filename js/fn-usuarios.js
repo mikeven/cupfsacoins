@@ -105,7 +105,7 @@ function agregarUsuario(){
 					function() { 
 						enviarRespuesta( res, "redireccion", "usuarios.php" )
 					}, 
-				4000 );
+				3000 );
 			}
 			else
 				notificar( "Nuevo usuario", res.mje, "error" );

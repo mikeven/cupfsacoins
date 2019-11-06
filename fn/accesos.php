@@ -4,6 +4,13 @@
 	/* --------------------------------------------------------- */
 	/* --------------------------------------------------------- */
 
+	/* Prefijos de secciones : 
+	/* en_ : enlaces
+	/* mp_ : opción de menú principal
+	/* pg_ : página completa
+	/* 
+	*/ 
+
 	//Rol: ADMINISTRADOR - ACCIONES:
 	$esq_secciones["agregar_usuario"] = array(
 		array('id' => 'mp_titm_us', 'desc' => 'Menu ppal Usuarios'),
