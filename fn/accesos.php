@@ -125,7 +125,7 @@
 	/* --------------------------------------------------------- */
 	/* --------------------------------------------------------- */
 
-	//Rol: EVALUADOR - ACCIONES:
+	//Rol: EVALUADOR - ACCIONES: Acciones de evaluadores en su mayoría
 	$esq_secciones["votar_nominacion"] = array(
 		array('id' => 'en_votar', 'desc' => 'Enlace para votar nominación'),
 		array('id' => 'pg_nominacion', 'desc' => 'Página ficha nominación')
