@@ -125,7 +125,7 @@
 										<?php if ( esActivable( $nom ) ) { ?>
 											<div class="switch switch-sm switch-dark sw-f 
 											sw<?php echo $nom["idNOMINACION"];?>" data-toggle="tooltip" data-placement="top" 
-											title="<?php echo $p_sw["t"];?>">
+											title="<?php echo $p_sw["t"];?>"    style="display: none;">
 												<input type="checkbox" name="switch" data-plugin-ios-switch 
 												<?php echo $p_sw["p"];?>
 												data-idn="<?php echo $nom["idNOMINACION"];?>" class="chvotable"/>
@@ -227,7 +227,7 @@
 									<td>
 										<?php if ( esActivable( $nom ) ) { ?>
 										<div class="switch switch-sm switch-dark sw-t" data-toggle="tooltip" data-placement="left" 
-										title="<?php echo $p_sw["t"];?>">
+										title="<?php echo $p_sw["t"];?>"    style="display: none;">
 											<input type="checkbox" name="switch" data-plugin-ios-switch 
 											<?php echo $p_sw["p"];?>
 											data-idn="<?php echo $nom["idNOMINACION"];?>" class="chvotable"/>

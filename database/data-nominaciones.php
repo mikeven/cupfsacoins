@@ -161,8 +161,7 @@
 		//Devuelve si una nominación fue votada por un usuario
 		$votada = false;
 
-		$q = "select idUSUARIO, idNOMINACION from voto 
-		where idUSUARIO = $idu and idNOMINACION = $idn";
+		$q = "select idUSUARIO, idNOMINACION from voto where idUSUARIO = $idu and idNOMINACION = $idn";
 		
 		$nrows 	= mysqli_num_rows( mysqli_query ( $dbh, $q ) );
 		if( $nrows > 0 ) 
@@ -177,8 +176,7 @@
 		$c["si"] = "and valor = 'si'";
 		$c["no"] = "and valor = 'no'";
 
-		$q = "select count( idNOMINACION ) as votos from voto 
-				where idNOMINACION = $idn $c[$cond]";
+		$q = "select count( idNOMINACION ) as votos from voto where idNOMINACION = $idn $c[$cond]";
 
 		$data = mysqli_query( $dbh, $q );
 		$cant = mysqli_fetch_array( $data );
@@ -198,11 +196,48 @@
 	/* --------------------------------------------------------- */
 	function adjudicarNominacion( $dbh, $idn ){
 		// Adjudica una nominación al nominado: hace disponible los coins
-		$q = "update nominacion set estado = 'adjudicada', 
-		fecha_adjudicacion = NOW() where idNOMINACION = $idn";
+		$q = "update nominacion set estado = 'adjudicada', fecha_adjudicacion = NOW() 
+		where idNOMINACION = $idn";
 		
 		mysqli_query( $dbh, $q );
 		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
+	function aprobacionPorVP( $dbh, $nominacion ){
+		// Procesa la aprobación y adjudicación de una nominación por parte de un VP
+		$evaluacion["idusuario"] 		= $nominacion["idnominador"];
+		$evaluacion["estado"] 			= "aprobada";
+		$evaluacion["comentario"] 		= "";
+		$evaluacion["idnominacion"] 	= $nominacion["id"];
+
+		registrarEvaluacion( $dbh, $evaluacion, true );
+		adjudicarNominacion( $dbh, $nominacion["id"] );
+	}
+	/* --------------------------------------------------------- */
+	function nominacionMismoDepartamento( $dbh, $nominacion ){
+		// Evalúa si una nominación está hecha entre usuarios del mismo departamento
+		$mismo_departamento = false;
+
+		$dpto_nominador = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominador"] );
+		$dpto_nominado = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominado"] );
+		
+		if( $dpto_nominador == $dpto_nominado ) 
+			$mismo_departamento = true;
+
+		return $mismo_departamento;
+	}
+	/* --------------------------------------------------------- */
+	function chequeoAprobacionVP( $dbh, $nominacion ){
+		// Evalúa si una nominación registrada es aprobable de inmediato por usuario VP
+		include( "data-usuarios.php" );
+
+		$departamental = nominacionMismoDepartamento( $dbh, $nominacion );
+		$es_vp = esRol( $dbh, 4, $nominacion["idnominador"] );	//Rol 4: Vicepresidente ( VP )
+
+		if( $es_vp && $departamental ){
+			// Si el nominador es VP y nominado y nominador son del mismo departamento
+			aprobacionPorVP( $dbh, $nominacion );
+		}
 	}
 	/* --------------------------------------------------------- */
 	function abiertaVotacion( $dbh, $idn ){
@@ -287,6 +322,7 @@
 		
 		if( ( $id != 0 ) && ( $id != "" ) ){
 			$res["exito"] = 1;
+			chequeoAprobacionVP( $dbh, $nominacion );
 			$res["mje"] = "Registro de nominación exitoso";
 			$res["reg"] = $nominacion;
 			limpiarArchivos( $dbh );

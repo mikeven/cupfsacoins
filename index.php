@@ -92,7 +92,7 @@
 					</div>
 				</div>
 
-				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2019. <a href="#!">Cupfsa</a>.</p>
+				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2019. Ver 1.1</p>
 			</div>
 		</section>
 		<!-- end: page -->

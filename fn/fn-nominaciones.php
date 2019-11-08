@@ -139,4 +139,12 @@
 		return $checked;
 	}
 	/* --------------------------------------------------------- */
+	function nominadorYNominado( $data_nominacion ){
+		// Devuelve el nominador y el nominado de una nominación en formato específico
+		$nominacion["idnominador"] = $data_nominacion["idNOMINADOR"];
+		$nominacion["idnominado"] = $data_nominacion["idNOMINADO"];
+
+		return $nominacion;
+	}
+	/* --------------------------------------------------------- */
 ?>

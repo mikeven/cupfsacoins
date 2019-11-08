@@ -12,6 +12,14 @@
 		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
 	}
 	/* --------------------------------------------------------- */
+	function obtenerIdDepartamentoUsuario( $dbh, $id_u ){
+		// Devuelve el id de departamento de un usuario dado su id
+		$q = "select idDepartamento from usuario where idUSUARIO = $id_u";
+		$data = mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
+		
+		return $data["idDepartamento"];
+	}
+	/* --------------------------------------------------------- */
 	function obtenerUsuariosRegistrados( $dbh ){
 		// Devuelve todos los registros de usuarios
 		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.cargo, d.nombre as departamento,  
@@ -57,6 +65,17 @@
 		$data = mysqli_query( $dbh, $q );
 		$lista = obtenerListaRegistros( $data );
 		return $lista;
+	}
+	/* --------------------------------------------------------- */
+	function esRol( $dbh, $idr, $idu ){
+		// Devuelve si un usuario posee el rol especificado por parámetro
+		$esrol = false;
+		$roles = rolesUsuario( $dbh, $idu );
+		foreach ( $roles as $rol ) {
+			if( $rol["idROL"] == $idr ) { $esrol = true; break; }
+		}
+
+		return $esrol;
 	}
 	/* --------------------------------------------------------- */
 	function agregarUsuario( $dbh, $usuario ){

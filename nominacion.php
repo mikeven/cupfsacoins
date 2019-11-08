@@ -20,8 +20,11 @@
     if( isset( $_GET["id"] ) )
     	$idn = $_GET["id"];
 
-    if( $idn != NULL )
+    if( $idn != NULL ){
 		$nominacion = obtenerNominacionPorId( $dbh, $idn );
+		if( $nominacion )
+			$mismo_dpto = nominacionMismoDepartamento( $dbh, nominadorYNominado( $nominacion ) );
+    }
 ?>
 <!doctype html>
 <html class="fixed">
@@ -138,7 +141,7 @@
 							</header>
 							<div class="panel-body text-center">
 								<?php if ( esActivable( $nominacion ) ) { ?>
-								<div class="switch switch-dark" data-toggle="tooltip" data-placement="right" title="<?php echo $p_sw["t"];?>">
+								<div class="switch switch-dark" data-toggle="tooltip" data-placement="right" title="<?php echo $p_sw["t"];?>"    style="display: none;">
 									<input type="checkbox" name="switch" data-plugin-ios-switch <?php echo $p_sw["p"];?> 
 									data-idn="<?php echo $nominacion["idNOMINACION"];?>" 
 									class="chvotable"/>

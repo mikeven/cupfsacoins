@@ -26,6 +26,10 @@
 	</div>
 <?php } else { ?>
 	<hr class="solid short">
-	<i class="fa fa-lock"></i> Nominación cerrada para votación
+	<?php if( $mismo_dpto ) { ?>
+		<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+	<?php } else { ?>
+		<i class="fa fa-lock"></i> VP del departamento debe aprobar para iniciar votación de esta nominación
+	<?php } ?>
 <?php } ?>	
 <?php } ?>

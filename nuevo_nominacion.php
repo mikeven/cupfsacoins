@@ -13,6 +13,7 @@
     include( "fn/fn-acceso.php" );
     
     isAccesible( $pagina );
+    //print_r( $_SESSION["user"]["roles"] );
 ?>
 <!doctype html>
 <html class="fixed">

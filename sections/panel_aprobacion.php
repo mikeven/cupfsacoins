@@ -10,12 +10,19 @@
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-times"></i> Rechazar</button>
 		
-		<?php if( $nominacion["motivo2"] == "" 
-				&& $nominacion["sustento2"] == "" 
-				&& $nominacion["estado"] == "pendiente" ) { ?>
-		<button id="btn_sustento" type="button" data-a="sustento"
-		class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
-			<i class="fa fa-file-o"></i> Solicitar sustento</button>
+		<?php if( $mismo_dpto ) { 
+			// Nominación entre usuarios del mismo departamento. Aprueba solo el VP ?>
+			<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+		<?php } else { ?>
+
+			<?php if( $nominacion["motivo2"] == "" 
+					&& $nominacion["sustento2"] == "" 
+					&& $nominacion["estado"] == "pendiente" ) { ?>
+			<button id="btn_sustento" type="button" data-a="sustento"
+			class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+				<i class="fa fa-file-o"></i> Solicitar sustento</button>
+			<?php } ?>
+
 		<?php } ?>
 		
 	</div>
