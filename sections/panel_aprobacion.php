@@ -12,7 +12,13 @@
 		
 		<?php if( $mismo_dpto ) { 
 			// Nominación entre usuarios del mismo departamento. Aprueba solo el VP ?>
-			<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+			<?php if( esAprobadaPorVP( $dbh, $idu, $nominacion ) ) {  ?>
+				<button id="btn_aprobar_vp" type="button" data-a="aprobada"
+					class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+					<i class="fa fa-check"></i> Aprobar VP</button>
+			<?php } else { ?>
+				<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+			<?php } ?>
 		<?php } else { ?>
 
 			<?php if( $nominacion["motivo2"] == "" 

@@ -23,7 +23,7 @@
     if( $idn != NULL ){
 		$nominacion = obtenerNominacionPorId( $dbh, $idn );
 		if( $nominacion )
-			$mismo_dpto = nominacionMismoDepartamento( $dbh, nominadorYNominado( $nominacion ) );
+			$mismo_dpto = esNominacionMismoDepartamento( $nominacion );
     }
 ?>
 <!doctype html>
@@ -236,13 +236,15 @@
 										//Evaluador
 										include( "sections/panel_votacion.php" );
 									}
-									if( isV( 'en_aprob_nom' ) ) { 	//Administrador
+									if( isV( 'en_aprob_nom' ) ) { 	
+										// Administrador - VP
 										if( $nominacion["estado"] != "aprobada" 
 											&& $nominacion["estado"] != "rechazada" ){
 											include( "sections/panel_aprobacion.php" );
 										}
 									}
-									if( isV( 'pan_nom_apoyo' ) ) { 	//Colaborador 
+									if( isV( 'pan_nom_apoyo' ) ) { 	
+										//Colaborador 
 										include( "sections/panel_soporte_nominacion.php" );
 									}
 								?>

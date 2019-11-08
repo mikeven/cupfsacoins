@@ -260,7 +260,7 @@ function adjudicarNominacion( origen, idn ){
     });
 }
 /* --------------------------------------------------------- */ 
-$(".adminev, .adminev_s").on('click', function (e) {
+$(".adminev, .adminev_s, .vp_ev").on('click', function (e) {
 	// Muestra el panel de comentario de administrador, asigna valor de evaluación a campo oculto
 	$(".panel_comentario").fadeIn(300);
 	$("#estado_nom").val( $(this).attr( "data-a" ) );

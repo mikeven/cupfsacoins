@@ -147,4 +147,23 @@
 		return $nominacion;
 	}
 	/* --------------------------------------------------------- */
+	function esNominacionMismoDepartamento( $nominacion ){
+		// Evalúa si una nominación está hecha entre usuarios del mismo departamento
+		return ( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] );
+	}
+	/* --------------------------------------------------------- */
+	function esAprobadaPorVP( $dbh, $idu, $nominacion ){
+		// Evalúa si una nominación es aprobada directamente por el VP del departamento del nominado y nominador
+		// Caso: Nominador no es VP
+		$aprobable = false;
+
+		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
+		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
+		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominador"] );
+		if( $mismo_dpto && $es_vp ) 
+			$aprobable = true;
+
+		return $aprobable;
+	}
+	/* --------------------------------------------------------- */
 ?>

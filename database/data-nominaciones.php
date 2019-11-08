@@ -11,13 +11,14 @@
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
 		u2.apellido as apellido2, n.valor_atributo as valor, a.nombre as atributo, 
 		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
-		n.votable, n.comentario, 
+		n.votable, n.comentario, d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro, 
 		date_format(n.fecha_cierre,'%d/%m/%Y') as fcierre,
 		date_format(n.fecha_adjudicacion,'%d/%m/%Y') as fadjudicada 
-		from nominacion n, usuario u1, usuario u2, atributo a 
+		from nominacion n, usuario u1, usuario u2, atributo a, departamento d1, departamento d2 
 		where n.idNOMINADOR = u1.idUSUARIO and n.idNOMINADO = u2.idUSUARIO 
-		and n.idATRIBUTO = a.idATRIBUTO and n.idNOMINACION = $idn";
+		and n.idATRIBUTO = a.idATRIBUTO and u1.idDepartamento = d1.idDepartamento and 
+		u2.idDepartamento = d2.idDepartamento and n.idNOMINACION = $idn";
 		
 		$data = mysqli_query( $dbh, $q );
 		$data ? $registro = mysqli_fetch_array( $data ) : $registro = NULL;
