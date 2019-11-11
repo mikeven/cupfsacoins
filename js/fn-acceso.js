@@ -18,7 +18,7 @@ function log_in(){
 				window.location = "inicio.php";
 			}
 			else {
-				alert("ERROR");
+				alert("Usuario o contraseña incorrecta");
 			}
         }
     });

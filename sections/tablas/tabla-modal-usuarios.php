@@ -10,20 +10,22 @@
 	<tbody>
 		<?php foreach ( $usuarios as $u ){ 
 			$roles_u = obtenerRolesUsuario( $dbh, $u["idUSUARIO"] );
+			if( $u["idUSUARIO"] != $_SESSION["user"]["idUSUARIO"] ){
 		?>
-		<tr class="gradeX">
-			<td>
-				<a class="sel_persona" href="#!" 
-				data-idp="<?php echo $u["idUSUARIO"] ?>"><?php echo $u["nombre"]." ".$u["apellido"] ?> </a>
-			</td>
-			<td><?php echo $u["departamento"] ?></td>
-			<td><?php echo $u["email"] ?></td>
-			<td>
-				<?php foreach ( $roles_u as $r ) { ?>
-					<div> <?php echo $r["nombre"] ?></div>
-				<?php } ?>
-			</td>
-		</tr>
+				<tr class="gradeX">
+					<td>
+						<a class="sel_persona" href="#!" 
+						data-idp="<?php echo $u["idUSUARIO"] ?>"><?php echo $u["nombre"]." ".$u["apellido"] ?> </a>
+					</td>
+					<td><?php echo $u["departamento"] ?></td>
+					<td><?php echo $u["email"] ?></td>
+					<td>
+						<?php foreach ( $roles_u as $r ) { ?>
+							<div> <?php echo $r["nombre"] ?></div>
+						<?php } ?>
+					</td>
+				</tr>
+			<?php } ?>
 		<?php } ?>
 	</tbody>
 </table>

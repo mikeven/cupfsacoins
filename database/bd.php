@@ -22,7 +22,7 @@
 	function obtenerConfigBD(){
 		//
 		$config = array();
-		$file = fopen( __DIR__."/database_l.ini", "r" ) or exit( "Error al leer archivo" );
+		$file = fopen( __DIR__."/database.ini", "r" ) or exit( "Error al leer archivo" );
 		
 		fgets( $file );
 		while( !feof( $file ) )	{
