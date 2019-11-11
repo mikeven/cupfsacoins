@@ -113,6 +113,7 @@
 		$votantes = obtenerCantidadUsuariosRol( $dbh, 3 );
 		
 		$mayoria = ceil( $votantes / 2 ) + 1;
+		
 		if( $votos >= $mayoria )
 			$quorum = true;
 

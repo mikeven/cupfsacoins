@@ -48,6 +48,15 @@
 		//Determina si una página del sistema es accesible para el usuario
 		if( !isV( $pagina ) ) header('Location: inicio.php');
 	}
+	/* --------------------------------------------------------- */
+	function mostrarResultadosNominacion( $es_aprob_vp, $votada ){
+		$mostrar = false;
+		if( isV( "result_nom" ) && ( !$es_aprob_vp ) || ( isV( "en_votar" ) && $votada ) )
+			$mostrar = true;
+
+		return $mostrar;
+	}
+	/* --------------------------------------------------------- */
 
 	$accesos_usess = obtenerEsquemaAccesosUsuario();
 ?>

@@ -316,6 +316,7 @@ function actualizarElementosVotacion( votos ){
 	$("#rvotossi").html( votos.si );
 	$("#rvotosno").html( votos.no );
 	$("#rvotot").html( votos.votos );
+	console.log(votos);
 	if( votos.quorum == true ){
 		if( votos.si > votos.no ){
 			$("#btn_aprobar").show();
@@ -333,6 +334,7 @@ function actualizarVisualVotacion( data , votos, animacion ){
 	
 	if( animacion == true )
 		$( "#flotPie" ).fadeOut(500);
+	
 	setTimeout( function(){ 
 		iniciarGrafico( data );
 		actualizarElementosVotacion( votos );

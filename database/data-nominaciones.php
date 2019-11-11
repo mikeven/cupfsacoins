@@ -125,7 +125,7 @@
 	function agregarSustento( $dbh, $nominacion ){
 		// Actualiza una nominación con los datos del segundo sustento
 		$q = "update nominacion set motivo2 = '$nominacion[motivo2]', 
-		sustento2 = '$nominacion[sustento2]', estado = 'pendiente' 
+		sustento2 = '$nominacion[sustento2]', estado = 'pendiente_ss' 
 		where idNOMINACION = $nominacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -377,7 +377,17 @@
 		else $cierre = true;
 
 		$evaluacion = escaparCampos( $dbh, $evaluacion );
-		$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+		if( $evaluacion["estado"] == "aprobada_directo_vp" ){
+			// La nominación es aprobada directamente por VP, se adjudica
+			$evaluacion["estado"] = "aprobada";
+			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+			$rsp = adjudicarNominacion( $dbh, $evaluacion["idnominacion"] );
+		}
+		else
+			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+
+		if( $evaluacion["estado"] == "validada" )
+			bloquearNominacion( $dbh, true, $evaluacion["idnominacion"] );
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;

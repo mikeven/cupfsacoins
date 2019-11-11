@@ -12,19 +12,8 @@
     include( "database/data-acceso.php" );
     include( "fn/fn-acceso.php" );
     include( "fn/fn-nominaciones.php" );
-
-    isAccesible( $pagina );
-    $idn = NULL;
-    $nominacion = NULL;
-    $idu = $_SESSION["user"]["idUSUARIO"];
-    if( isset( $_GET["id"] ) )
-    	$idn = $_GET["id"];
-
-    if( $idn != NULL ){
-		$nominacion = obtenerNominacionPorId( $dbh, $idn );
-		if( $nominacion )
-			$mismo_dpto = esNominacionMismoDepartamento( $nominacion );
-    }
+    include( "fn/fn-nominacion.php" );
+ 
 ?>
 <!doctype html>
 <html class="fixed">
@@ -77,15 +66,6 @@
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
 	</head>
-	<?php
-		if( $nominacion != NULL ) {
-			$p_sw = posicionSuiche( $nominacion["votable"] );
-			$comite = obtenerCantidadUsuariosRol( $dbh, 3 );
-			if( isV( 'en_votar' ) ) { //Evaluador
-				$votada = esVotada( $dbh, $idu, $idn );
-			}
-		}
-	?>
 	<body>
 		<section class="body">
 
@@ -199,8 +179,7 @@
 								<div class="form-group">
 									<label class="col-sm-4 text-right">Nominado por: </label>
 									<div class="col-sm-8 text-left">
-										<?php echo $nominacion["nombre1"]." ".
-												$nominacion["apellido1"]; ?>
+										<?php echo $nominacion["nombre1"]." ".$nominacion["apellido1"]; ?>
 									</div>
 								</div>
 
@@ -239,7 +218,8 @@
 									if( isV( 'en_aprob_nom' ) ) { 	
 										// Administrador - VP
 										if( $nominacion["estado"] != "aprobada" 
-											&& $nominacion["estado"] != "rechazada" ){
+											&& $nominacion["estado"] != "rechazada" 
+											&& $nominacion["estado"] != "adjudicada" ){
 											include( "sections/panel_aprobacion.php" );
 										}
 									}
@@ -277,11 +257,10 @@
 								</footer>
 							<?php } } ?>
 							<!-- ------------------------------------ PIE FORMULARIOS -->
-
-						
 						</section>
 					</div>
-					<?php if( isV( "result_nom" ) || ( isV( "en_votar" ) && ( $votada ) ) ) { ?>
+					
+					<?php if( mostrarResultadosNominacion( $es_aprob_vp, $votada ) ) { ?>
 						<div class="col-sm-6 col-xs-12">
 							<section class="panel">
 								<header class="panel-heading">

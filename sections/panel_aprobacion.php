@@ -1,7 +1,7 @@
 <div id="panel_aprobacion">
 	<hr class="solid short">
 	<div id="confirmar_seleccion">
-
+		
 		<button id="btn_aprobar" type="button" data-a="aprobada"
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-check"></i> Aprobar</button>
@@ -9,24 +9,51 @@
 		<button id="btn_rechazar" type="button" data-a="rechazada"
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-times"></i> Rechazar</button>
-		
+
 		<?php if( $mismo_dpto ) { 
 			// Nominación entre usuarios del mismo departamento. Aprueba solo el VP ?>
-			<?php if( esAprobadaPorVP( $dbh, $idu, $nominacion ) ) {  ?>
-				<button id="btn_aprobar_vp" type="button" data-a="aprobada"
-					class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
-					<i class="fa fa-check"></i> Aprobar VP</button>
-			<?php } else { ?>
-				<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
-			<?php } ?>
-		<?php } else { ?>
+			<?php if( $es_aprob_vp ) {  // Aprobación completa y directa por el VP del depto ?>
+				
+				<?php if( $nominacion["estado"] == "pendiente" ) {  ?>
+					<button id="btn_aprobar_vp" type="button" data-a="aprobada_directo_vp"
+						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+						<i class="fa fa-star"></i> Aprobar</button>
+				<?php } ?>
 
-			<?php if( $nominacion["motivo2"] == "" 
-					&& $nominacion["sustento2"] == "" 
-					&& $nominacion["estado"] == "pendiente" ) { ?>
-			<button id="btn_sustento" type="button" data-a="sustento"
-			class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
-				<i class="fa fa-file-o"></i> Solicitar sustento</button>
+			<?php } else { ?>
+
+				<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+
+			<?php } ?>
+
+		<?php } else { 
+		// Nominación entre usuarios de departamentos diferentes. 
+		// Valida primero el VP del depto del nominado y luego pasa a votación ?>
+
+			<?php if( $nominacion["estado"] == "validada" ) { ?>
+
+				<?php if( solicitableSustento( $nominacion )  ) { ?>
+				<button id="btn_sustento" type="button" data-a="sustento"
+				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+					<i class="fa fa-file-o"></i> Solicitar sustento</button>
+				<?php } ?>
+
+			<?php } else { ?>
+
+				<?php if( $es_valid_vp ) {  
+					// Es validable por el VP del depto del nominado ?>
+					<button id="btn_validar_vp" type="button" data-a="validada"
+						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+						<i class="fa fa-check-circle"></i> Validar</button>
+						
+				<?php } else { ?>
+
+					<?php if( $nominacion["estado"] == "pendiente" ) { ?>
+						<i class="fa fa-lock"></i> VP del departamento debe validar esta nominación primero
+					<?php } ?>
+
+				<?php } ?>
+						
 			<?php } ?>
 
 		<?php } ?>

@@ -9,8 +9,10 @@
 		// Devuelve verdadero/falso sobre si el usuario puede votar una nominación
 		$vota = false;
 		if( isV( 'en_votar' ) && !esVotada( $dbh, $idu, $nominacion["idNOMINACION"] ) 
-			&& ( $nominacion["estado"] == "pendiente" || 
-				 $nominacion["estado"] == "sustento" ) ){
+			&& ( $nominacion["estado"] == "pendiente" 		|| 
+				 $nominacion["estado"] == "pendiente_ss" 	|| 
+				 $nominacion["estado"] == "sustento"  		|| 
+				 $nominacion["estado"] == "validada" ) ){
 			$vota = true;
 		}
 		return $vota;
@@ -35,8 +37,10 @@
 		// Devuelve la etiqueta de estado de nominación según valor
 		$etiquetas = array(
 			"pendiente" 	=> "Pendiente",
+			"pendiente_ss" 	=> "Pendiente",
 			"sustento"		=> "Espera por sustento",
 			"aprobada"		=> "Aprobada",
+			"validada"		=> "Validada",
 			"rechazada"		=> "Rechazada",
 			"adjudicada"	=> "Adjudicada"
 		);
@@ -48,7 +52,9 @@
 		// Devuelve el ícono de estado de nominación según valor
 		$iconos = array(
 			"pendiente" 	=> "<i class='fa fa-clock-o'></i>",
+			"pendiente_ss" 	=> "<i class='fa fa-clock-o'></i>",
 			"sustento"		=> "<i class='fa fa-file-o'></i>",
+			"validada"		=> "<i class='fa fa-check-circle'></i>",
 			"aprobada"		=> "<i class='fa fa-check-square-o'></i>",
 			"rechazada"		=> "<i class='fa fa-times'></i>",
 			"adjudicada"	=> "<i class='fa fa-gift'></i>"
@@ -61,8 +67,10 @@
 		// Devuelve la clase para asignar fondo de nominaciones según estado
 		$iconos = array(
 			"pendiente" 	=> "bg-primary",
+			"pendiente_ss" 	=> "bg-primary",
 			"sustento"		=> "bg-warning",
 			"aprobada"		=> "bg-success",
+			"validada" 		=> "bg-primary",
 			"rechazada"		=> "bg-secondary",
 			"adjudicada"	=> "bg-quartenary"
 		);
@@ -139,12 +147,16 @@
 		return $checked;
 	}
 	/* --------------------------------------------------------- */
-	function nominadorYNominado( $data_nominacion ){
-		// Devuelve el nominador y el nominado de una nominación en formato específico
-		$nominacion["idnominador"] = $data_nominacion["idNOMINADOR"];
-		$nominacion["idnominado"] = $data_nominacion["idNOMINADO"];
+	function solicitableSustento( $nominacion ){
+		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
+		$solicitar_sustento = false;
 
-		return $nominacion;
+		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" ){
+			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
+				$solicitar_sustento = true;
+		}
+
+		return $solicitar_sustento;
 	}
 	/* --------------------------------------------------------- */
 	function esNominacionMismoDepartamento( $nominacion ){
@@ -153,17 +165,34 @@
 	}
 	/* --------------------------------------------------------- */
 	function esAprobadaPorVP( $dbh, $idu, $nominacion ){
-		// Evalúa si una nominación es aprobada directamente por el VP del departamento del nominado y nominador
-		// Caso: Nominador no es VP
-		$aprobable = false;
+		// Evalúa si una nominación es aprobada directamente por el VP del departamento del nominado y nominador. Caso: el VP no es el nominador.
+		$aprobable 	= false;
+		$mismo_dpto = false;
 
 		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
-		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominador"] );
+		if ( $id_dpto_usuario == $nominacion["iddpto_nominador"] && $id_dpto_usuario == $nominacion["iddpto_nominado"] ) 
+			$mismo_dpto = true;
+		
 		if( $mismo_dpto && $es_vp ) 
 			$aprobable = true;
 
 		return $aprobable;
+	}
+	/* --------------------------------------------------------- */
+	function esValidadaPorVP( $dbh, $idu, $nominacion ){
+		// Evalúa si una nominación es validada inicialmente por el VP del departamento del nominado.
+		// Caso: nominador y nominado son de departamentos diferentes.
+		$validable = false;
+
+		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
+		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
+		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
+		
+		if( $es_vp && $mismo_dpto && $nominacion["estado"] == "pendiente" ) 
+			$validable = true;
+
+		return $validable;
 	}
 	/* --------------------------------------------------------- */
 ?>
