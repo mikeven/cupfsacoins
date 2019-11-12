@@ -262,6 +262,7 @@
 		include( "../fn/fn-misc.php" );
 		
 		$directorio = "../upload";
+		$ficheros = array();
 		$nominaciones = obtenerNominacionesRegistradas( $dbh );
 
 		$sustentos = array_merge( arr_claves( $nominaciones, "sustento1" ), 

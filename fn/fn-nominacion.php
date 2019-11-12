@@ -15,6 +15,7 @@
 
     if( $idn != NULL ){
 		$nominacion = obtenerNominacionPorId( $dbh, $idn );
+		
 		if( $nominacion )
 			$mismo_dpto = esNominacionMismoDepartamento( $nominacion );
     }

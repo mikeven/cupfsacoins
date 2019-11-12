@@ -87,7 +87,7 @@
 		// Si es perfil colaborador siendo nominador o nominado con nominación aprobada
 		if( isV( 'pan_nom_apoyo' ) && (( $nominacion["idNOMINADOR"] == $idu ) || 
 										(	$nominacion["idNOMINADO"] == $idu && 
-											$nominacion["estado"] == "aprobada" ) ) )
+											($nominacion["estado"] == "aprobada" || $nominacion["estado"] == "adjudicada") ) ) )
 			$visible = true;
 
 		// Perfiles administrador o evaluador
@@ -147,11 +147,12 @@
 		return $checked;
 	}
 	/* --------------------------------------------------------- */
-	function solicitableSustento( $nominacion ){
+	function solicitableSustento( $dbh, $idu, $nominacion ){
 		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
 		$solicitar_sustento = false;
 
-		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" ){
+		$es_admin = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
+		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin ){
 			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
 				$solicitar_sustento = true;
 		}

@@ -32,7 +32,7 @@
 
 			<?php if( $nominacion["estado"] == "validada" ) { ?>
 
-				<?php if( solicitableSustento( $nominacion )  ) { ?>
+				<?php if( solicitableSustento( $dbh, $idu, $nominacion )  ) { ?>
 				<button id="btn_sustento" type="button" data-a="sustento"
 				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
 					<i class="fa fa-file-o"></i> Solicitar sustento</button>

@@ -29,6 +29,7 @@
 
 		$etiquetas = array(
 			"aprobada" => "fue aprobada",
+			"validada" => "fue validada",
 			"rechazada" => "fue rechazada",
 			"sustento" => "requiere de un segundo sustento"
 		);

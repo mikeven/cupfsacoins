@@ -294,7 +294,9 @@
 					<!-- end: page -->
 
 					<?php } else { ?>
+
 						<h4>No hay información disponible</h4>
+						
 					<?php } ?>
 
 				</section>
