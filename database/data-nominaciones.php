@@ -33,7 +33,7 @@
 		a.nombre as atributo, a.valor, a.imagen, n.votable, n.sustento1, n.sustento2, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
 		from nominacion n, usuario u2, atributo a where n.idNOMINADO = u2.idUSUARIO 
-		and n.idATRIBUTO = a.idATRIBUTO order by fregistro desc";
+		and n.idATRIBUTO = a.idATRIBUTO order by n.fecha_nominacion desc";
 
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
@@ -47,7 +47,8 @@
 		a.nombre as atributo, a.imagen, a.valor, n.votable, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
 		from nominacion n, usuario u2, atributo a where n.idNOMINADO = u2.idUSUARIO 
-		and n.idATRIBUTO = a.idATRIBUTO and $p = $idu $p2 order by fregistro desc";
+		and n.idATRIBUTO = a.idATRIBUTO and $p = $idu $p2 order by n.fecha_nominacion desc";
+
 
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
@@ -62,7 +63,7 @@
 		from nominacion n, usuario u2, atributo a where n.idNOMINADO = u2.idUSUARIO 
 		and n.idATRIBUTO = a.idATRIBUTO and n.idNOMINACION not in 
 		(select idNOMINACION from voto where idUSUARIO = $idu ) 
-		order by fregistro desc";
+		order by n.fecha_nominacion desc";
 
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
@@ -382,7 +383,7 @@
 			// La nominación es aprobada directamente por VP, se adjudica
 			$evaluacion["estado"] = "aprobada";
 			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
-			$rsp = adjudicarNominacion( $dbh, $evaluacion["idnominacion"] );
+			//$rsp = adjudicarNominacion( $dbh, $evaluacion["idnominacion"] );
 		}
 		else
 			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );

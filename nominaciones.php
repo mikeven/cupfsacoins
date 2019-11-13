@@ -173,7 +173,7 @@
 							<i class="fa fa-th-large"></i> Ver fichas</a>
 						</h5>
 						<table class="table table-bordered table-striped mb-none" 
-						id="datatable-default">
+						id="datatable-nominaciones">
 							<thead>
 								<tr>
 									<th>Fecha</th>
@@ -298,7 +298,26 @@
 
 		<!-- Examples -->
 		<script src="js/fn-ui.js"></script>
-		<script src="js/init-tables-default.js"></script>
+		
 		<script src="js/fn-nominaciones.js"></script>
+		<script type="text/javascript">
+			(function( $ ) {
+
+				'use strict';
+
+				var datatableInit = function() {
+
+					$('#datatable-nominaciones').DataTable( {
+				        "order": [[ 0, "desc" ]]
+				    } );
+
+				};
+
+				$(function() {
+					datatableInit();
+				});
+
+			}).apply( this, [ jQuery ]);
+		</script>
 	</body>
 </html>
