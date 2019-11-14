@@ -10,8 +10,9 @@
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
 		u2.apellido as apellido2, n.valor_atributo as valor, a.nombre as atributo, 
-		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
-		n.votable, n.comentario, d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
+		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, n.votable, 
+		n.comentario, n.comentario_vp, d1.idDepartamento as iddpto_nominador, 
+		d2.idDepartamento as iddpto_nominado, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro, 
 		date_format(n.fecha_cierre,'%d/%m/%Y') as fcierre,
 		date_format(n.fecha_adjudicacion,'%d/%m/%Y') as fadjudicada 
@@ -152,6 +153,20 @@
 		
 		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 
 		estado = '$evaluacion[estado]', comentario = '$evaluacion[comentario]'$fc 
+		where idNOMINACION = $evaluacion[idnominacion]";
+		
+		$data = mysqli_query( $dbh, $q );
+
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
+	function registrarEvaluacionVP( $dbh, $evaluacion, $cierre ){
+		//Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
+		$fc = "";
+		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
+		
+		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 
+		estado = '$evaluacion[estado]', comentario_vp = '$evaluacion[comentario]'$fc 
 		where idNOMINACION = $evaluacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -379,18 +394,30 @@
 		else $cierre = true;
 
 		$evaluacion = escaparCampos( $dbh, $evaluacion );
-		if( $evaluacion["estado"] == "aprobada_directo_vp" ){
-			// La nominación es aprobada directamente por VP, se adjudica
-			$evaluacion["estado"] = "aprobada";
+
+		if( $evaluacion["es_vp"] == 1 ){
+			// Evaluación proveniente de un usuario VP
+
+			$rsp = registrarEvaluacionVP( $dbh, $evaluacion, $cierre );
+
+			if( $evaluacion["estado"] == "validada" )	// Activa nominación para votación
+				bloquearNominacion( $dbh, true, $evaluacion["idnominacion"] );
+
+		}else{
+			// Evaluación proveniente de un usuario Admin
+
 			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+		}
+
+		/*if( $evaluacion["estado"] == "aprobada_directo_vp" ){
+			// La nominación es aprobada directamente por VP
+			$evaluacion["estado"] = "aprobada";
+			$rsp = registrarEvaluacionVP( $dbh, $evaluacion, $cierre );
 			//$rsp = adjudicarNominacion( $dbh, $evaluacion["idnominacion"] );
 		}
 		else
-			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );*/
 
-		if( $evaluacion["estado"] == "validada" )
-			bloquearNominacion( $dbh, true, $evaluacion["idnominacion"] );
-		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
 			mensajeMail( $dbh, $evaluacion );

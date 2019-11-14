@@ -66,11 +66,11 @@
 	function claseEstadoNominacion( $estado ){
 		// Devuelve la clase para asignar fondo de nominaciones según estado
 		$iconos = array(
-			"pendiente" 	=> "bg-primary",
-			"pendiente_ss" 	=> "bg-primary",
+			"pendiente" 	=> "bg-dark",
+			"pendiente_ss" 	=> "bg-dark",
 			"sustento"		=> "bg-warning",
 			"aprobada"		=> "bg-success",
-			"validada" 		=> "bg-primary",
+			"validada" 		=> "bg-tertiary",
 			"rechazada"		=> "bg-secondary",
 			"adjudicada"	=> "bg-quartenary"
 		);
@@ -147,6 +147,24 @@
 		return $checked;
 	}
 	/* --------------------------------------------------------- */
+	function esRecibida(){
+		// Determina si el listado de nominaciones son recibidas
+		$recibidas = false;
+
+		if( isset( $_GET["param"] ) &&  $_GET["param"] == 'recibidas' )
+			$recibidas = true;
+
+		return $recibidas;
+	}
+	/* --------------------------------------------------------- */
+	function enlNominacion( $nominacion, $recibida ){
+		// Devuelve el enlace a la ficha de nominación en función si es recibida o no
+		$param = ( $recibida ) ? "&recibida" : "";
+		$lnk = "nominacion.php?id=$nominacion[idNOMINACION]".$param;
+
+		return $lnk;
+	}
+	/* --------------------------------------------------------- */
 	function solicitableSustento( $dbh, $idu, $nominacion ){
 		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
 		$solicitar_sustento = false;
@@ -156,6 +174,16 @@
 			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
 				$solicitar_sustento = true;
 		}
+
+		return $solicitar_sustento;
+	}
+	/* --------------------------------------------------------- */
+	function solicitableSustento2VP( $nominacion ){
+		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
+		$solicitar_sustento = false;
+
+		if( $nominacion["sustento2"] == "" && $nominacion["motivo2"] == "" )
+			$solicitar_sustento = true;
 
 		return $solicitar_sustento;
 	}
@@ -190,7 +218,8 @@
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
 		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
 		
-		if( $es_vp && $mismo_dpto && $nominacion["estado"] == "pendiente" ) 
+		if( $es_vp && $mismo_dpto && 
+			( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "pendiente_ss" ) ) 
 			$validable = true;
 
 		return $validable;

@@ -66,9 +66,6 @@
 			    position: absolute;
 			    bottom: 5px; 
 			}
-
-			#nom_paneles{ max-height: 450px; overflow-y: scroll; }
-
 		</style>
 
 		<!-- Head Libs -->
@@ -78,7 +75,6 @@
 		$data_nominaciones = obtenerListadoNominaciones( $dbh, $idu );
 		$nominaciones = $data_nominaciones["nominaciones"];
 		$titulo = $data_nominaciones["titulo"];
-		$mis_noms = esRecibida();
 	?>
 	<body>
 		<section class="body">
@@ -129,7 +125,7 @@
 										<?php if ( esActivable( $nom ) ) { ?>
 											<div class="switch switch-sm switch-dark sw-f 
 											sw<?php echo $nom["idNOMINACION"];?>" data-toggle="tooltip" data-placement="top" 
-											title="<?php echo $p_sw["t"];?>" style="display: none;">
+											title="<?php echo $p_sw["t"];?>"    style="display: none;">
 												<input type="checkbox" name="switch" data-plugin-ios-switch 
 												<?php echo $p_sw["p"];?>
 												data-idn="<?php echo $nom["idNOMINACION"];?>" class="chvotable"/>
@@ -137,12 +133,10 @@
 										<?php } ?>
 									</header>
 									<div class="panel-body p-lg" style="width: 70%;">
-										<?php if ( !$mis_noms ) { ?>
 										<h4 class="text-semibold mt-sm">
 											<?php echo $nom["nombre2"]." ".
 														$nom["apellido2"]; ?>
 										</h4>
-										<?php } ?>
 										<h5 class=""><?php echo $nom["atributo"]?></h5>
 										<p>
 											<span id="enlaces_nominacion" class="accion-adj">
@@ -150,7 +144,7 @@
 											echo iconoEstadoNominacion( $nom["estado"] );
 											echo " ".estadoNominacion( $nom["estado"] ); ?> |
 
-											<a href="<?php echo enlNominacion( $nom, $mis_noms ) ?>">
+											<a href="nominacion.php?id=<?php echo $nom["idNOMINACION"];?>">
 											<?php echo $enl; ?></a>
 											
 											<?php if ( $nom["estado"] == "aprobada" 
@@ -202,7 +196,7 @@
 								<tr class="gradeX">
 									<td><?php echo $nom["fregistro"]; ?></td>
 									<td>
-										<a href="<?php echo enlNominacion( $nom, $mis_noms ) ?>">
+										<a href="nominacion.php?id=<?php echo $nom['idNOMINACION'];?>">
 								<?php echo $nom["nombre2"]." ".$nom["apellido2"]; ?>
 										</a>
 									</td>

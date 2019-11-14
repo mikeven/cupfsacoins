@@ -134,10 +134,12 @@
 									<i class="fa fa-circle" style="color: #ff9900;"></i>
 									<?php echo $nominacion['valor']." coins"; ?>
 								</p>
-								<h4 class="text-semibold mt-sm text-center">
-								<?php echo $nominacion["nombre2"]." ".
-												$nominacion["apellido2"]; ?>
-								</h4>
+								<?php if ( !isset( $_GET["recibida"] ) ) { ?>
+									<h4 class="text-semibold mt-sm text-center">
+									<?php echo $nominacion["nombre2"]." ".
+													$nominacion["apellido2"]; ?>
+									</h4>
+								<?php } ?>
 								<hr class="solid short">
 								<!-- ------------------------------ SUSTENTO -->
 								<div class="form-group">
@@ -198,10 +200,20 @@
 
 								<?php if( $nominacion["comentario"] != "" ) { ?>
 								<div class="form-group">
-									<label class="col-sm-4 text-right">Observaciones: 
+									<label class="col-sm-4 text-right">Obs del admin: 
 									</label>
 									<div class="col-sm-8 text-left">
 										<?php echo $nominacion["comentario"]; ?>
+									</div>
+								</div>
+								<?php } ?>
+
+								<?php if( $nominacion["comentario_vp"] != "" ) { ?>
+								<div class="form-group">
+									<label class="col-sm-4 text-right">Obs del VP: 
+									</label>
+									<div class="col-sm-8 text-left">
+										<?php echo $nominacion["comentario_vp"]; ?>
 									</div>
 								</div>
 								<?php } ?>

@@ -15,7 +15,7 @@
 			<?php if( $es_aprob_vp ) {  // Aprobación completa y directa por el VP del depto ?>
 				
 				<?php if( $nominacion["estado"] == "pendiente" ) {  ?>
-					<button id="btn_aprobar_vp" type="button" data-a="aprobada_directo_vp"
+					<button id="btn_aprobar_vp" type="button" data-a="aprobada"
 						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
 						<i class="fa fa-star"></i> Aprobar</button>
 				<?php } ?>
@@ -41,10 +41,20 @@
 			<?php } else { ?>
 
 				<?php if( $es_valid_vp ) {  
-					// Es validable por el VP del depto del nominado ?>
+					// Es evaluable por el VP del depto del nominado ?>
 					<button id="btn_validar_vp" type="button" data-a="validada"
 						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
 						<i class="fa fa-check-circle"></i> Validar</button>
+
+					<button id="btn_rechazar" type="button" data-a="rechazada"
+						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+						<i class="fa fa-times"></i> Rechazar</button>
+
+					<?php if( solicitableSustento2VP( $nominacion ) ) { ?>
+						<button id="btn_sustento" type="button" data-a="sustento"
+							class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+							<i class="fa fa-file-o"></i> Solicitar sustento</button>
+					<?php } ?>
 						
 				<?php } else { ?>
 
@@ -68,6 +78,7 @@
 				<div class="col-sm-12">
 					<textarea class="form-control" rows="3" id="textareaAutosize" name="comentario" data-plugin-textarea-autosize="" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 74px; width: 100%;"></textarea>
 				</div>
+				<input id="usuariovp" type="hidden" name="es_vp" value="<?php echo $es_valid_vp; ?>">
 				<input id="estado_nom" type="hidden" name="estado">
 				<input type="hidden" name="idusuario" value="<?php echo $idu;?>">
 				<input type="hidden" name="idnominacion" value="<?php echo $idn;?>">

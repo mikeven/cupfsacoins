@@ -5519,7 +5519,8 @@ html.header-dark .userbox .dropdown-menu a {
 
 .panel-heading {
 	background: #f6f6f6;
-	border-radius: 5px 5px 0 0;
+	/*border-radius: 5px 5px 0 0;*/
+	border-radius: 0;
 	border-bottom: 1px solid #DADADA;
 	padding: 18px;
 	position: relative;
@@ -5651,7 +5652,8 @@ html.header-dark .userbox .dropdown-menu a {
 }
 
 .panel-heading + .panel-body {
-	border-radius: 0 0 5px 5px;
+	/*border-radius: 0 0 5px 5px;*/
+	border-radius: 0;
 }
 
 .panel-footer {
@@ -6178,11 +6180,14 @@ html .panel .panel-heading-transparent + .panel-body {
 }
 
 .panel-horizontal .panel-heading {
-	border-radius: 5px 0 0 5px;
+	/*
+	border-radius: 5px 0 0 5px;*/
+	border-radius: 0;
 }
 
 .panel-horizontal .panel-heading + .panel-body {
-	border-radius: 0 5px 5px 0;
+	/*border-radius: 0 5px 5px 0;*/
+	border-radius: 0;
 }
 
 .panel-horizontal .panel-footer {
