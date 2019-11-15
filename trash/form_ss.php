@@ -6,17 +6,18 @@
 
 <div id="panel_sustento2" class="panel_sustento2">
 	<hr class="solid short">
-	<h5>Agregar sustentación</h5>
+	<h5>Segunda sustentación</h5>
 	<form id="frm_asustento" class="form-horizontal form-bordered" action="">
-		<div class="form-group">
-			<label class="col-sm-3 control-label">Motivo <span class="required">*</span></label>
+		<div class="panel-body">
+			<div class="form-group">
+			<label class="col-sm-3 control-label">Motivo 2 <span class="required">*</span></label>
 			<div class="col-sm-9" align="left">
 				<textarea class="form-control" rows="3" id="textareaAutosize" name="motivo2" data-plugin-textarea-autosize="" style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 74px; width: 100%;" required></textarea>
 			</div>
 		</div>
 
 		<div class="form-group">
-			<label class="col-md-3 control-label">Sustento </label>
+			<label class="col-md-3 control-label">Sustento 2</label>
 			<div class="col-md-9">
 				<div class="fileupload fileupload-new" data-provides="fileupload" align="left">
 					<div class="input-append">
@@ -34,16 +35,17 @@
 				</div>
 			</div>
 		</div>
-
-		<input id="idnominacion" type="hidden" name="seg_sustento" value="<?php echo $idn;?>">
-		<input id="estado_nom" type="hidden" name="edo_nom" value="<?php echo $nominacion["estado"];?>">
-
-		<!--<div class="row">
-			<div class="col-sm-12" align="right">
-				<button id="btn_sustento2" class="btn btn-primary">Enviar</button>
+		<input id="idnominacion" type="hidden" name="seg_sustento" 
+		value="<?php echo $idn;?>">
+		<footer class="panel-footer">
+			<div class="row">
+				<div class="col-sm-12" align="right">
+					<button id="btn_nominar" class="btn btn-primary">Nominar</button>
+					<div id="response"></div>
+				</div>
 			</div>
-		</div>-->
-
+		</footer>
+		<div id="divToUpdate"></div>
 	</form>
 </div>
 <?php } ?>

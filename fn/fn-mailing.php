@@ -28,10 +28,11 @@
 		// Devuelve la frase para el mensaje de cambio de estatus en nominación
 
 		$etiquetas = array(
-			"aprobada" => "fue aprobada",
-			"validada" => "fue validada",
-			"rechazada" => "fue rechazada",
-			"sustento" => "requiere de un segundo sustento"
+			"aprobada" 		=> "fue aprobada",
+			"validada" 		=> "fue validada",
+			"rechazada" 	=> "fue rechazada",
+			"sustento" 		=> "requiere de sustento",
+			"sustento_vp" 	=> "requiere de sustento"
 		);
 
 		return $etiquetas[$evaluacion];

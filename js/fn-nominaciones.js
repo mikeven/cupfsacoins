@@ -10,7 +10,7 @@
 
 	'use strict';
 
-	// basic
+	// Form nueva nominación
 	$("#frm_nnominacion").validate({
 		highlight: function( label ) {
 			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -30,14 +30,21 @@
 		}
 	});
 
-	$("#frm_sustento2").validate({
+	// Form agregar sustentos
+	$("#frm_asustento").validate({
 		highlight: function( label ) {
 			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
 		},
 		success: function( label ) {
 			$(label).closest('.form-group').removeClass('has-error');
 			label.remove();
-		},
+		},/*
+		submitHandler: function(form) {
+			if( $(form).valid() ){
+            	var icono = "<img src='assets/images/loading.gif'>";
+				$("#panel_sustento2").html( icono );
+			}
+        },*/
 		errorPlacement: function( error, element ) {
 			var placement = element.closest('.input-group');
 			if (!placement.get(0)) {
@@ -48,15 +55,6 @@
 			}
 		}
 	});
-
-	// validation summary
-	var $summaryForm = $("#summary-form");
-	$summaryForm.validate({
-		errorContainer: $summaryForm.find( 'div.validation-message' ),
-		errorLabelContainer: $summaryForm.find( 'div.validation-message ul' ),
-		wrapper: "li"
-	});
-
 
 }).apply( this, [ jQuery ]);
 
@@ -167,7 +165,7 @@ $("#frm_nnominacion").on('submit', function(e) {
     if ( $("#frm_nnominacion").valid() ) {
         e.preventDefault();
         $("#response").html( espera );
-    	$("#btn_nominar").fadeOut(120 );
+    	$("#btn_nominar").fadeOut( 120 );
     }
 });
 /* --------------------------------------------------------- */ 
@@ -193,11 +191,13 @@ $("#btn_votar").on('click', function (e) {
 	votar();
 });
 /* --------------------------------------------------------- */
-$('#frm_sustento2').ajaxForm({ 
+$('#frm_asustento').ajaxForm({ 
 	// Invocación asíncrona para enviar segundo sustento sobre una nominación
-
     type: 		"POST",
-    url:        'database/data-nominaciones.php', 
+    url:        'database/data-nominaciones.php',
+    beforeSubmit : function(){
+    	$("#panel_sustento2").html( "<img src='assets/images/loading.gif'>" );
+    },
     success:    function(response) { 
     	console.log(response);
     	res = jQuery.parseJSON( response );
@@ -210,17 +210,17 @@ $('#frm_sustento2').ajaxForm({
     }
 });
 /* --------------------------------------------------------- */ 
-$("#frm_sustento2").on('submit', function(e) {
+$("#frm_asustento_").on('submit', function(e) {
 	// Evita el envío del formulario al ser validado
 	var icono = "<img src='assets/images/loading.gif'>";
 	$("#panel_sustento2").html( icono );
-    if ( $("#frm_sustento2").valid() ) {
+    if ( $("#frm_asustento").valid() ) {
         e.preventDefault();
     }
 });
 /* --------------------------------------------------------- */
 function sustento2(){
-	$("#frm_sustento2").submit();
+	$("#frm_asustento").submit();
 }
 /* --------------------------------------------------------- */
 function actualizarVisualAdjudicacion( origen ){

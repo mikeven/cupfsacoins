@@ -254,8 +254,7 @@
 							<?php } ?>
 							<!-- ------------------------------------ PIE FORMULARIOS -->
 							<?php if( isV( 'pan_nom_apoyo' ) ) { 	//Colaborador  	
-									if ( $nominacion["estado"] == "sustento" 
-									  && $nominacion["idNOMINADOR"] == $idu ) { 
+									if ( enviaSustento( $idu, $nominacion ) ) { 
 								// Perfil colaborador, nominación pendiente por segundo sustento, 
 								// Usuario en sesión = nominador de la actual nominación
 							?>
@@ -329,13 +328,13 @@
 		
 		<!-- Specific Page Vendor -->
 		<script src="assets/vendor/select2/select2.js"></script>
-		<script src="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
-		<script src="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
 		<script src="assets/vendor/pnotify/pnotify.custom.js"></script>
 		<script src="assets/vendor/flot/jquery.flot.js"></script>
 		<script src="assets/vendor/flot-tooltip/jquery.flot.tooltip.js"></script>
 		<script src="assets/vendor/flot/jquery.flot.pie.js"></script>
 		<script src="assets/vendor/jquery-validation/jquery.validate.js"></script>
+		<script src="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
+		<script src="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
 		<script src="assets/vendor/bootstrap-fileupload/bootstrap-fileupload.min.js"></script>
 		
 		<!-- Theme Base, Components and Settings -->
@@ -349,6 +348,7 @@
 
 		<!-- Func. particular -->
 		<script src="js/fn-ui.js"></script>
+		<script src="assets/javascripts/forms/examples.advanced.form.js" /></script>
 		<script src="js/fn-nominaciones.js"></script>
 		<script src="js/tabla-nominaciones.js"></script>
 

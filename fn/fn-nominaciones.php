@@ -36,13 +36,14 @@
 	function estadoNominacion( $estado ){
 		// Devuelve la etiqueta de estado de nominación según valor
 		$etiquetas = array(
-			"pendiente" 	=> "Pendiente",
-			"pendiente_ss" 	=> "Pendiente",
-			"sustento"		=> "Espera por sustento",
-			"aprobada"		=> "Aprobada",
-			"validada"		=> "Validada",
-			"rechazada"		=> "Rechazada",
-			"adjudicada"	=> "Adjudicada"
+			"pendiente" 		=> "Pendiente",
+			"pendiente_ss" 		=> "Pendiente",
+			"sustento"			=> "Espera por sustento",
+			"sustento_vp"		=> "Espera por sustento",
+			"aprobada"			=> "Aprobada",
+			"validada"			=> "Validada",
+			"rechazada"			=> "Rechazada",
+			"adjudicada"		=> "Adjudicada"
 		);
 
 		return $etiquetas[$estado];
@@ -51,13 +52,14 @@
 	function iconoEstadoNominacion( $estado ){
 		// Devuelve el ícono de estado de nominación según valor
 		$iconos = array(
-			"pendiente" 	=> "<i class='fa fa-clock-o'></i>",
-			"pendiente_ss" 	=> "<i class='fa fa-clock-o'></i>",
-			"sustento"		=> "<i class='fa fa-file-o'></i>",
-			"validada"		=> "<i class='fa fa-check-circle'></i>",
-			"aprobada"		=> "<i class='fa fa-check-square-o'></i>",
-			"rechazada"		=> "<i class='fa fa-times'></i>",
-			"adjudicada"	=> "<i class='fa fa-gift'></i>"
+			"pendiente" 		=> "<i class='fa fa-clock-o'></i>",
+			"pendiente_ss" 		=> "<i class='fa fa-clock-o'></i>",
+			"sustento"			=> "<i class='fa fa-file-o'></i>",
+			"sustento_vp"		=> "<i class='fa fa-file-o'></i>",
+			"validada"			=> "<i class='fa fa-check-circle'></i>",
+			"aprobada"			=> "<i class='fa fa-check-square-o'></i>",
+			"rechazada"			=> "<i class='fa fa-times'></i>",
+			"adjudicada"		=> "<i class='fa fa-gift'></i>"
 		);
 
 		return $iconos[$estado];
@@ -66,13 +68,14 @@
 	function claseEstadoNominacion( $estado ){
 		// Devuelve la clase para asignar fondo de nominaciones según estado
 		$iconos = array(
-			"pendiente" 	=> "bg-dark",
-			"pendiente_ss" 	=> "bg-dark",
-			"sustento"		=> "bg-warning",
-			"aprobada"		=> "bg-success",
-			"validada" 		=> "bg-tertiary",
-			"rechazada"		=> "bg-secondary",
-			"adjudicada"	=> "bg-quartenary"
+			"pendiente" 		=> "bg-dark",
+			"pendiente_ss" 		=> "bg-dark",
+			"sustento"			=> "bg-warning",
+			"sustento_vp"		=> "bg-warning",
+			"aprobada"			=> "bg-success",
+			"validada" 			=> "bg-tertiary",
+			"rechazada"			=> "bg-secondary",
+			"adjudicada"		=> "bg-quartenary"
 		);
 
 		return $iconos[$estado];
@@ -157,6 +160,17 @@
 		return $recibidas;
 	}
 	/* --------------------------------------------------------- */
+	function enviaSustento( $idu, $nominacion ){
+		// Determina si el usuario actual puede enviar sustentos
+		$envia = false;
+
+		if ( ( $nominacion["estado"] == "sustento" || $nominacion["estado"] == "sustento_vp" ) 
+				&& $nominacion["idNOMINADOR"] == $idu )
+			$envia = true;
+
+		return $envia;
+	}
+	/* --------------------------------------------------------- */
 	function enlNominacion( $nominacion, $recibida ){
 		// Devuelve el enlace a la ficha de nominación en función si es recibida o no
 		$param = ( $recibida ) ? "&recibida" : "";
@@ -178,7 +192,7 @@
 		return $solicitar_sustento;
 	}
 	/* --------------------------------------------------------- */
-	function solicitableSustento2VP( $nominacion ){
+	function solicitableSustentoVP( $nominacion ){
 		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
 		$solicitar_sustento = false;
 

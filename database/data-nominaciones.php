@@ -124,7 +124,7 @@
 		return mysqli_insert_id( $dbh );
 	}
 	/* --------------------------------------------------------- */
-	function agregarSustento( $dbh, $nominacion ){
+	function agregarSustento( $dbh, $nominacion, $e_n ){
 		// Actualiza una nominación con los datos del segundo sustento
 		$q = "update nominacion set motivo2 = '$nominacion[motivo2]', 
 		sustento2 = '$nominacion[sustento2]', estado = 'pendiente_ss' 
@@ -436,6 +436,7 @@
 
 		$nominacion["idnominacion"] = $_POST["seg_sustento"];
 		$nominacion["motivo2"] 		= $_POST["motivo2"];
+		$nominacion["edo_nom"]		= $_POST["edo_nom"];
 		$nominacion["sustento2"]	= "";
 
 		if( isset( $_FILES["archivo"] ) ){
@@ -445,7 +446,10 @@
 		}
 
 		$nominacion = escaparCampos( $dbh, $nominacion );
-		$rsp = agregarSustento( $dbh, $nominacion );
+		if( $nominacion["edo_nom"] == "sustento_vp" )
+			$rsp = agregarSustentoVP( $dbh, $nominacion );
+		else
+			$rsp = agregarSustento( $dbh, $nominacion );
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
