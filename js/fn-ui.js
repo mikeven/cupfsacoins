@@ -5,15 +5,11 @@
  */
 /* --------------------------------------------------------- */	
 /* --------------------------------------------------------- */
-function obtenerEnlaceDocumentoCreado( documento, frt ){
-	//var frm = dataUrlDoc( documento, tipo );
-	var enl = "documento.php?tipo_documento=" + frt.param + "&id=" + documento.idr;
-	var ico = "<i class='fa fa-file-text fa-2x'></i>";
-
-	var e_enl = "<a href='" + enl + "' class='btn btn-app' target='_blank'>" + 
-	ico + frt.etiqueta + " #" + documento.numero + "</a>";
-
-	return e_enl;
+function recargarPag( t ){
+	// Refresca la página actual después de tiempo t
+	setTimeout( function(){ 
+		window.location.reload( false );
+	}, t );
 }
 /* --------------------------------------------------------- */
 function notificar( titulo, mensaje, tipo ){

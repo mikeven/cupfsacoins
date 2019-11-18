@@ -142,6 +142,8 @@
 											<?php echo $nom["nombre2"]." ".
 														$nom["apellido2"]; ?>
 										</h4>
+										<?php } else {?>
+											<?php mostrarNominador( $nom ); ?>
 										<?php } ?>
 										<h5 class=""><?php echo $nom["atributo"]?></h5>
 										<p>

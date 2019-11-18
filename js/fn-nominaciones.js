@@ -88,7 +88,8 @@ function votar(){
 			res = jQuery.parseJSON( response );
 			if( res.exito == 1 ){
 				notificar( "Votación", res.mje, "success" );
-				$("#panel_resultado").fadeIn(4000);
+				$("#panel_resultado").fadeIn( 1000 );
+				recargarPag( 3000 );
 			}
 			else
 				notificar( "Votación", res.mje, "error" );
@@ -118,6 +119,7 @@ function evaluar(){
 				$(".panel_comentario").fadeOut( 1000 );
 				$("#panel_aprobacion").slideUp( 1000 );
 				notificar( "Nominación", res.mje, "success" );
+				recargarPag( 3000 );
 			}
 			else
 				notificar( "Nominación", res.mje, "error" );
@@ -193,6 +195,7 @@ $("#btn_votar").on('click', function (e) {
 /* --------------------------------------------------------- */
 $('#frm_asustento').ajaxForm({ 
 	// Invocación asíncrona para enviar segundo sustento sobre una nominación
+	// dato de invocacion: "seg_sustento"
     type: 		"POST",
     url:        'database/data-nominaciones.php',
     beforeSubmit : function(){
@@ -320,7 +323,10 @@ function actualizarElementosVotacion( votos ){
 	if( votos.quorum == true ){
 		if( votos.si > votos.no ){
 			$("#btn_aprobar").show();
-			$("#btn_rechazar").hide();
+			if( votos.estado == "rechazada" )
+				$("#btn_rechazar").hide();
+			else 
+				$("#btn_rechazar").show();
 		}
 		else{
 			$("#btn_rechazar").show();

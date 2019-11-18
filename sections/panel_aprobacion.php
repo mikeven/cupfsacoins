@@ -22,7 +22,13 @@
 
 			<?php } else { ?>
 
-				<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+				<?php if( $es_vp_nominado ) { ?>
+					
+				<?php } else { ?>
+
+					<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
+
+				<?php } ?>
 
 			<?php } ?>
 
@@ -59,7 +65,9 @@
 				<?php } else { ?>
 
 					<?php if( $nominacion["estado"] == "pendiente" ) { ?>
+
 						<i class="fa fa-lock"></i> VP del departamento debe validar esta nominación primero
+						
 					<?php } ?>
 
 				<?php } ?>

@@ -36,14 +36,15 @@
 	function estadoNominacion( $estado ){
 		// Devuelve la etiqueta de estado de nominación según valor
 		$etiquetas = array(
-			"pendiente" 		=> "Pendiente",
-			"pendiente_ss" 		=> "Pendiente",
-			"sustento"			=> "Espera por sustento",
-			"sustento_vp"		=> "Espera por sustento",
-			"aprobada"			=> "Aprobada",
-			"validada"			=> "Validada",
-			"rechazada"			=> "Rechazada",
-			"adjudicada"		=> "Adjudicada"
+			"pendiente" 		=> "Pendiente",				// Nominación recién creada
+			"pendiente_ss" 		=> "Pendiente",				// Pendiente: Admin debe aprobar sustento
+			"pendiente_svp" 	=> "Pendiente",				// Pendiente: VP debe aprobar sustento 
+			"sustento"			=> "Espera por sustento",	// Pendiente por sustento pedido por Admin
+			"sustento_vp"		=> "Espera por sustento VP",// Pendiente por sustento pedido por VP
+			"aprobada"			=> "Aprobada",				// Aprobada por admin o VP
+			"validada"			=> "Validada",				// Validada por VP
+			"rechazada"			=> "Rechazada",				// Rechazada por Admin o VP
+			"adjudicada"		=> "Adjudicada"				// Adjudicada al nominado
 		);
 
 		return $etiquetas[$estado];
@@ -54,6 +55,7 @@
 		$iconos = array(
 			"pendiente" 		=> "<i class='fa fa-clock-o'></i>",
 			"pendiente_ss" 		=> "<i class='fa fa-clock-o'></i>",
+			"pendiente_svp" 	=> "<i class='fa fa-clock-o'></i>",
 			"sustento"			=> "<i class='fa fa-file-o'></i>",
 			"sustento_vp"		=> "<i class='fa fa-file-o'></i>",
 			"validada"			=> "<i class='fa fa-check-circle'></i>",
@@ -70,6 +72,7 @@
 		$iconos = array(
 			"pendiente" 		=> "bg-dark",
 			"pendiente_ss" 		=> "bg-dark",
+			"pendiente_svp" 	=> "bg-dark",
 			"sustento"			=> "bg-warning",
 			"sustento_vp"		=> "bg-warning",
 			"aprobada"			=> "bg-success",
@@ -159,6 +162,11 @@
 
 		return $recibidas;
 	}
+
+	function mostrarNominador( $nominacion ){
+		// Muestra la etiqueta del nominador en listado de nominaciones recibidas
+		echo "Nominado por: ".$nominacion["nombre1"]." ". $nominacion["apellido1"];
+	}
 	/* --------------------------------------------------------- */
 	function enviaSustento( $idu, $nominacion ){
 		// Determina si el usuario actual puede enviar sustentos
@@ -193,10 +201,11 @@
 	}
 	/* --------------------------------------------------------- */
 	function solicitableSustentoVP( $nominacion ){
-		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
+		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación para un VP
 		$solicitar_sustento = false;
 
-		if( $nominacion["sustento2"] == "" && $nominacion["motivo2"] == "" )
+		if( $nominacion["sustento_vp"] == "" && $nominacion["motivo_vp"] == "" 
+			&& $nominacion["estado"] != "sustento_vp" )
 			$solicitar_sustento = true;
 
 		return $solicitar_sustento;
@@ -213,8 +222,11 @@
 		$mismo_dpto = false;
 
 		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
+		
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
-		if ( $id_dpto_usuario == $nominacion["iddpto_nominador"] && $id_dpto_usuario == $nominacion["iddpto_nominado"] ) 
+		if ( $id_dpto_usuario == $nominacion["iddpto_nominador"] 
+			&& $id_dpto_usuario == $nominacion["iddpto_nominado"] 
+			&& $idu != $nominacion["idNOMINADO"] ) 
 			$mismo_dpto = true;
 		
 		if( $mismo_dpto && $es_vp ) 
@@ -231,12 +243,18 @@
 		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
 		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
+		$estados_validos = array( "pendiente", "sustento_vp", "pendiente_svp" );
 		
-		if( $es_vp && $mismo_dpto && 
-			( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "pendiente_ss" ) ) 
+		if( $es_vp && $mismo_dpto && in_array( $nominacion["estado"], $estados_validos ) ) 
 			$validable = true;
 
 		return $validable;
+	}
+	/* --------------------------------------------------------- */
+	function esVPNominado( $dbh, $idu, $nominacion ){
+		// Evalúa si el nominado de una nominación es VP
+
+		return esRol( $dbh, 4, $nominacion["idNOMINADO"] );
 	}
 	/* --------------------------------------------------------- */
 ?>

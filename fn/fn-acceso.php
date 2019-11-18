@@ -49,9 +49,10 @@
 		if( !isV( $pagina ) ) header('Location: inicio.php');
 	}
 	/* --------------------------------------------------------- */
-	function mostrarResultadosNominacion( $es_aprob_vp, $votada ){
+	function mostrarResultadosNominacion( $es_vp, $votada ){
 		$mostrar = false;
-		if( isV( "result_nom" ) && ( !$es_aprob_vp ) || ( isV( "en_votar" ) && $votada ) )
+
+		if( isV( "result_nom" ) && ( !$es_vp ) || ( isV( "en_votar" ) && $votada ) )
 			$mostrar = true;
 
 		return $mostrar;

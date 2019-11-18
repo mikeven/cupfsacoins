@@ -177,7 +177,28 @@
 									</div>
 								</div>
 								<?php } ?>
-								<!-- ------------------------------ SUSTENTO -->
+								<!-- --------------------------- SUSTENTO VP -->
+								<?php if( $nominacion["motivo_vp"] != "" ) { ?>
+								<div class="form-group">
+									<label class="col-sm-4 text-right">Motivo para VP: 
+									</label>
+									<div class="col-sm-8 text-left">
+										<?php echo $nominacion["motivo_vp"]; ?>
+									</div>
+								</div>
+								<?php } ?>
+								
+								<?php if( $nominacion["sustento_vp"] != "" ) { ?>
+								<div class="form-group">
+									<div class="col-sm-4"></div>
+									<div class="col-sm-8 text-left">
+										<a href="<?php echo $nominacion["sustento_vp"]; ?>" 
+											target="_blank">
+										<i class="fa fa-file-text-o"></i> Sustento VP </a>
+									</div>
+								</div>
+								<?php } ?>
+								<!-- ------------------ NOMINADO Y NOMINADOR -->
 								<div class="form-group">
 									<label class="col-sm-4 text-right">Nominado por: </label>
 									<div class="col-sm-8 text-left">
@@ -271,7 +292,7 @@
 						</section>
 					</div>
 					
-					<?php if( mostrarResultadosNominacion( $es_aprob_vp, $votada ) ) { ?>
+					<?php if( mostrarResultadosNominacion( $es_usrvp, $votada ) ) { ?>
 						<div class="col-sm-6 col-xs-12">
 							<section class="panel">
 								<header class="panel-heading">

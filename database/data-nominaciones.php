@@ -10,9 +10,9 @@
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
 		u2.apellido as apellido2, n.valor_atributo as valor, a.nombre as atributo, 
-		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, n.votable, 
-		n.comentario, n.comentario_vp, d1.idDepartamento as iddpto_nominador, 
-		d2.idDepartamento as iddpto_nominado, 
+		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
+		n.motivo_vp, n.sustento_vp, n.votable, n.comentario, n.comentario_vp, 
+		d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro, 
 		date_format(n.fecha_cierre,'%d/%m/%Y') as fcierre,
 		date_format(n.fecha_adjudicacion,'%d/%m/%Y') as fadjudicada 
@@ -20,6 +20,15 @@
 		where n.idNOMINADOR = u1.idUSUARIO and n.idNOMINADO = u2.idUSUARIO 
 		and n.idATRIBUTO = a.idATRIBUTO and u1.idDepartamento = d1.idDepartamento and 
 		u2.idDepartamento = d2.idDepartamento and n.idNOMINACION = $idn";
+		
+		$data = mysqli_query( $dbh, $q );
+		$data ? $registro = mysqli_fetch_array( $data ) : $registro = NULL;
+		return $registro;
+	}
+	/* --------------------------------------------------------- */
+	function obtenerEstadoNominacionPorId( $dbh, $idn ){
+		//Devuelve el estado de una nominacion dado su id
+		$q = "select estado from nominacion where idNOMINACION = $idn";
 		
 		$data = mysqli_query( $dbh, $q );
 		$data ? $registro = mysqli_fetch_array( $data ) : $registro = NULL;
@@ -44,10 +53,12 @@
 		//Devuelve los registros de nominaciones hechas o recibidas por un usuario.
 
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
+		u1.nombre as nombre1, u1.apellido as apellido1, 
 		n.estado, u2.nombre as nombre2, u2.apellido as apellido2, 
 		a.nombre as atributo, a.imagen, a.valor, n.votable, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
-		from nominacion n, usuario u2, atributo a where n.idNOMINADO = u2.idUSUARIO 
+		from nominacion n, usuario u1, usuario u2, atributo a where 
+		n.idNOMINADOR = u1.idUSUARIO and n.idNOMINADO = u2.idUSUARIO 
 		and n.idATRIBUTO = a.idATRIBUTO and $p = $idu $p2 order by n.fecha_nominacion desc";
 
 
@@ -124,10 +135,21 @@
 		return mysqli_insert_id( $dbh );
 	}
 	/* --------------------------------------------------------- */
+	function agregarSustentoVP( $dbh, $nominacion, $e_n ){
+		// Actualiza una nominación con los datos del sustento adicional
+		$q = "update nominacion set motivo_vp = '$nominacion[motivo2]', 
+		sustento_vp = '$nominacion[sustento2]', estado = '$e_n' 
+		where idNOMINACION = $nominacion[idnominacion]";
+		
+		$data = mysqli_query( $dbh, $q );
+
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
 	function agregarSustento( $dbh, $nominacion, $e_n ){
-		// Actualiza una nominación con los datos del segundo sustento
+		// Actualiza una nominación con los datos del sustento adicional
 		$q = "update nominacion set motivo2 = '$nominacion[motivo2]', 
-		sustento2 = '$nominacion[sustento2]', estado = 'pendiente_ss' 
+		sustento2 = '$nominacion[sustento2]', estado = '$e_n' 
 		where idNOMINACION = $nominacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -207,6 +229,7 @@
 		$votacion["si"] 	= obtenerVotosNominacion( $dbh, $idn, 'si' );
 		$votacion["no"] 	= obtenerVotosNominacion( $dbh, $idn, 'no' );
 		$votacion["quorum"]	= quorumVotacion( $dbh, $votacion["votos"] );
+		$votacion["estado"]	= obtenerEstadoNominacionPorId( $dbh, $idn )["estado"];
 
 		return $votacion;
 	}
@@ -244,14 +267,12 @@
 		return $mismo_departamento;
 	}
 	/* --------------------------------------------------------- */
-	function chequeoAprobacionVP( $dbh, $nominacion ){
+	function chequeoAprobacionVP( $dbh, $nominacion, $nominador_es_vp ){
 		// Evalúa si una nominación registrada es aprobable de inmediato por usuario VP
-		include( "data-usuarios.php" );
 
 		$departamental = nominacionMismoDepartamento( $dbh, $nominacion );
-		$es_vp = esRol( $dbh, 4, $nominacion["idnominador"] );	//Rol 4: Vicepresidente ( VP )
 
-		if( $es_vp && $departamental ){
+		if( $nominador_es_vp && $departamental ){
 			// Si el nominador es VP y nominado y nominador son del mismo departamento
 			aprobacionPorVP( $dbh, $nominacion );
 		}
@@ -313,12 +334,32 @@
 		enviarMensajeEmail( "cambio_estatus", $data_mail );
 	}
 	/* --------------------------------------------------------- */
+	function llevaFechaCierre( $evaluacion ){
+		// Determina si una nominación incluirá fecha de cierre al registrar evaluación 
+		$fecha_cierre = false;
+		if( $evaluacion["estado"] == "aprobada" || $evaluacion["estado"] == "rechazada" )
+			$fecha_cierre = true;
+
+		return $fecha_cierre;
+	}
+	/* --------------------------------------------------------- */
+	function postNominacion( $dbh, $nominacion, $vp_nominado ){
+		// Acciones posteriores al registro de una nueva nominación
+		// Acciones: chequeo de aprobación inmediata por VP; activar votación de nominación
+
+		$nr_es_vp = esRol( $dbh, 4, $nominacion["idnominador"] );	//Rol 4: Vicepresidente ( VP )
+		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
+		if( $vp_nominado )
+			bloquearNominacion( $dbh, true, $nominacion["idnominacion"] );
+	}
+	/* --------------------------------------------------------- */
 	// Solicitudes asíncronas
 	/* --------------------------------------------------------- */
 	if( isset( $_POST["nva_nominacion"] ) ){
 		//Solicitud para registrar una nueva nominación
 
 		include( "bd.php" );
+		include( "data-usuarios.php" );
 
 		$nominacion["idnominador"] 	= $_POST["nva_nominacion"];
 		$nominacion["idnominado"] 	= $_POST["id_persona"];
@@ -327,6 +368,7 @@
 		$nominacion["motivo"] 		= $_POST["motivo"];
 		$nominacion["sustento"]		= "";
 		$nominacion["estado"] 		= "pendiente";
+		$vp_nominado 				= false;
 
 		if( isset( $_FILES["archivo"] ) ){
 			$archivo = cargarArchivo( $_FILES["archivo"], RUTA_SUSTENTOS );
@@ -335,12 +377,19 @@
 		}
 
 		$nominacion = escaparCampos( $dbh, $nominacion );
+		
+		if( esRol( $dbh, 4, $nominacion["idnominado"] ) ){
+			// El nominado es un usuario VP: nominación se registra como 'validada'
+			$vp_nominado = true;
+			$nominacion["estado"] = "validada";
+		}
+
 		$id = agregarNominacion( $dbh, $nominacion );
 		$nominacion["id"] = $id;
 		
 		if( ( $id != 0 ) && ( $id != "" ) ){
 			$res["exito"] = 1;
-			chequeoAprobacionVP( $dbh, $nominacion );
+			postNominacion( $dbh, $nominacion, $vp_nominado );
 			$res["mje"] = "Registro de nominación exitoso";
 			$res["reg"] = $nominacion;
 			limpiarArchivos( $dbh );
@@ -390,8 +439,7 @@
 		include( "../fn/fn-mailing.php" );
 
 		parse_str( $_POST["evaluar"], $evaluacion );
-		if( $evaluacion["estado"] == "sustento" ) $cierre = false;
-		else $cierre = true;
+		$cierre = llevaFechaCierre( $evaluacion );
 
 		$evaluacion = escaparCampos( $dbh, $evaluacion );
 
@@ -409,15 +457,6 @@
 			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
 		}
 
-		/*if( $evaluacion["estado"] == "aprobada_directo_vp" ){
-			// La nominación es aprobada directamente por VP
-			$evaluacion["estado"] = "aprobada";
-			$rsp = registrarEvaluacionVP( $dbh, $evaluacion, $cierre );
-			//$rsp = adjudicarNominacion( $dbh, $evaluacion["idnominacion"] );
-		}
-		else
-			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );*/
-
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
 			mensajeMail( $dbh, $evaluacion );
@@ -430,7 +469,7 @@
 	}
 	/* --------------------------------------------------------- */
 	if( isset( $_POST["seg_sustento"] ) ){
-		//Solicitud para registrar segundo sustento sobre nominación
+		//Solicitud para registrar sustento adicional sobre nominación
 
 		include( "bd.php" );
 
@@ -446,10 +485,11 @@
 		}
 
 		$nominacion = escaparCampos( $dbh, $nominacion );
-		if( $nominacion["edo_nom"] == "sustento_vp" )
-			$rsp = agregarSustentoVP( $dbh, $nominacion );
+		if( $nominacion["edo_nom"] == "sustento_vp" ){
+			$rsp = agregarSustentoVP( $dbh, $nominacion, "pendiente_svp" );
+		}
 		else
-			$rsp = agregarSustento( $dbh, $nominacion );
+			$rsp = agregarSustento( $dbh, $nominacion, "pendiente_ss" );
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;

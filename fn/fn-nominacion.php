@@ -9,6 +9,7 @@
     $idn = NULL;
     $nominacion = NULL;
     $idu = $_SESSION["user"]["idUSUARIO"];
+    $es_usrvp = esRol( $dbh, 4, $idu );
     /* ----------------------------------------------------------- */
     if( isset( $_GET["id"] ) )
     	$idn = $_GET["id"];
@@ -30,6 +31,7 @@
 
 		$es_aprob_vp = esAprobadaPorVP( $dbh, $idu, $nominacion );
 		$es_valid_vp = esValidadaPorVP( $dbh, $idu, $nominacion );
+		$es_vp_nominado = esVPNominado( $dbh, $idu, $nominacion );
 	}
 	/* ----------------------------------------------------------- */
 ?>
