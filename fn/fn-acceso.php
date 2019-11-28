@@ -50,11 +50,17 @@
 	}
 	/* --------------------------------------------------------- */
 	function mostrarResultadosNominacion( $es_vp, $votada ){
+		//Determina si es visible los resultados de votación de una nominación
 		$mostrar = false;
 
-		if( isV( "result_nom" ) && ( !$es_vp ) || ( isV( "en_votar" ) && $votada ) )
-			$mostrar = true;
-
+		if( isV( "result_nom" ) && !$es_vp ){		// Si puede ver resultados, no es VP
+			if( isV( "en_votar" ) ){				// Si puede votar
+				if( $votada )						// Si ya votó por la nominación
+					$mostrar = true;
+			}else
+				$mostrar = true;
+		}
+			
 		return $mostrar;
 	}
 	/* --------------------------------------------------------- */

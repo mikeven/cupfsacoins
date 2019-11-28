@@ -180,7 +180,7 @@
 								<!-- --------------------------- SUSTENTO VP -->
 								<?php if( $nominacion["motivo_vp"] != "" ) { ?>
 								<div class="form-group">
-									<label class="col-sm-4 text-right">Motivo para VP: 
+									<label class="col-sm-4 text-right">Sustentación: 
 									</label>
 									<div class="col-sm-8 text-left">
 										<?php echo $nominacion["motivo_vp"]; ?>
@@ -194,7 +194,7 @@
 									<div class="col-sm-8 text-left">
 										<a href="<?php echo $nominacion["sustento_vp"]; ?>" 
 											target="_blank">
-										<i class="fa fa-file-text-o"></i> Sustento VP </a>
+										<i class="fa fa-file-text-o"></i> Sustento </a>
 									</div>
 								</div>
 								<?php } ?>

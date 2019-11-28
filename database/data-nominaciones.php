@@ -39,11 +39,16 @@
 		//Devuelve los registros de todas las nominaciones
 
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
-		n.estado, u2.nombre as nombre2, u2.apellido as apellido2, 
-		a.nombre as atributo, a.valor, a.imagen, n.votable, n.sustento1, n.sustento2, 
-		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
-		from nominacion n, usuario u2, atributo a where n.idNOMINADO = u2.idUSUARIO 
-		and n.idATRIBUTO = a.idATRIBUTO order by n.fecha_nominacion desc";
+		n.estado, u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
+		u2.apellido as apellido2, a.nombre as atributo, a.valor, a.imagen, n.votable, 
+		n.sustento1, n.sustento2, d1.idDepartamento as iddpto_nominador, 
+		d2.idDepartamento as iddpto_nominado, date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
+		from nominacion n, usuario u1, usuario u2, atributo a, departamento d1, departamento d2 
+		where n.idNOMINADO = u2.idUSUARIO and n.idNOMINADOR = u1.idUSUARIO 
+		and n.idATRIBUTO = a.idATRIBUTO and u1.idDepartamento = d1.idDepartamento and 
+		u2.idDepartamento = d2.idDepartamento order by n.fecha_nominacion desc";
+
+		//echo $q;
 
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
@@ -197,7 +202,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function esVotada( $dbh, $idu, $idn ){
-		//Devuelve si una nominación fue votada por un usuario
+		//Devuelve si una nominación fue votada por un usuario (usuario en sesión)
 		$votada = false;
 
 		$q = "select idUSUARIO, idNOMINACION from voto where idUSUARIO = $idu and idNOMINACION = $idn";
@@ -350,7 +355,7 @@
 		$nr_es_vp = esRol( $dbh, 4, $nominacion["idnominador"] );	//Rol 4: Vicepresidente ( VP )
 		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
 		if( $vp_nominado )
-			bloquearNominacion( $dbh, true, $nominacion["idnominacion"] );
+			bloquearNominacion( $dbh, true, $nominacion["id"] );
 	}
 	/* --------------------------------------------------------- */
 	// Solicitudes asíncronas

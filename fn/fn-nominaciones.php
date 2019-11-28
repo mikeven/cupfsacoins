@@ -105,8 +105,9 @@
 	function obtenerNombreTitulo( $p ){
 		// Devuelve el texto complementario para mostrar en la página de nominaciones
 		$titulo = "";
-		if( $p == "hechas" || $p == "recibidas" )
+		if( $p == "recibidas" )
 			$titulo = $p;
+		if( $p == "hechas" ) $titulo = "realizadas";
 
 		return $titulo;
 	}
@@ -190,7 +191,7 @@
 	function solicitableSustento( $dbh, $idu, $nominacion ){
 		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
 		$solicitar_sustento = false;
-
+		
 		$es_admin = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
 		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin ){
 			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
@@ -198,6 +199,17 @@
 		}
 
 		return $solicitar_sustento;
+	}
+	/* --------------------------------------------------------- */
+	function esVisibleEnLista( $dbh, $idu, $nominacion ){
+		// Evalúa si una nominación es visible en el listado de nominaciones
+		$visible = true;
+
+		if( esRol( $dbh, 4, $idu ) ){						//Rol 4: Vicepresidente ( VP ))
+			$visible = esVisiblePorVP( $dbh, $idu, $nominacion );
+		}
+
+		return $visible;
 	}
 	/* --------------------------------------------------------- */
 	function solicitableSustentoVP( $nominacion ){
@@ -239,16 +251,31 @@
 		// Evalúa si una nominación es validada inicialmente por el VP del departamento del nominado.
 		// Caso: nominador y nominado son de departamentos diferentes.
 		$validable = false;
+		$estados_validos = array( "pendiente", "sustento_vp", "pendiente_svp" );
 
 		$es_vp = esRol( $dbh, 4, $idu );	//Rol 4: Vicepresidente ( VP )
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
 		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
-		$estados_validos = array( "pendiente", "sustento_vp", "pendiente_svp" );
+		$esnominado = ( $idu == $nominacion["idNOMINADO"] );
 		
-		if( $es_vp && $mismo_dpto && in_array( $nominacion["estado"], $estados_validos ) ) 
+		if( $es_vp && $mismo_dpto && in_array( $nominacion["estado"], $estados_validos ) && !$esnominado ) 
 			$validable = true;
 
 		return $validable;
+	}
+	/* --------------------------------------------------------- */
+	function esVisiblePorVP( $dbh, $idu, $nominacion ){
+		// Evalúa si una nominación es visible en el listado de nominaciones para un VP
+		$visible = false;
+
+		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
+		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
+		$esnominado = ( $idu == $nominacion["idNOMINADO"] );
+		
+		if( $mismo_dpto && !$esnominado && $nominacion["estado"] == "adjudicada" ) 
+			$visible = true;
+
+		return $visible;
 	}
 	/* --------------------------------------------------------- */
 	function esVPNominado( $dbh, $idu, $nominacion ){

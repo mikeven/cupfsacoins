@@ -118,6 +118,8 @@
 							$enl = enlaceVerNominacion( $dbh, $idu, $nom );
 							$cl = claseEstadoNominacion( $nom["estado"] );
 							$p_sw = posicionSuiche( $nom["votable"] );
+
+							if( esVisibleEnLista( $dbh, $idu, $nom ) ){
 						?>
 							<div class="col-sm-6 col-xs-12">
 								<section class="panel panel-horizontal">
@@ -172,7 +174,7 @@
 									</div>
 								</section>
 							</div>
-						<?php } ?>
+						<?php } } ?>
 					</div>
 					<div id="nom_tabla" style="display: none;">
 						<h5>
@@ -200,12 +202,13 @@
 							<tbody>
 								<?php foreach ( $nominaciones as $nom ) { 
 									$p_sw = posicionSuiche( $nom["votable"] );
+									if( esVisibleEnLista( $dbh, $idu, $nom ) ){
 								?>
 								<tr class="gradeX">
 									<td><?php echo $nom["fregistro"]; ?></td>
 									<td>
 										<a href="<?php echo enlNominacion( $nom, $mis_noms ) ?>">
-								<?php echo $nom["nombre2"]." ".$nom["apellido2"]; ?>
+											<?php echo $nom["nombre2"]." ".$nom["apellido2"]; ?>
 										</a>
 									</td>
 									<td><?php echo $nom["atributo"]?></td>
@@ -244,7 +247,8 @@
 									</td>
 									<?php } ?>
 								</tr>
-								<?php } ?>
+								
+								<?php } } ?>
 								
 							</tbody>
 						</table>

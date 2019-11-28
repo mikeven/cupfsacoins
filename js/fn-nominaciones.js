@@ -321,16 +321,17 @@ function actualizarElementosVotacion( votos ){
 	$("#rvotot").html( votos.votos );
 	console.log(votos);
 	if( votos.quorum == true ){
+		$("#btn_sustento").hide();
 		if( votos.si > votos.no ){
 			$("#btn_aprobar").show();
-			if( votos.estado == "rechazada" )
+			/*if( votos.estado == "rechazada" )
 				$("#btn_rechazar").hide();
 			else 
-				$("#btn_rechazar").show();
+				$("#btn_rechazar").show();*/
 		}
 		else{
 			$("#btn_rechazar").show();
-			$("#btn_aprobar").hide();
+			//$("#btn_aprobar").hide();
 		}
 	}
 }

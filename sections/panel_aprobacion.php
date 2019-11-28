@@ -10,6 +10,12 @@
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-times"></i> Rechazar</button>
 
+		<?php if( solicitableSustento( $dbh, $idu, $nominacion )  ) { ?>
+			<button id="btn_sustento" type="button" data-a="sustento"
+				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+			<i class="fa fa-file-o"></i> Solicitar sustento</button>
+		<?php } ?>
+
 		<?php if( $mismo_dpto ) { 
 			// Nominación entre usuarios del mismo departamento. Aprueba solo el VP ?>
 			<?php if( $es_aprob_vp ) {  // Aprobación completa y directa por el VP del depto ?>
@@ -36,15 +42,7 @@
 		// Nominación entre usuarios de departamentos diferentes. 
 		// Valida primero el VP del depto del nominado y luego pasa a votación ?>
 
-			<?php if( $nominacion["estado"] == "validada" ) { ?>
-
-				<?php if( solicitableSustento( $dbh, $idu, $nominacion )  ) { ?>
-				<button id="btn_sustento" type="button" data-a="sustento"
-				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
-					<i class="fa fa-file-o"></i> Solicitar sustento</button>
-				<?php } ?>
-
-			<?php } else { ?>
+			<?php if( $nominacion["estado"] != "validada" ) { ?>
 
 				<?php if( $es_valid_vp ) {  
 					// Es evaluable por el VP del depto del nominado ?>
