@@ -97,7 +97,7 @@
 					</header>
 					<!-- start: page -->
 					<?php 
-						if( nominacionVisible( $idu, $nominacion ) ) {
+						if( nominacionVisible( $dbh, $idu, $nominacion ) ) {
 							$cl = claseEstadoNominacion( $nominacion["estado"] ); 
 					?>
 
@@ -136,8 +136,7 @@
 								</p>
 								<?php if ( !isset( $_GET["recibida"] ) ) { ?>
 									<h4 class="text-semibold mt-sm text-center">
-									<?php echo $nominacion["nombre2"]." ".
-													$nominacion["apellido2"]; ?>
+									<?php echo $nominacion["nombre2"]." ".$nominacion["apellido2"]; ?>
 									</h4>
 								<?php } ?>
 								<hr class="solid short">

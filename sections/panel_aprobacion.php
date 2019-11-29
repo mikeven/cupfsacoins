@@ -10,7 +10,7 @@
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-times"></i> Rechazar</button>
 
-		<?php if( solicitableSustento( $dbh, $idu, $nominacion )  ) { ?>
+		<?php if( solicitableSustento( $dbh, $idu, $nominacion, $mismo_dpto )  ) { ?>
 			<button id="btn_sustento" type="button" data-a="sustento"
 				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
 			<i class="fa fa-file-o"></i> Solicitar sustento</button>

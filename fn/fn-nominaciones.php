@@ -84,20 +84,27 @@
 		return $iconos[$estado];
 	}
 	/* --------------------------------------------------------- */
-	function nominacionVisible( $idu, $nominacion ){
+	function nominacionVisible( $dbh, $idu, $nominacion ){
 		// Devuelve verdadero si el contenido de una nominación es visible según perfil y estado
 		$visible = false;
+		$es_vp 	= esRol( $dbh, 4, $idu );
+		$es_adm = esRol( $dbh, 1, $idu );
 
 		if( $nominacion == NULL ) return false;
 
 		// Si es perfil colaborador siendo nominador o nominado con nominación aprobada
 		if( isV( 'pan_nom_apoyo' ) && (( $nominacion["idNOMINADOR"] == $idu ) || 
-										(	$nominacion["idNOMINADO"] == $idu && 
-											($nominacion["estado"] == "aprobada" || $nominacion["estado"] == "adjudicada") ) ) )
+										( $nominacion["idNOMINADO"] == $idu && 
+										( $nominacion["estado"] == "aprobada" || $nominacion["estado"] == "adjudicada") ) ) )
 			$visible = true;
 
 		// Perfiles administrador o evaluador
-		if( isV( 'en_aprob_nom' ) || isV( 'en_votar' ) ) $visible = true;
+		if( $es_adm || isV( 'en_votar' ) ) 
+			$visible = true;
+
+		// Perfil VP
+		if( esVisiblePorVP( $dbh, $idu, $nominacion ) )
+			$visible = true;
 
 		return $visible;
 	}
@@ -188,12 +195,12 @@
 		return $lnk;
 	}
 	/* --------------------------------------------------------- */
-	function solicitableSustento( $dbh, $idu, $nominacion ){
+	function solicitableSustento( $dbh, $idu, $nominacion, $mismo_dpto ){
 		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
 		$solicitar_sustento = false;
 		
 		$es_admin = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
-		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin ){
+		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin && !$mismo_dpto ){
 			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
 				$solicitar_sustento = true;
 		}
@@ -265,14 +272,14 @@
 	}
 	/* --------------------------------------------------------- */
 	function esVisiblePorVP( $dbh, $idu, $nominacion ){
-		// Evalúa si una nominación es visible en el listado de nominaciones para un VP
+		// Evalúa si una nominación es visible para un VP en el listado de nominaciones
 		$visible = false;
 
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
 		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
 		$esnominado = ( $idu == $nominacion["idNOMINADO"] );
 		
-		if( $mismo_dpto && !$esnominado && $nominacion["estado"] == "adjudicada" ) 
+		if( ( $mismo_dpto && !$esnominado ) || ( $esnominado && $nominacion["estado"] == "adjudicada")  ) 
 			$visible = true;
 
 		return $visible;

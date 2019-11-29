@@ -67,7 +67,7 @@
 			    bottom: 5px; 
 			}
 
-			#nom_paneles{ max-height: 450px; overflow-y: scroll; }
+			#nom_paneles{ max-height: 68vh; overflow-y: scroll; }
 
 		</style>
 

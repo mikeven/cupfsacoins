@@ -48,8 +48,6 @@
 		and n.idATRIBUTO = a.idATRIBUTO and u1.idDepartamento = d1.idDepartamento and 
 		u2.idDepartamento = d2.idDepartamento order by n.fecha_nominacion desc";
 
-		//echo $q;
-
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
 	}
@@ -58,14 +56,14 @@
 		//Devuelve los registros de nominaciones hechas o recibidas por un usuario.
 
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
-		u1.nombre as nombre1, u1.apellido as apellido1, 
-		n.estado, u2.nombre as nombre2, u2.apellido as apellido2, 
+		u1.nombre as nombre1, u1.apellido as apellido1, d1.idDepartamento as iddpto_nominador, 
+		d2.idDepartamento as iddpto_nominado, n.estado, u2.nombre as nombre2, u2.apellido as apellido2, 
 		a.nombre as atributo, a.imagen, a.valor, n.votable, 
-		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro 
-		from nominacion n, usuario u1, usuario u2, atributo a where 
-		n.idNOMINADOR = u1.idUSUARIO and n.idNOMINADO = u2.idUSUARIO 
-		and n.idATRIBUTO = a.idATRIBUTO and $p = $idu $p2 order by n.fecha_nominacion desc";
-
+		date_format( n.fecha_nominacion,'%d/%m/%Y' ) as fregistro 
+		from nominacion n, usuario u1, usuario u2, departamento d1, departamento d2, atributo a 
+		where n.idNOMINADOR = u1.idUSUARIO and n.idNOMINADO = u2.idUSUARIO 
+		and n.idATRIBUTO = a.idATRIBUTO and u1.idDepartamento = d1.idDepartamento and 
+		u2.idDepartamento = d2.idDepartamento and $p = $idu $p2 order by n.fecha_nominacion desc";
 
 		$data = mysqli_query( $dbh, $q );
 		return obtenerListaRegistros( $data );
