@@ -91,7 +91,7 @@
 
 				<section role="main" class="content-body">
 					<header class="page-header">
-						<h2><i class="fa fa fa-bookmark" aria-hidden="true"></i>Nueva nominación</h2>
+						<h2><i class="fa fa fa-bookmark" aria-hidden="true"></i> Nueva nominación</h2>
 						<div class="right-wrapper pull-right">
 							<ol class="breadcrumbs">
 								<li>

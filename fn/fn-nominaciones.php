@@ -196,12 +196,12 @@
 	}
 	/* --------------------------------------------------------- */
 	function solicitableSustento( $dbh, $idu, $nominacion, $mismo_dpto ){
-		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación
+		// Evalúa si puede mostrarse la opción para solicitar sustento a una nominación por parte de un admin
 		$solicitar_sustento = false;
 		
 		$es_admin = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
 		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin && !$mismo_dpto ){
-			if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "validada" )
+			if( $nominacion["estado"] == "validada" )
 				$solicitar_sustento = true;
 		}
 
@@ -228,6 +228,11 @@
 			$solicitar_sustento = true;
 
 		return $solicitar_sustento;
+	}
+	/* --------------------------------------------------------- */
+	function soyNominado( $idu, $nominacion ){
+		// Evalúa si el usuario actual es el nominado de la nominación
+		return ( $nominacion["idNOMINADO"] == $idu );
 	}
 	/* --------------------------------------------------------- */
 	function esNominacionMismoDepartamento( $nominacion ){

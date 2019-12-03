@@ -11,7 +11,7 @@
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
 		u2.apellido as apellido2, n.valor_atributo as valor, a.nombre as atributo, 
 		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
-		n.motivo_vp, n.sustento_vp, n.votable, n.comentario, n.comentario_vp, 
+		n.motivo_vp, n.sustento_vp, n.votable, n.obs_comite, n.obs_vp, n.obs_sustento, n.obs_sustento_vp, 
 		d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro, 
 		date_format(n.fecha_cierre,'%d/%m/%Y') as fcierre,
@@ -172,12 +172,15 @@
 	}
 	/* --------------------------------------------------------- */
 	function registrarEvaluacion( $dbh, $evaluacion, $cierre ){
-		//Actualiza una nominación con los datos de su evaluación
+		//Actualiza una nominación con los datos de su evaluación por un usuario admin
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
+		if( $evaluacion["estado"] == "sustento" ) $campo_obs = "obs_sustento";
+	    else
+	    	$campo_obs = "obs_comite";
 		
 		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 
-		estado = '$evaluacion[estado]', comentario = '$evaluacion[comentario]'$fc 
+		estado = '$evaluacion[estado]', $campo_obs = '$evaluacion[comentario]'$fc 
 		where idNOMINACION = $evaluacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -189,9 +192,11 @@
 		//Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
-		
+		if( $evaluacion["estado"] == "validada" ) $campo_obs = "obs_vp";
+		if( $evaluacion["estado"] == "sustento_vp" ) $campo_obs = "obs_sustento_vp";
+
 		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 
-		estado = '$evaluacion[estado]', comentario_vp = '$evaluacion[comentario]'$fc 
+		estado = '$evaluacion[estado]', $campo_obs = '$evaluacion[comentario]'$fc 
 		where idNOMINACION = $evaluacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -437,7 +442,7 @@
 	}
 	/* --------------------------------------------------------- */
 	if( isset( $_POST["evaluar"] ) ){
-		//Solicitud para registrar un voto sobre nominación
+		//Solicitud para registrar una evaluación de admin o VP: solicitud de sustento o comentario para aprobar/rechazar
 		include( "bd.php" );
 		include( "../fn/fn-mailing.php" );
 

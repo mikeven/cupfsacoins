@@ -139,7 +139,11 @@
 									<?php echo $nominacion["nombre2"]." ".$nominacion["apellido2"]; ?>
 									</h4>
 								<?php } ?>
+								
+								<!-- -------------------------------------------------------------------- -->
+								
 								<hr class="solid short">
+								
 								<!-- ------------------------------ SUSTENTO -->
 								<div class="form-group">
 									<label class="col-sm-4 text-right">Motivo: </label>
@@ -156,48 +160,17 @@
 									</div>
 									<?php } ?>
 								</div>
-								<!-- ------------------------------ SUSTENTO -->
-								<?php if( $nominacion["motivo2"] != "" ) { ?>
-								<div class="form-group">
-									<label class="col-sm-4 text-right">Motivo 2: 
-									</label>
-									<div class="col-sm-8 text-left">
-										<?php echo $nominacion["motivo2"]; ?>
-									</div>
-								</div>
-								<?php } ?>
+
+								<?php 
+									if( soyNominado( $idu, $nominacion ) == false )
+										include( "sections/panel_discusion_nominacion.php" ); 
+								?>
+
+								<!-- -------------------------------------------------------------------- -->
 								
-								<?php if( $nominacion["sustento2"] != "" ) { ?>
-								<div class="form-group">
-									<div class="col-sm-4"></div>
-									<div class="col-sm-8 text-left">
-										<a href="<?php echo $nominacion["sustento2"]; ?>" target="_blank">
-										<i class="fa fa-file-text-o"></i> Sustento 2 </a>
-									</div>
-								</div>
-								<?php } ?>
-								<!-- --------------------------- SUSTENTO VP -->
-								<?php if( $nominacion["motivo_vp"] != "" ) { ?>
-								<div class="form-group">
-									<label class="col-sm-4 text-right">Sustentación: 
-									</label>
-									<div class="col-sm-8 text-left">
-										<?php echo $nominacion["motivo_vp"]; ?>
-									</div>
-								</div>
-								<?php } ?>
+								<hr class="solid short">
 								
-								<?php if( $nominacion["sustento_vp"] != "" ) { ?>
-								<div class="form-group">
-									<div class="col-sm-4"></div>
-									<div class="col-sm-8 text-left">
-										<a href="<?php echo $nominacion["sustento_vp"]; ?>" 
-											target="_blank">
-										<i class="fa fa-file-text-o"></i> Sustento </a>
-									</div>
-								</div>
-								<?php } ?>
-								<!-- ------------------ NOMINADO Y NOMINADOR -->
+								<!-- ------------------------------ NOMINADOR -->
 								<div class="form-group">
 									<label class="col-sm-4 text-right">Nominado por: </label>
 									<div class="col-sm-8 text-left">
@@ -217,26 +190,6 @@
 									?>
 									</div>
 								</div>
-
-								<?php if( $nominacion["comentario"] != "" ) { ?>
-								<div class="form-group">
-									<label class="col-sm-4 text-right">Obs del admin: 
-									</label>
-									<div class="col-sm-8 text-left">
-										<?php echo $nominacion["comentario"]; ?>
-									</div>
-								</div>
-								<?php } ?>
-
-								<?php if( $nominacion["comentario_vp"] != "" ) { ?>
-								<div class="form-group">
-									<label class="col-sm-4 text-right">Obs del VP: 
-									</label>
-									<div class="col-sm-8 text-left">
-										<?php echo $nominacion["comentario_vp"]; ?>
-									</div>
-								</div>
-								<?php } ?>
 
 								<!-- --------------------- PANELES ACCIONES -->
 								

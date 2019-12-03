@@ -1,4 +1,4 @@
-<hr class="solid short">
+
 <div class="form-group">
 	<label class="col-sm-4 text-right">Fecha nominación: 
 	</label>

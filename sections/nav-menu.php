@@ -32,8 +32,8 @@
 				<li> <a href="nuevo_nominacion.php"> Nueva nominación </a> </li>
 				<?php } ?>
 				<?php if( isV( 'mp_nom_pers' ) ) { ?>
-				<li> <a href="nominaciones.php?param=hechas">Nominaciones realizadas</a> </li>
-				<li> <a href="nominaciones.php?param=recibidas">Nominaciones recibidas</a> </li>
+				<li> <a href="nominaciones.php?param=hechas">Realizadas</a> </li>
+				<li> <a href="nominaciones.php?param=recibidas">Recibidas</a> </li>
 				<?php } ?>
 				<?php if( isV( 'mp_ver_atrib' ) ) { ?>
 					<li> <a href="atributos.php"> Atributos </a> </li>
