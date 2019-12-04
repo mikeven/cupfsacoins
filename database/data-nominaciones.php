@@ -192,7 +192,7 @@
 		//Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
-		if( $evaluacion["estado"] == "validada" ) $campo_obs = "obs_vp";
+		if( $evaluacion["estado"] == "validada" || $evaluacion["estado"] == "aprobada" ) $campo_obs = "obs_vp";
 		if( $evaluacion["estado"] == "sustento_vp" ) $campo_obs = "obs_sustento_vp";
 
 		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 

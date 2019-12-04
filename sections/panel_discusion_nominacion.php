@@ -33,7 +33,7 @@
 	</div>
 	<?php } ?>
 
-	<!-- --------------------- OBSERVACIÓN DEL VP -->
+	<!-- -------------- OBSERVACIÓN DEL VP (Final) -->
 	<?php if( $nominacion["obs_vp"] != "" ) { ?>
 	<div class="form-group">
 		<label class="col-sm-4 text-right">Obs del VP: 
@@ -76,7 +76,7 @@
 	</div>
 	<?php } ?>
 
-	<!-- --------- OBSERVACIÓN DEL ADMIN (COMITE) -->
+	<!-- --------- OBSERVACIÓN DEL ADMIN (Comité) -->
 	<?php if( $nominacion["obs_comite"] != "" ) { ?>
 	<div class="form-group">
 		<label class="col-sm-4 text-right">Obs del comité: 

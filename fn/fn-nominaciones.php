@@ -200,9 +200,9 @@
 		$solicitar_sustento = false;
 		
 		$es_admin = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
-		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin && !$mismo_dpto ){
-			if( $nominacion["estado"] == "validada" )
-				$solicitar_sustento = true;
+		if( $nominacion["motivo2"] == "" && $nominacion["sustento2"] == "" && $es_admin 
+			&& $nominacion["estado"] == "validada" ){
+			$solicitar_sustento = true;
 		}
 
 		return $solicitar_sustento;
