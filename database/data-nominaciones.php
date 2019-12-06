@@ -332,6 +332,7 @@
 	/* --------------------------------------------------------- */
 	function mensajeMail( $dbh, $data ){
 		include( "data-usuarios.php" );
+		include( "data-mailing.php" );
 		// Prepara los datos para enviar un mensaje por email
 		
 		$data_mail = obtenerNominacionPorId( $dbh, $data["idnominacion"] );

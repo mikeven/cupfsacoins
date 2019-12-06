@@ -1,0 +1,182 @@
+<?xml version="1.0"?>
+<?mso-application progid="Excel.Sheet"?>
+<Workbook xmlns="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:o="urn:schemas-microsoft-com:office:office"
+ xmlns:x="urn:schemas-microsoft-com:office:excel"
+ xmlns:ss="urn:schemas-microsoft-com:office:spreadsheet"
+ xmlns:html="http://www.w3.org/TR/REC-html40">
+ <DocumentProperties xmlns="urn:schemas-microsoft-com:office:office">
+  <LastAuthor>Dell-MG</LastAuthor>
+  <LastSaved>2019-12-06T19:58:17Z</LastSaved>
+  <Version>12.00</Version>
+ </DocumentProperties>
+ <ExcelWorkbook xmlns="urn:schemas-microsoft-com:office:excel">
+  <WindowHeight>9996</WindowHeight>
+  <WindowWidth>9996</WindowWidth>
+  <WindowTopX>120</WindowTopX>
+  <WindowTopY>132</WindowTopY>
+  <ProtectStructure>False</ProtectStructure>
+  <ProtectWindows>False</ProtectWindows>
+ </ExcelWorkbook>
+ <Styles>
+  <Style ss:ID="Default" ss:Name="Normal">
+   <Alignment ss:Vertical="Bottom"/>
+   <Borders/>
+   <Font ss:FontName="Calibri" x:Family="Swiss" ss:Size="11" ss:Color="#000000"/>
+   <Interior/>
+   <NumberFormat/>
+   <Protection/>
+  </Style>
+ </Styles>
+ <Worksheet ss:Name="Table1">
+  <Table ss:ExpandedColumnCount="6" ss:ExpandedRowCount="16" x:FullColumns="1"
+   x:FullRows="1" ss:DefaultColumnWidth="62.400000000000006"
+   ss:DefaultRowHeight="14.4">
+   <Column ss:AutoFitWidth="0" ss:Width="18.600000000000001"/>
+   <Column ss:AutoFitWidth="0" ss:Width="39"/>
+   <Column ss:AutoFitWidth="0" ss:Width="351.6"/>
+   <Column ss:AutoFitWidth="0" ss:Width="1100.4000000000001"/>
+   <Column ss:Index="6" ss:AutoFitWidth="0" ss:Width="66.600000000000009"/>
+   <Row>
+    <Cell><Data ss:Type="String">id</Data></Cell>
+    <Cell><Data ss:Type="String">asunto</Data></Cell>
+    <Cell><Data ss:Type="String">evento</Data></Cell>
+    <Cell><Data ss:Type="String">texto</Data></Cell>
+    <Cell><Data ss:Type="String">emisor</Data></Cell>
+    <Cell><Data ss:Type="String">receptor</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">1</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Nueva nominación </Data></Cell>
+    <Cell><Data ss:Type="String">Usuario no VP registra nueva nominación</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},     Tu nominación ha sido enviada y estará siendo procesada a la brevedad posible. Te mantendremos informado</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">2</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Has recibido un reconocimiento</Data></Cell>
+    <Cell><Data ss:Type="String">VP nomina/adjudica a usuario de la misma área</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {vp} ha decidido reconocerte hoy por tu demostración de los Atributos CUPFSA. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">nominado</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">3</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Nueva nominación </Data></Cell>
+    <Cell><Data ss:Type="String">Nominación entre usuarios de la misma área. VP no es nominador ni nominado</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {vp}, {nominador} ha realizado una nominación a {nominado} por el atributo {atributo}. Por favor ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">4</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">VP rechazó nominación del área del nominado</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},  Tu nominación no ha sido aprobada por el Vicepresidente del área de tu nominado. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">5</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">VP solicita sustento por nominado de su misma área</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},     El Vicepresidente del área de tu nominado ha solicitado mayores detalles acerca de tu nominación. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">6</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">VP valida nominación hecha a usuario de la misma área</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},   El Vicepresidente del área de tu nominado ha validado tu nominación. Antes de adjudicar el monto de CUPFSA Coins a tu nominado en el sistema, recuerda pasar por Recursos Humanos a retirar la postal que le entregarás a tu nominado personalmente como agradecimiento por demostrar los Atributos CUPFSA.&quot;</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">7</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Has recibido un reconocimiento</Data></Cell>
+    <Cell><Data ss:Type="String">Nominación es adjudicada por nominador</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominado}, {nominador} ha decidido reconocerte hoy por tu demostración de los Atributos CUPFSA. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+    <Cell><Data ss:Type="String">nominado</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">8</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">VP valida nominación hecha por usuario de otra área</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},  El Vicepresidente del área de tu nominado ha validado tu nominación. Esta pasará ahora al Comité de Evaluación. Te mantendremos informado</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">9</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Nueva nominación </Data></Cell>
+    <Cell><Data ss:Type="String">Nominación entre usuarios de diferentes áreas</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado Administrador, {nominador} ha realizado una nominación. Ingresar a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">VP</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">10</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">Admin aprueba nominación después de votación</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},   El Comité de Evaluación a validado tu nominación a {nominado}. Antes de adjudicar el monto de CUPFSA Coins a tu nominado en el sistema, recuerda pasar por Recursos Humanos a retirar la postal que le entregarás a tu nominado personalmente como agradecimiento</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">11</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">Admin aprueba nominación después de votación</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado Administrador, se ha validado la nominación de {nominador} a {nominado} por el atributo {atributo}. Estar pendiente de entregar la correspondiente postal</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">12</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">Admin solicita sustento de nominación</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador},   El Comité de Evaluación ha solicitado mayores detalles acerca de tu nominación. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">13</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Tu nominación ha sido evaluada</Data></Cell>
+    <Cell><Data ss:Type="String">Admin rechaza nominación</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominador}, tu nominación ha sido denegada por el Comité de Evaluación. Ingresa a CUPFSA Coins para ver los detalles</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+    <Cell><Data ss:Type="String">nominador</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">14</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Canje realizado</Data></Cell>
+    <Cell><Data ss:Type="String">Nominado canjea nominación adjudicada</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado Administrador, {nominado} ha canjeado {coins} CUPFSA Coins por {producto}. Verificar inventario y hacer entrega a la brevedad posible</Data></Cell>
+    <Cell><Data ss:Type="String">nominado</Data></Cell>
+    <Cell><Data ss:Type="String">Admin</Data></Cell>
+   </Row>
+   <Row>
+    <Cell><Data ss:Type="Number">15</Data></Cell>
+    <Cell><Data ss:Type="String">CUPFSA COINS - Realizaste un canje</Data></Cell>
+    <Cell><Data ss:Type="String">Nominado canjea nominación adjudicada</Data></Cell>
+    <Cell><Data ss:Type="String">Estimado(a) {nominado}, has canjeado {coins} CUPFSA Coins por {producto}. Recursos Humanos te estará contactando cuando ya el premio esté listo para su entrega</Data></Cell>
+    <Cell><Data ss:Type="String">nominado</Data></Cell>
+    <Cell><Data ss:Type="String">nominado</Data></Cell>
+   </Row>
+  </Table>
+  <WorksheetOptions xmlns="urn:schemas-microsoft-com:office:excel">
+   <Selected/>
+   <Panes>
+    <Pane>
+     <Number>3</Number>
+     <ActiveRow>1</ActiveRow>
+     <ActiveCol>1</ActiveCol>
+    </Pane>
+   </Panes>
+   <ProtectObjects>False</ProtectObjects>
+   <ProtectScenarios>False</ProtectScenarios>
+  </WorksheetOptions>
+ </Worksheet>
+</Workbook>
