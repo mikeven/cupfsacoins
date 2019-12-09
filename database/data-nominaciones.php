@@ -8,8 +8,8 @@
 	function obtenerNominacionPorId( $dbh, $idn ){
 		//Devuelve el registro de una nominacion dado su id
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
-		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
-		u2.apellido as apellido2, n.valor_atributo as valor, a.nombre as atributo, 
+		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, u1.email as email1,  
+		u2.apellido as apellido2, u2.email as email2, n.valor_atributo as valor, a.nombre as atributo, 
 		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
 		n.motivo_vp, n.sustento_vp, n.votable, n.obs_comite, n.obs_vp, n.obs_sustento, n.obs_sustento_vp, 
 		d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
@@ -84,6 +84,14 @@
 		return obtenerListaRegistros( $data );
 	}
 	/* --------------------------------------------------------- */
+	function obtenerMensajeEvento( $dbh, $idm ){
+		//Devuelve el mensaje base para enviar por email de acuerdo a un evento
+
+		$q = "select asunto, texto from mailing where id = $idm";
+		
+		return mysqli_fetch_array( mysqli_query( $dbh, $q ) );
+	}
+	/* --------------------------------------------------------- */
 	function obtenerNominacionesAccion( $dbh, $idu, $accion ){
 		//Invoca la obtención de nominaciones hechas/recibidas/no votadas por un usuario
 		
@@ -152,8 +160,7 @@
 	function agregarSustento( $dbh, $nominacion, $e_n ){
 		// Actualiza una nominación con los datos del sustento adicional
 		$q = "update nominacion set motivo2 = '$nominacion[motivo2]', 
-		sustento2 = '$nominacion[sustento2]', estado = '$e_n' 
-		where idNOMINACION = $nominacion[idnominacion]";
+		sustento2 = '$nominacion[sustento2]', estado = '$e_n' where idNOMINACION = $nominacion[idnominacion]";
 		
 		$data = mysqli_query( $dbh, $q );
 
@@ -264,15 +271,15 @@
 	/* --------------------------------------------------------- */
 	function nominacionMismoDepartamento( $dbh, $nominacion ){
 		// Evalúa si una nominación está hecha entre usuarios del mismo departamento
-		$mismo_departamento = false;
+		/*$mismo_departamento = false;
 
 		$dpto_nominador = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominador"] );
 		$dpto_nominado = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominado"] );
 		
 		if( $dpto_nominador == $dpto_nominado ) 
-			$mismo_departamento = true;
+			$mismo_departamento = true;*/
 
-		return $mismo_departamento;
+		return ( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] );
 	}
 	/* --------------------------------------------------------- */
 	function chequeoAprobacionVP( $dbh, $nominacion, $nominador_es_vp ){
@@ -330,17 +337,14 @@
 		}
 	}
 	/* --------------------------------------------------------- */
-	function mensajeMail( $dbh, $data ){
-		include( "data-usuarios.php" );
-		include( "data-mailing.php" );
+	function mensajeMail( $dbh, $nominacion, $idmje ){
 		// Prepara los datos para enviar un mensaje por email
 		
-		$data_mail = obtenerNominacionPorId( $dbh, $data["idnominacion"] );
-		$data_mail["evaluacion"] = $data["estado"];
-		$data_us = obtenerUsuarioPorId( $dbh, $data_mail["idNOMINADOR"] );
+		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
+		if( $idmje == 3 )
+			$nominacion["vp_dpto_ndo"] = obtenerVPDepartamento( $dbh, $nominacion["iddpto_nominado"] );
 		
-		$data_mail["receptor"] = $data_us["email"];
-		enviarMensajeEmail( "cambio_estatus", $data_mail );
+		enviarMensajeEmail( $idmje, $mensaje, $nominacion );
 	}
 	/* --------------------------------------------------------- */
 	function llevaFechaCierre( $evaluacion ){
@@ -352,14 +356,25 @@
 		return $fecha_cierre;
 	}
 	/* --------------------------------------------------------- */
-	function postNominacion( $dbh, $nominacion, $vp_nominado ){
+	function postNominacion( $dbh, $data_nominacion, $vp_nominado ){
 		// Acciones posteriores al registro de una nueva nominación
 		// Acciones: chequeo de aprobación inmediata por VP; activar votación de nominación
+		include( "../fn/fn-mailing.php" );
+		
+		$nominacion = obtenerNominacionPorId( $dbh, $data_nominacion["id"] );
+		$nr_es_vp = esRol( $dbh, 4, $nominacion["idNOMINADOR"] );	//Rol 4: Vicepresidente ( VP )
+		
+		if( $nr_es_vp ){
+			mensajeMail( $dbh, $nominacion, 2 );
+		}else{
+			mensajeMail( $dbh, $nominacion, 1 );
+			if( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] )
+				mensajeMail( $dbh, $nominacion, 3 );
+		}
 
-		$nr_es_vp = esRol( $dbh, 4, $nominacion["idnominador"] );	//Rol 4: Vicepresidente ( VP )
 		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
 		if( $vp_nominado )
-			bloquearNominacion( $dbh, true, $nominacion["id"] );
+			bloquearNominacion( $dbh, true, $nominacion["idNOMINACION"] );
 	}
 	/* --------------------------------------------------------- */
 	// Solicitudes asíncronas
@@ -445,7 +460,7 @@
 	if( isset( $_POST["evaluar"] ) ){
 		//Solicitud para registrar una evaluación de admin o VP: solicitud de sustento o comentario para aprobar/rechazar
 		include( "bd.php" );
-		include( "../fn/fn-mailing.php" );
+		//include( "../fn/fn-mailing.php" );
 
 		parse_str( $_POST["evaluar"], $evaluacion );
 		$cierre = llevaFechaCierre( $evaluacion );
@@ -468,7 +483,7 @@
 
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
-			mensajeMail( $dbh, $evaluacion );
+			//mensajeMail( $dbh, $evaluacion );
 			$res["mje"] = "Evaluación registrada con éxito";
 		} else {
 			$res["exito"] = 0;

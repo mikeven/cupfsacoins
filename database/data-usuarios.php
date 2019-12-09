@@ -49,6 +49,14 @@
 		return obtenerListaRegistros( $data );
 	}
 	/* --------------------------------------------------------- */
+	function obtenerVPDepartamento( $dbh, $iddpto ){
+		// Obtiene el VP del departamento indicado por id
+		$q = "select idUSUARIO, nombre, email from usuario where idDepartamento = $iddpto and 
+		idUSUARIO in (select idUSUARIO from usuario_rol where idROL = 4)";
+		
+		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
+	}
+	/* --------------------------------------------------------- */
 	function obtenerCantidadUsuariosRol( $dbh, $idROL ){
 		// Devuelve la cantidad de usuarios que poseen un rol, dado su id
 		$q = "select count(*) as nro from usuario_rol where idROL = $idROL";

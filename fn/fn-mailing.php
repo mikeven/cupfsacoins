@@ -8,7 +8,7 @@
 		$email_from = "digital@cupfsa.com";
 		$cabeceras  = 'MIME-Version: 1.0' . "\r\n";
 		$cabeceras .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
-        $cabeceras .= "From: CUPFSA COINS <".$email.">"."\r\n";
+        $cabeceras .= "From: CUPFSA COINS <".$email_from.">"."\r\n";
 
         return $cabeceras;
 	}
@@ -19,50 +19,77 @@
 		return file_get_contents( "../fn/mailing/mailing_message.html" );
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function mensajeEstatus( $dbh, $idm ){
-		// Devuelve la frase para el mensaje de cambio de estatus en nominación
+	function obtenerReceptor( $idm, $datos ){
 
+		// Devuelve el email del receptor del mensaje de acuerdo al id del caso
+		if( in_array( $idm, array( 1 ) ) )
+			$receptor = $datos["email1"];					// nominador
+		if( in_array( $idm, array( 2 ) ) )
+			$receptor = $datos["email2"];					// nominado
+		if( in_array( $idm, array( 3 ) ) )
+			$receptor = $datos["vp_dpto_ndo"]["email"];		// VP del departamento del nominado
 		
 
-		return $etiquetas[$evaluacion];
+		return $receptor;
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function mensajeNvaNominacion( $plantilla, $mbase, $datos ){
+	function mensajeTipo1( $plantilla, $mbase, $datos, $vp_nominador ){
 		// Llenado de mensaje con plantilla y mensaje base: 
+		// Registro de nueva nominación: 
 		
-		$nominado = $datos["nombre2"]." ".$datos["apellido2"];
-		$estado = mensajeEstatus( $datos["evaluacion"] );
+		$nominador = $datos["nombre1"];
 
-		$plantilla = str_replace( "{nominado}", $nominado, $plantilla );
-		$plantilla = str_replace( "{atributo}", $datos["atributo"], $plantilla );
-		$plantilla = str_replace( "{estado}", $estado, $plantilla );
+		$mbase = str_replace( "{nominador}", $nominador, $mbase );
+		if( $vp_nominador )
+			$mbase = str_replace( "{nominado}", $nominado, $mbase );
+
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
 		
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function escribirMensaje( $tmensaje, $plantilla, $datos ){
+	function mensajeTipo2( $plantilla, $mbase, $datos, $vp_nominador ){
+		// Llenado de mensaje con plantilla y mensaje base: 
+		// Nueva nominación hecha entre usuarios mismo departamento, notificación al VP
+
+		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
+		$mbase = str_replace( "{nominado}", $datos["nombre2"], $mbase );
+		$mbase = str_replace( "{vp}", $datos["vp_dpto_ndo"]["nombre"], $mbase );
+			
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
+	function escribirMensaje( $idm, $mensaje, $plantilla, $datos ){
 		// Sustitución de elementos de la plantilla con los datos del mensaje
 
-		include( "data-mailing.php" );
-		$mje_evt = obtenerMensajeEvento( $dbh, $idm );
-		$mbase = $mje_evt["texto"];
+		$sobre["asunto"] 		= $mensaje["asunto"];
+		$sobre["receptor"] 		= obtenerReceptor( $idm, $datos );
 		
-		if( $tmensaje == "nva_nom" ){
-			// Usuario no VP registra nueva nominación 
-			$sobre["asunto"] = $mje_evt["asunto"];
-			$sobre["mensaje"] = mensajeNvaNominacion( $plantilla, $mbase, $datos );
+		if( $idm == 1 ){
+			// Usuario no VP registra nueva nominación, notificación al nominador 
+			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["texto"], $datos, false );
 		}
-
+		if( $idm == 2 ){
+			// Usuario VP registra nueva nominación, adjudicación inmediata al nominado
+			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["texto"], $datos ,true );
+		}
+		if( $idm == 3 ){
+			// Nominación entre mismo departamento, VP recibe notificación
+			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["texto"], $datos ,true );
+		}
+		
 		return $sobre; 
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function enviarMensajeEmail( $tipo_mensaje, $datos ){
+	function enviarMensajeEmail( $id_mensaje, $mensaje, $datos ){
 		// Construcción del mensaje para enviar por email
 		$plantilla = obtenerPlantillaMensaje();
-		$sobre = escribirMensaje( $tipo_mensaje, $plantilla, $datos );
+		$sobre = escribirMensaje( $id_mensaje, $mensaje, $plantilla, $datos );
 		$cabeceras = obtenerCabecerasMensaje();
 		
-		return mail( "mrangel@mgideas.net", $sobre["asunto"], $sobre["mensaje"], $cabeceras );
+		return mail( $sobre["receptor"], $sobre["asunto"], $sobre["mensaje"], $cabeceras );
 	}
 	/* ----------------------------------------------------------------------------------- */
 ?>
