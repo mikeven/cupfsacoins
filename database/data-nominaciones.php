@@ -199,7 +199,9 @@
 		//Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
-		if( $evaluacion["estado"] == "validada" || $evaluacion["estado"] == "aprobada" ) $campo_obs = "obs_vp";
+		if( $evaluacion["estado"] == "validada" 
+			|| $evaluacion["estado"] == "aprobada" 
+			|| $evaluacion["estado"] == "rechazada") $campo_obs = "obs_vp";
 		if( $evaluacion["estado"] == "sustento_vp" ) $campo_obs = "obs_sustento_vp";
 
 		$q = "update nominacion set idADMIN = $evaluacion[idusuario], 
@@ -260,13 +262,15 @@
 	/* --------------------------------------------------------- */
 	function aprobacionPorVP( $dbh, $nominacion ){
 		// Procesa la aprobación y adjudicación de una nominación por parte de un VP
-		$evaluacion["idusuario"] 		= $nominacion["idnominador"];
+		$evaluacion["idusuario"] 		= $nominacion["idNOMINADOR"];
 		$evaluacion["estado"] 			= "aprobada";
 		$evaluacion["comentario"] 		= "";
-		$evaluacion["idnominacion"] 	= $nominacion["id"];
+		$evaluacion["idnominacion"] 	= $nominacion["idNOMINACION"];
 
 		registrarEvaluacion( $dbh, $evaluacion, true );
-		adjudicarNominacion( $dbh, $nominacion["id"] );
+		adjudicarNominacion( $dbh, $nominacion["idNOMINACION"] );
+
+		postAdjudicacion( $dbh, $nominacion["idNOMINACION"] );
 	}
 	/* --------------------------------------------------------- */
 	function nominacionMismoDepartamento( $dbh, $nominacion ){
@@ -343,6 +347,8 @@
 		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
 		if( $idmje == 3 )
 			$nominacion["vp_dpto_ndo"] = obtenerVPDepartamento( $dbh, $nominacion["iddpto_nominado"] );
+		if( $idmje == 9 )
+			$nominacion["admin"] = obtenerAdministrador( $dbh );
 		
 		enviarMensajeEmail( $idmje, $mensaje, $nominacion );
 	}
@@ -356,11 +362,53 @@
 		return $fecha_cierre;
 	}
 	/* --------------------------------------------------------- */
+	function postAdjudicacion( $dbh, $idn ){
+		// Acciones posteriores a la adjudicación de una nominación
+		// Envío de mensajes en casos: Solicitud de sustento (VP)
+		include( "../fn/fn-mailing.php" );
+
+		$nominacion = obtenerNominacionPorId( $dbh, $idn );
+		
+		mensajeMail( $dbh, $nominacion, 2 );
+	}
+	/* --------------------------------------------------------- */
+	function postEvaluacion( $dbh, $evaluacion, $es_vp ){
+		// Acciones posteriores a la evaluación de una nominación
+		// Envío de mensajes en casos: Solicitud de sustento (VP)
+		include( "../fn/fn-mailing.php" );
+
+		$nominacion = obtenerNominacionPorId( $dbh, $evaluacion["idnominacion"] );
+		
+		if( $es_vp ){
+			// Evaluaciones hechas por VP
+
+			if( $evaluacion["estado"] == "rechazada" )
+				mensajeMail( $dbh, $nominacion, 4 );
+			if( $evaluacion["estado"] == "sustento_vp" )
+				mensajeMail( $dbh, $nominacion, 5 );
+			if( $evaluacion["estado"] == "aprobada" )
+				mensajeMail( $dbh, $nominacion, 6 );
+			if( $evaluacion["estado"] == "validada" )
+				mensajeMail( $dbh, $nominacion, 8 );
+		}else{
+			// Evaluaciones hechas por Admin
+
+			if( $evaluacion["estado"] == "aprobada" ){
+				mensajeMail( $dbh, $nominacion, 10 );
+				mensajeMail( $dbh, $nominacion, 11 );
+			}
+			if( $evaluacion["estado"] == "sustento" )
+				mensajeMail( $dbh, $nominacion, 12 );
+			if( $evaluacion["estado"] == "rechazada" )
+				mensajeMail( $dbh, $nominacion, 13 );
+		}
+	}
+	/* --------------------------------------------------------- */
 	function postNominacion( $dbh, $data_nominacion, $vp_nominado ){
 		// Acciones posteriores al registro de una nueva nominación
 		// Acciones: chequeo de aprobación inmediata por VP; activar votación de nominación
 		include( "../fn/fn-mailing.php" );
-		
+
 		$nominacion = obtenerNominacionPorId( $dbh, $data_nominacion["id"] );
 		$nr_es_vp = esRol( $dbh, 4, $nominacion["idNOMINADOR"] );	//Rol 4: Vicepresidente ( VP )
 		
@@ -370,6 +418,8 @@
 			mensajeMail( $dbh, $nominacion, 1 );
 			if( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] )
 				mensajeMail( $dbh, $nominacion, 3 );
+			else
+				mensajeMail( $dbh, $nominacion, 9 );
 		}
 
 		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
@@ -475,10 +525,13 @@
 			if( $evaluacion["estado"] == "validada" )	// Activa nominación para votación
 				bloquearNominacion( $dbh, true, $evaluacion["idnominacion"] );
 
+			postEvaluacion( $dbh, $evaluacion, true );
 		}else{
 			// Evaluación proveniente de un usuario Admin
 
 			$rsp = registrarEvaluacion( $dbh, $evaluacion, $cierre );
+
+			postEvaluacion( $dbh, $evaluacion, false );
 		}
 
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
@@ -535,7 +588,8 @@
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
-			$res["mje"] = "Nominación adjudicada";			
+			$res["mje"] = "Nominación adjudicada";
+			postAdjudicacion( $dbh, $_POST["adjudicar"] );			
 		} else {
 			$res["exito"] = 0;
 			$res["mje"] = "Error al adjudicar nominación";
