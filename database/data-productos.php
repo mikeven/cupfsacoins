@@ -61,6 +61,34 @@
 		return mysqli_query( $dbh, $q );
 	}
 	/* --------------------------------------------------------- */
+	function obtenerMensajeMailing( $dbh, $idm ){
+		//Devuelve el mensaje base para enviar por email de acuerdo a un evento
+
+		$q = "select asunto, texto from mailing where id = $idm";
+		
+		return mysqli_fetch_array( mysqli_query( $dbh, $q ) );
+	}
+	/* --------------------------------------------------------- */
+	function mensajeCorreo( $dbh, $canje, $idmje ){
+		// Prepara los datos para enviar un mensaje por email
+		
+		$mensaje = obtenerMensajeMailing( $dbh, $idmje );
+		if( $idmje == 14 )
+			$canje["admin"] = obtenerAdministrador( $dbh );
+		
+		enviarMensajeEmail( $idmje, $mensaje, $canje );
+	}
+	/* --------------------------------------------------------- */
+	function postCanje( $dbh, $canje ){
+		// Acciones posteriores al canje de productos
+		include( "../fn/fn-mailing.php" );
+
+		$canje["producto"] 	= obtenerProductoPorId( $dbh, $canje["idproducto"] );
+		$canje["usuario"] 	= obtenerUsuarioPorId( $dbh, $canje["idusuario"] );
+		
+		mensajeCorreo( $dbh, $canje, 14 );
+	}
+	/* --------------------------------------------------------- */
 	function agregarCanje( $dbh, $canje ){
 		// Guarda el registro de un caje de producto
 		$q = "insert into canje ( idUSUARIO, idPRODUCTO, valor, fecha_canje ) 
@@ -197,6 +225,7 @@
 		//Solicitud para registrar nuevo canje de producto
 
 		include( "bd.php" );
+		include( "data-usuarios.php" );
 		
 		parse_str( $_POST["form_ncje"], $canje );
 		$canje = escaparCampos( $dbh, $canje );
@@ -205,6 +234,7 @@
 		if( ( $id != 0 ) && ( $id != "" ) ){
 			$res["exito"] = 1;
 			$res["mje"] = "Canje realizado con éxito";
+			postCanje( $dbh, $canje );
 		} else {
 			$res["exito"] = 0;
 			$res["mje"] = "Error al canjear producto";

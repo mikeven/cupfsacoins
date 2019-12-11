@@ -5,7 +5,7 @@
 	/* --------------------------------------------------------- */
 	function solvente( $coins, $valor ){
 		// Devuelve verdadero si los coins disponibles cubren el valor del producto
-		return $coins > $valor;
+		return $coins >= $valor;
 	}
 	/* --------------------------------------------------------- */
 	function esBorrable( $dbh, $idp ){

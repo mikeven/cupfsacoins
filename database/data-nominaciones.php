@@ -347,7 +347,7 @@
 		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
 		if( $idmje == 3 )
 			$nominacion["vp_dpto_ndo"] = obtenerVPDepartamento( $dbh, $nominacion["iddpto_nominado"] );
-		if( $idmje == 9 )
+		if( $idmje == 9 || $idmje == 11 )
 			$nominacion["admin"] = obtenerAdministrador( $dbh );
 		
 		enviarMensajeEmail( $idmje, $mensaje, $nominacion );
@@ -510,7 +510,7 @@
 	if( isset( $_POST["evaluar"] ) ){
 		//Solicitud para registrar una evaluación de admin o VP: solicitud de sustento o comentario para aprobar/rechazar
 		include( "bd.php" );
-		//include( "../fn/fn-mailing.php" );
+		include( "data-usuarios.php" );
 
 		parse_str( $_POST["evaluar"], $evaluacion );
 		$cierre = llevaFechaCierre( $evaluacion );

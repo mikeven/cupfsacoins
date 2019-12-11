@@ -210,7 +210,7 @@ $("#btn_canje").on('click', function (e) {
 			res = jQuery.parseJSON( response );
 			if( res.exito == 1 ){
 				$('#frm_ncanje').html( "" );
-    			enviarRespuesta( res, "redireccion", "mis-canjes.php" );
+    			//enviarRespuesta( res, "redireccion", "mis-canjes.php" );
 			}
 			else
 				notificar( "Producto", res.mje, "error" );

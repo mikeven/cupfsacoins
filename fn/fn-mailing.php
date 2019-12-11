@@ -22,13 +22,16 @@
 	function obtenerReceptor( $idm, $datos ){
 		// Devuelve el email del receptor del mensaje de acuerdo al id del caso
 		
-		if( in_array( $idm, array( 1, 4, 5, 6, 8, 12 ) ) )
+		if( in_array( $idm, array( 1, 4, 5, 6, 8, 10, 12, 13 ) ) )
 			$receptor = $datos["email1"];					// nominador
-		if( in_array( $idm, array( 2 ) ) )
+		
+		if( in_array( $idm, array( 2, 15 ) ) )
 			$receptor = $datos["email2"];					// nominado
+		
 		if( in_array( $idm, array( 3 ) ) )
 			$receptor = $datos["vp_dpto_ndo"]["email"];		// vp del departamento del nominado
-		if( in_array( $idm, array( 9 ) ) )
+		
+		if( in_array( $idm, array( 9, 11, 14 ) ) )
 			$receptor = $datos["admin"]["email"];			// administrador
 		
 		return $receptor;
@@ -52,6 +55,7 @@
 
 		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
 		$mbase = str_replace( "{nominado}", $datos["nombre2"], $mbase );
+		$mbase = str_replace( "{atributo}", $datos["atributo"], $mbase );
 		$mbase = str_replace( "{vp}", $datos["vp_dpto_ndo"]["nombre"], $mbase );
 		
 		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
@@ -60,11 +64,37 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function mensajeTipo3( $plantilla, $asunto, $mbase, $datos, $vp_nominador ){
+	function mensajeTipo3( $plantilla, $asunto, $mbase, $datos ){
 		// VP solicita sustento, rechaza o valida nominación: recibe el nominador
 		// Nominación entre departamentos diferentes: recibe el admin
 
 		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
+		
+		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
+	function mensajeTipo4( $plantilla, $asunto, $mbase, $datos ){
+		// Administrador recibe notificación de la aprobación de una nominación
+
+		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
+		$mbase = str_replace( "{nominado}", $datos["nombre2"], $mbase );
+		$mbase = str_replace( "{atributo}", $datos["atributo"], $mbase );
+		
+		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
+	function mensajeTipo5( $plantilla, $asunto, $mbase, $datos ){
+		// Notificaciones sobre canjes de productos
+
+		$mbase = str_replace( "{nominado}", $datos["usuario"]["nombre"], $mbase );
+		$mbase = str_replace( "{producto}", $datos["producto"]["nombre"], $mbase );
+		$mbase = str_replace( "{coins}", $datos["valor"], $mbase );
 		
 		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
 		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
@@ -84,19 +114,28 @@
 		}
 		if( $idm == 2 ){
 			// Usuario VP registra nueva nominación, adjudicación inmediata al nominado
-			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos ,true );
+			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
 		}
 		if( $idm == 3 ){
 			// Nominación entre mismo departamento, VP recibe notificación
-			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos ,true );
+			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
 		}
-		if( $idm == 4 || $idm == 5 || $idm == 6 || $idm == 8 ){
+		
+		if( in_array($idm, array( 4, 5, 6, 8, 9, 12, 13 ) ) ){
 			// Notificaciones al nominador sobre nominación hecha por él
-			$sobre["mensaje"] 	= mensajeTipo3( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos ,true );
+			// 9: Notificación al administrador
+			// 12: Admin solicita sustento al nominador
+			$sobre["mensaje"] 	= mensajeTipo3( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
-		if( $idm == 9 ){
-			// Notificación al administrador
-			$sobre["mensaje"] 	= mensajeTipo3( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos ,true );
+		
+		if( $idm == 10 || $idm == 11 ){
+			// Nominador recibe mensaje de aprobación de nominación
+			$sobre["mensaje"] 	= mensajeTipo4( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
+		}
+		
+		if( $idm == 14 || $idm == 15 ){
+			// Usuario realiza canje
+			$sobre["mensaje"] 	= mensajeTipo5( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
 		
 		return $sobre; 
@@ -107,7 +146,7 @@
 		$plantilla 	= obtenerPlantillaMensaje();
 		$sobre 		= escribirMensaje( $id_mensaje, $mensaje, $plantilla, $datos );
 		$cabeceras 	= obtenerCabecerasMensaje();
-		
+
 		return mail( $sobre["receptor"], $sobre["asunto"], $sobre["mensaje"], $cabeceras );
 	}
 	/* ----------------------------------------------------------------------------------- */
