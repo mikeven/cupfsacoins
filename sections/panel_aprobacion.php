@@ -26,6 +26,16 @@
 						<i class="fa fa-star"></i> Aprobar</button>
 				<?php } ?>
 
+				<button id="btn_rechazar" type="button" data-a="rechazada"
+					class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+					<i class="fa fa-times"></i> Rechazar</button>
+
+				<?php if( solicitableSustentoVP( $nominacion ) ) { ?>
+					<button id="btn_sustento" type="button" data-a="sustento_vp"
+						class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+						<i class="fa fa-file-o"></i> Solicitar sustento</button>
+				<?php } ?>
+
 			<?php } else { ?>
 
 				<?php if( $es_vp_nominado ) { ?>
