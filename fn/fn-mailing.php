@@ -28,10 +28,10 @@
 		if( in_array( $idm, array( 2, 15 ) ) )
 			$receptor = $datos["email2"];					// nominado
 		
-		if( in_array( $idm, array( 3 ) ) )
+		if( in_array( $idm, array( 3, 16 ) ) )
 			$receptor = $datos["vp_dpto_ndo"]["email"];		// vp del departamento del nominado
 		
-		if( in_array( $idm, array( 9, 11, 14 ) ) )
+		if( in_array( $idm, array( 9, 11, 14, 17 ) ) )
 			$receptor = $datos["admin"]["email"];			// administrador
 		
 		return $receptor;
@@ -102,6 +102,18 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
+	function mensajeTipo6( $plantilla, $asunto, $mbase, $datos ){
+		// Notificaciones sobre sustentación de nominaciones
+
+		$mbase = str_replace( "{vp}", $datos["vp_dpto_ndo"]["nombre"], $mbase );
+		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
+		
+		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
 	function escribirMensaje( $idm, $mensaje, $plantilla, $datos ){
 		// Sustitución de elementos de la plantilla con los datos del mensaje
 
@@ -121,7 +133,7 @@
 			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
 		}
 		
-		if( in_array($idm, array( 4, 5, 6, 8, 9, 12, 13 ) ) ){
+		if( in_array( $idm, array( 4, 5, 6, 8, 9, 12, 13, 17 ) ) ){
 			// Notificaciones al nominador sobre nominación hecha por él
 			// 9: Notificación al administrador
 			// 12: Admin solicita sustento al nominador
@@ -136,6 +148,11 @@
 		if( $idm == 14 || $idm == 15 ){
 			// Usuario realiza canje
 			$sobre["mensaje"] 	= mensajeTipo5( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
+		}
+
+		if( $idm == 16 ){
+			// Nominador envía sustento a VP solicitante
+			$sobre["mensaje"] 	= mensajeTipo6( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
 		
 		return $sobre; 

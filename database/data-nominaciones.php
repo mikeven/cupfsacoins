@@ -345,9 +345,9 @@
 		// Prepara los datos para enviar un mensaje por email
 		
 		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
-		if( $idmje == 3 )
+		if( $idmje == 3 || $idmje == 16 )
 			$nominacion["vp_dpto_ndo"] = obtenerVPDepartamento( $dbh, $nominacion["iddpto_nominado"] );
-		if( $idmje == 9 || $idmje == 11 )
+		if( $idmje == 9 || $idmje == 11 || $idmje == 17 )
 			$nominacion["admin"] = obtenerAdministrador( $dbh );
 		
 		enviarMensajeEmail( $idmje, $mensaje, $nominacion );
@@ -370,6 +370,19 @@
 		$nominacion = obtenerNominacionPorId( $dbh, $idn );
 		
 		mensajeMail( $dbh, $nominacion, 2 );
+	}
+	/* --------------------------------------------------------- */
+	function postSustentacion( $dbh, $data_n, $sust_vp ){
+		// Acciones posteriores a la sustentación de nominaciones
+		// Envío de mensajes en casos: Envío de sustentos a VP / Admin
+		include( "../fn/fn-mailing.php" );
+
+		$nominacion = obtenerNominacionPorId( $dbh, $data_n["idnominacion"] );
+
+		if( $sust_vp )
+			mensajeMail( $dbh, $nominacion, 16 );
+		else
+			mensajeMail( $dbh, $nominacion, 17 );	
 	}
 	/* --------------------------------------------------------- */
 	function postEvaluacion( $dbh, $evaluacion, $es_vp ){
@@ -415,11 +428,12 @@
 		if( $nr_es_vp ){
 			mensajeMail( $dbh, $nominacion, 2 );
 		}else{
-			mensajeMail( $dbh, $nominacion, 1 );
-			if( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] )
-				mensajeMail( $dbh, $nominacion, 3 );
-			else
-				mensajeMail( $dbh, $nominacion, 9 );
+			mensajeMail( $dbh, $nominacion, 1 );		// Notifica al nominador
+			mensajeMail( $dbh, $nominacion, 3 );		// Notifica al VP del depto del nominado
+			if( $nominacion["iddpto_nominador"] != $nominacion["iddpto_nominado"] )	{
+				// Departamentos diferentes
+				mensajeMail( $dbh, $nominacion, 9 );	// Notifica al Admin
+			}
 		}
 
 		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
@@ -549,6 +563,7 @@
 		//Solicitud para registrar sustento adicional sobre nominación
 
 		include( "bd.php" );
+		include( "data-usuarios.php" );
 
 		$nominacion["idnominacion"] = $_POST["seg_sustento"];
 		$nominacion["motivo2"] 		= $_POST["motivo2"];
@@ -564,9 +579,12 @@
 		$nominacion = escaparCampos( $dbh, $nominacion );
 		if( $nominacion["edo_nom"] == "sustento_vp" ){
 			$rsp = agregarSustentoVP( $dbh, $nominacion, "pendiente_svp" );
+			postSustentacion( $dbh, $nominacion, true );
 		}
-		else
+		else{
 			$rsp = agregarSustento( $dbh, $nominacion, "pendiente_ss" );
+			postSustentacion( $dbh, $nominacion, false );
+		}
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
