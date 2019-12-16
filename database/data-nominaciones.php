@@ -270,7 +270,9 @@
 		registrarEvaluacion( $dbh, $evaluacion, true );
 		adjudicarNominacion( $dbh, $nominacion["idNOMINACION"] );
 
-		postAdjudicacion( $dbh, $nominacion["idNOMINACION"] );
+		postAdjudicacion( $dbh, $nominacion["idNOMINACION"], false );
+		// último parámetro en false: no incluir función mailing, ya fue incluida anteriormente en el 
+		// flujo de llamadas previas a 'postAdjudicacion'
 	}
 	/* --------------------------------------------------------- */
 	function nominacionMismoDepartamento( $dbh, $nominacion ){
@@ -362,10 +364,11 @@
 		return $fecha_cierre;
 	}
 	/* --------------------------------------------------------- */
-	function postAdjudicacion( $dbh, $idn ){
+	function postAdjudicacion( $dbh, $idn, $inc_mailing ){
 		// Acciones posteriores a la adjudicación de una nominación
 		// Envío de mensajes en casos: Solicitud de sustento (VP)
-		include( "../fn/fn-mailing.php" );
+		if( $inc_mailing )
+			include( "../fn/fn-mailing.php" );
 
 		$nominacion = obtenerNominacionPorId( $dbh, $idn );
 		
@@ -419,26 +422,33 @@
 	/* --------------------------------------------------------- */
 	function postNominacion( $dbh, $data_nominacion, $vp_nominado ){
 		// Acciones posteriores al registro de una nueva nominación
-		// Acciones: chequeo de aprobación inmediata por VP; activar votación de nominación
+		
 		include( "../fn/fn-mailing.php" );
 
 		$nominacion = obtenerNominacionPorId( $dbh, $data_nominacion["id"] );
-		$nr_es_vp = esRol( $dbh, 4, $nominacion["idNOMINADOR"] );	//Rol 4: Vicepresidente ( VP )
+		$nominador_es_vp = esRol( $dbh, 4, $nominacion["idNOMINADOR"] );	//Rol 4: Vicepresidente ( VP )
 		
-		if( $nr_es_vp ){
-			mensajeMail( $dbh, $nominacion, 2 );
+		mensajeMail( $dbh, $nominacion, 1 );				// Notifica al nominador
+
+		if( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] )	{
+			// Nominador y nominado son del mismo departamento
+			if( $nominador_es_vp ) 	
+				// Si el nominador es VP
+				mensajeMail( $dbh, $nominacion, 2 );		// Notifica reconocimiento al nominado
+			else 
+				mensajeMail( $dbh, $nominacion, 3 );		// Notifica al VP del depto del nominado
+		
 		}else{
-			mensajeMail( $dbh, $nominacion, 1 );		// Notifica al nominador
-			mensajeMail( $dbh, $nominacion, 3 );		// Notifica al VP del depto del nominado
-			if( $nominacion["iddpto_nominador"] != $nominacion["iddpto_nominado"] )	{
-				// Departamentos diferentes
-				mensajeMail( $dbh, $nominacion, 9 );	// Notifica al Admin
-			}
+			mensajeMail( $dbh, $nominacion, 9 );			// Notifica al Admin
+			if( !$vp_nominado )		
+				// Si el nominado no es VP	
+				mensajeMail( $dbh, $nominacion, 3 );		// Notifica al VP del depto del nominado
 		}
 
-		chequeoAprobacionVP( $dbh, $nominacion, $nr_es_vp );
+		chequeoAprobacionVP( $dbh, $nominacion, $nominador_es_vp );
+
 		if( $vp_nominado )
-			bloquearNominacion( $dbh, true, $nominacion["idNOMINACION"] );
+			bloquearNominacion( $dbh, true, $nominacion["idNOMINACION"] );	// Activa nominación para votación
 	}
 	/* --------------------------------------------------------- */
 	// Solicitudes asíncronas
@@ -607,7 +617,7 @@
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
 			$res["mje"] = "Nominación adjudicada";
-			postAdjudicacion( $dbh, $_POST["adjudicar"] );			
+			postAdjudicacion( $dbh, $_POST["adjudicar"], true );			
 		} else {
 			$res["exito"] = 0;
 			$res["mje"] = "Error al adjudicar nominación";

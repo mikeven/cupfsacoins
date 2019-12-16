@@ -20,7 +20,7 @@
 			// Nominación entre usuarios del mismo departamento. Aprueba solo el VP ?>
 			<?php if( $es_aprob_vp ) {  // Aprobación completa y directa por el VP del depto ?>
 				
-				<?php if( $nominacion["estado"] == "pendiente" ) {  ?>
+				<?php if( $nominacion["estado"] == "pendiente" || $nominacion["estado"] == "pendiente_svp" ) {  ?>
 					<button id="btn_aprobar_vp" type="button" data-a="aprobada"
 						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
 						<i class="fa fa-star"></i> Aprobar</button>

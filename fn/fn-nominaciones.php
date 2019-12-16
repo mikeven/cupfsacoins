@@ -283,10 +283,13 @@
 		$id_dpto_usuario = obtenerIdDepartamentoUsuario( $dbh, $idu );
 		$mismo_dpto = ( $id_dpto_usuario == $nominacion["iddpto_nominado"] );
 		$esnominado = ( $idu == $nominacion["idNOMINADO"] );
+		$esnominador = ( $idu == $nominacion["idNOMINADOR"] );
 		
-		if( ( $mismo_dpto && !$esnominado ) || ( $esnominado && $nominacion["estado"] == "adjudicada")  ) 
+		if( ( $mismo_dpto && !$esnominado ) || 
+			( $esnominado && $nominacion["estado"] == "adjudicada") ||
+			( $esnominador ) ) 
 			$visible = true;
-
+		
 		return $visible;
 	}
 	/* --------------------------------------------------------- */
