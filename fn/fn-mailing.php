@@ -22,10 +22,10 @@
 	function obtenerReceptor( $idm, $datos ){
 		// Devuelve el email del receptor del mensaje de acuerdo al id del caso
 		
-		if( in_array( $idm, array( 1, 4, 5, 6, 8, 10, 12, 13 ) ) )
+		if( in_array( $idm, array( 1, 4, 5, 6, 8, 10, 12, 13, 18 ) ) )
 			$receptor = $datos["email1"];					// nominador
 		
-		if( in_array( $idm, array( 2, 15 ) ) )
+		if( in_array( $idm, array( 2 ) ) )
 			$receptor = $datos["email2"];					// nominado
 		
 		if( in_array( $idm, array( 3, 16 ) ) )
@@ -33,6 +33,9 @@
 		
 		if( in_array( $idm, array( 9, 11, 14, 17 ) ) )
 			$receptor = $datos["admin"]["email"];			// administrador
+
+		if( in_array( $idm, array( 15 ) ) )
+			$receptor = $datos["usuario"]["email"];			// usuario quien realiza canje
 		
 		return $receptor;
 	}
@@ -50,7 +53,7 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function mensajeTipo2( $plantilla, $asunto, $mbase, $datos, $vp_nominador ){ 
+	function mensajeTipo2( $plantilla, $asunto, $mbase, $datos ){ 
 		// Nueva nominación hecha entre usuarios mismo departamento, notificación al VP
 
 		$mbase = str_replace( "{nominador}", $datos["nombre1"], $mbase );
@@ -120,8 +123,9 @@
 		$sobre["asunto"] 		= $mensaje["asunto"];
 		$sobre["receptor"] 		= obtenerReceptor( $idm, $datos );
 		
-		if( $idm == 1 ){
-			// Usuario no VP registra nueva nominación, notificación al nominador 
+		if( $idm == 1 || $idm == 18 ){
+			//  1: Usuario no VP registra nueva nominación, notificación al nominador 
+			// 18: Usuario no VP nomina a VP de su dpto, notifica aprobación al nominador 
 			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, false );
 		}
 		if( $idm == 2 ){
@@ -130,7 +134,7 @@
 		}
 		if( $idm == 3 ){
 			// Nominación entre mismo departamento, VP recibe notificación
-			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
+			$sobre["mensaje"] 	= mensajeTipo2( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
 		
 		if( in_array( $idm, array( 4, 5, 6, 8, 9, 12, 13, 17 ) ) ){

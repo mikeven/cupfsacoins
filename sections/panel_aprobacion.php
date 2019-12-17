@@ -56,13 +56,17 @@
 
 				<?php if( $es_valid_vp ) {  
 					// Es evaluable por el VP del depto del nominado ?>
-					<button id="btn_validar_vp" type="button" data-a="validada"
-						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
-						<i class="fa fa-check-circle"></i> Validar</button>
+					<?php if( $nominacion["estado"] != "sustento_vp" ) { ?>
+						
+						<button id="btn_validar_vp" type="button" data-a="validada"
+							class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+							<i class="fa fa-check-circle"></i> Validar</button>
 
-					<button id="btn_rechazar" type="button" data-a="rechazada"
-						class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
-						<i class="fa fa-times"></i> Rechazar</button>
+						<button id="btn_rechazar" type="button" data-a="rechazada"
+							class="mb-xs mt-xs mr-xs btn btn-primary vp_ev">
+							<i class="fa fa-times"></i> Rechazar</button>
+
+					<?php } ?>
 
 					<?php if( solicitableSustentoVP( $nominacion ) ) { ?>
 						<button id="btn_sustento" type="button" data-a="sustento_vp"

@@ -81,12 +81,14 @@
 	/* --------------------------------------------------------- */
 	function postCanje( $dbh, $canje ){
 		// Acciones posteriores al canje de productos
+		// Envío de mensajes en casos: Notificación al administrador y al usuario que canjea
 		include( "../fn/fn-mailing.php" );
 
 		$canje["producto"] 	= obtenerProductoPorId( $dbh, $canje["idproducto"] );
 		$canje["usuario"] 	= obtenerUsuarioPorId( $dbh, $canje["idusuario"] );
 		
 		mensajeCorreo( $dbh, $canje, 14 );
+		mensajeCorreo( $dbh, $canje, 15 );
 	}
 	/* --------------------------------------------------------- */
 	function agregarCanje( $dbh, $canje ){

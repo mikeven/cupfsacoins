@@ -6,7 +6,7 @@
 	define( "RUTA_SUSTENTOS", "../upload/" );
 
 	function obtenerNominacionPorId( $dbh, $idn ){
-		//Devuelve el registro de una nominacion dado su id
+		// Devuelve el registro de una nominacion dado su id
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, u1.email as email1,  
 		u2.apellido as apellido2, u2.email as email2, n.valor_atributo as valor, a.nombre as atributo, 
@@ -27,7 +27,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerEstadoNominacionPorId( $dbh, $idn ){
-		//Devuelve el estado de una nominacion dado su id
+		// Devuelve el estado de una nominacion dado su id
 		$q = "select estado from nominacion where idNOMINACION = $idn";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -36,7 +36,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerNominacionesRegistradas( $dbh ){
-		//Devuelve los registros de todas las nominaciones
+		// Devuelve los registros de todas las nominaciones
 
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
 		n.estado, u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, 
@@ -53,7 +53,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerNominacionesPersonales( $dbh, $idu, $p, $p2 ){
-		//Devuelve los registros de nominaciones hechas o recibidas por un usuario.
+		// Devuelve los registros de nominaciones hechas o recibidas por un usuario.
 
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
 		u1.nombre as nombre1, u1.apellido as apellido1, d1.idDepartamento as iddpto_nominador, 
@@ -70,7 +70,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerNominacionesPorVotar( $dbh, $idu ){
-		//Devuelve los registros de nominaciones que no ha sido votada por un usuario dado su id.
+		// Devuelve los registros de nominaciones que no ha sido votada por un usuario dado su id.
 
 		$q = "select n.idNOMINACION as id, n.idNOMINADOR, n.idNOMINADO, n.votable, 
 		u2.nombre as nombre2, u2.apellido as apellido2, a.nombre as atributo,  
@@ -85,7 +85,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerMensajeEvento( $dbh, $idm ){
-		//Devuelve el mensaje base para enviar por email de acuerdo a un evento
+		// Devuelve el mensaje base para enviar por email de acuerdo a un evento
 
 		$q = "select asunto, texto from mailing where id = $idm";
 		
@@ -93,7 +93,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerNominacionesAccion( $dbh, $idu, $accion ){
-		//Invoca la obtención de nominaciones hechas/recibidas/no votadas por un usuario
+		// Invoca la obtención de nominaciones hechas/recibidas/no votadas por un usuario
 		
 		if( $accion == "hechas" ){ 		
 			$p = "n.idNOMINADOR";
@@ -112,12 +112,12 @@
 	}
 	/* --------------------------------------------------------- */
 	function nombrePrefijo(){
-		//Devuelve un prefijo de nombre a un archivo basado en una marca de tiempo
+		// Devuelve un prefijo de nombre a un archivo basado en una marca de tiempo
 		return date_timestamp_get( date_create() );
 	}
 	/* --------------------------------------------------------- */
 	function cargarArchivo( $archivo, $dir ){
-		//Ubica el archivo subido en la ruta indicada
+		// Ubica el archivo subido en la ruta indicada
 
 		$pref = nombrePrefijo( $archivo['name'] );
 		$destino = $dir . $pref ."-". basename( $archivo['name'] );
@@ -134,7 +134,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function agregarNominacion( $dbh, $nominacion ){
-		//Guarda un nuevo registro de nominación
+		// Guarda un nuevo registro de nominación
 
 		$q = "insert into nominacion ( idNOMINADOR, idNOMINADO, idATRIBUTO, 
 		valor_atributo, estado, motivo1, sustento1, fecha_nominacion ) values 
@@ -168,7 +168,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function registrarVoto( $dbh, $voto ){
-		//Guarda un nuevo registro de voto
+		// Guarda un nuevo registro de voto
 
 		$q = "insert into voto ( idUSUARIO, idNOMINACION, valor, fecha_voto ) 
 		values ( $voto[idusuario], $voto[idnominacion], '$voto[voto]', NOW() )";
@@ -179,7 +179,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function registrarEvaluacion( $dbh, $evaluacion, $cierre ){
-		//Actualiza una nominación con los datos de su evaluación por un usuario admin
+		// Actualiza una nominación con los datos de su evaluación por un usuario admin
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
 		if( $evaluacion["estado"] == "sustento" ) $campo_obs = "obs_sustento";
@@ -196,7 +196,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function registrarEvaluacionVP( $dbh, $evaluacion, $cierre ){
-		//Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
+		// Actualiza una nominación con los datos de su evaluación realizada por un usuario VP
 		$fc = "";
 		if( $cierre ) $fc = ", fecha_cierre = NOW() ";
 		if( $evaluacion["estado"] == "validada" 
@@ -213,8 +213,19 @@
 		return mysqli_affected_rows( $dbh );
 	}
 	/* --------------------------------------------------------- */
+	function aprobarNominacionVPDepartamental( $dbh, $nominacion ){
+		// Aprobación de nominación a VP cuando es nominado por usuario de su mismo departamento
+		
+		$q = "update nominacion set idADMIN = $nominacion[idNOMINADOR], 
+		estado = 'aprobada', fecha_cierre = NOW() where idNOMINACION = $nominacion[idNOMINACION]";
+		
+		$data = mysqli_query( $dbh, $q );
+
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
 	function esVotada( $dbh, $idu, $idn ){
-		//Devuelve si una nominación fue votada por un usuario (usuario en sesión)
+		// Devuelve si una nominación fue votada por un usuario (usuario en sesión)
 		$votada = false;
 
 		$q = "select idUSUARIO, idNOMINACION from voto where idUSUARIO = $idu and idNOMINACION = $idn";
@@ -277,13 +288,6 @@
 	/* --------------------------------------------------------- */
 	function nominacionMismoDepartamento( $dbh, $nominacion ){
 		// Evalúa si una nominación está hecha entre usuarios del mismo departamento
-		/*$mismo_departamento = false;
-
-		$dpto_nominador = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominador"] );
-		$dpto_nominado = obtenerIdDepartamentoUsuario( $dbh, $nominacion["idnominado"] );
-		
-		if( $dpto_nominador == $dpto_nominado ) 
-			$mismo_departamento = true;*/
 
 		return ( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] );
 	}
@@ -428,17 +432,27 @@
 		$nominacion = obtenerNominacionPorId( $dbh, $data_nominacion["id"] );
 		$nominador_es_vp = esRol( $dbh, 4, $nominacion["idNOMINADOR"] );	//Rol 4: Vicepresidente ( VP )
 		
-		mensajeMail( $dbh, $nominacion, 1 );				// Notifica al nominador
 
 		if( $nominacion["iddpto_nominador"] == $nominacion["iddpto_nominado"] )	{
 			// Nominador y nominado son del mismo departamento
-			if( $nominador_es_vp ) 	
-				// Si el nominador es VP
+			if( $nominador_es_vp ){	
+				// VP nomina a usuario de su departamento
 				mensajeMail( $dbh, $nominacion, 2 );		// Notifica reconocimiento al nominado
-			else 
-				mensajeMail( $dbh, $nominacion, 3 );		// Notifica al VP del depto del nominado
+			} 
+			else{
+				if( $vp_nominado ){
+					// Colaborador nomina a VP de su departamento
+					aprobarNominacionVPDepartamental( $dbh, $nominacion );
+					mensajeMail( $dbh, $nominacion, 18 );	// Notifica aprobación al nominador
+				}else{
+					mensajeMail( $dbh, $nominacion, 1 );	// Notifica al nominador
+					mensajeMail( $dbh, $nominacion, 3 );	// Notifica al VP del depto del nominado
+				}
+			} 
 		
 		}else{
+			// Nominación entre departamentos diferentes
+			mensajeMail( $dbh, $nominacion, 1 );			// Notifica al nominador
 			mensajeMail( $dbh, $nominacion, 9 );			// Notifica al Admin
 			if( !$vp_nominado )		
 				// Si el nominado no es VP	
