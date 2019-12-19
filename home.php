@@ -89,17 +89,90 @@
 
 					<div class="row">
 						<div class="col-sm-12 col-xs-12">
-							
+							<?php 
+								//print_r( $accesos_usess["acciones"] );
+							?>
 							<section class="panel">
+								<?php if( isV( 'mp_nom_pers' ) ) { ?>
+									<header class="panel-heading">
+										<h2 class="panel-title">CUPFSA COINS</h2>
+										<p class="panel-subtitle"></p>
+									</header>
+									<div class="panel-body">
+										<?php include( "sections/instrucciones.php" ); ?>
+									</div>
+								<?php } ?>
+								<?php if( isV( '---' ) ) { ?>
+									<header class="panel-heading">
+										<h2 class="panel-title">Últimas nominaciones hechas</h2>
+										<p class="panel-subtitle"></p>
+									</header>
 								
-								<header class="panel-heading">
-									<h2 class="panel-title">Bienvenido(a) a CUPFSA Coins</h2>
-									<p class="panel-subtitle"></p>
-								</header>
-								<div class="panel-body">
-									<?php include( "sections/instrucciones.php" ); ?>
-								</div>
-								
+									<div class="panel-body">
+										<div class="owl-carousel" data-plugin-carousel data-plugin-options='{ "autoPlay": 4000, "items": 3, "itemsDesktop": [1199,4], "itemsDesktopSmall": [979,3], "itemsTablet": [768,2], "itemsMobile": [479,1] }'>
+											<?php 
+												foreach ( $nominaciones_h as $nom ) {
+												$cl = claseEstadoNominacion( $nom["estado"] ); 
+											?>
+											<div class="item spaced">
+												<header class="panel-heading <?php echo $cl;?>">
+													<h5><?php echo $nom["atributo"]?></h5>
+												</header>
+												<div class="panel-body p-lg" 
+													style="border:1px solid #ccc">
+													<p><?php echo $nom["fregistro"]?></p>
+													<h4 class="text-semibold mt-sm">
+														<?php echo $nom["nombre2"]?>
+													</h4>
+
+												<?php 
+
+												echo iconoEstadoNominacion( $nom["estado"] );
+												echo " ".estadoNominacion( $nom["estado"] ); ?> |
+
+													<a href="nominacion.php?id=<?php echo $nom["idNOMINACION"]?>"><i class="fa fa-eye"></i> Ver
+													</a>												
+													<span id="enlaces_nominacion" class="accion-adj">
+
+													<?php if ( $nom["estado"] == "aprobada" 
+													    && $nom["idNOMINADOR"] == $idu ) { 
+														// Nominación aprobada y usuario en sesión es el nominador
+													?> 
+														| <a href="#!" class="adjudicacion" href="#!" 
+														data-idn="<?php echo $nom["idNOMINACION"]; ?>" 
+														data-o="resumen">
+															<i class='fa fa-gift'></i> Adjudicar
+														</a> 
+													<?php } ?>
+													</span>
+												</div>
+											</div>
+											<?php } ?>
+									 	</div>	
+									 	<hr class="solid short">
+									 	<h2 class="panel-title">Últimas nominaciones recibidas</h2>
+										<p class="panel-subtitle"></p>
+
+										<div class="owl-carousel" data-plugin-carousel data-plugin-options='{ "autoPlay": 4000, "items": 3, "itemsDesktop": [1199,4], "itemsDesktopSmall": [979,3], "itemsTablet": [768,2], "itemsMobile": [479,1] }'>
+											<?php foreach ( $nominaciones_r as $nom ) { ?>
+											<div class="item spaced">
+												<header class="panel-heading bg-primary">
+													<h5><?php echo $nom["atributo"] ?></h5>
+												</header>
+												<div class="panel-body p-lg" style="border:1px solid #ccc">
+													<p><?php echo $nom["fregistro"] ?></p>
+													<h4 class="text-semibold mt-sm">
+														<?php echo $nom["nombre2"] ?>
+													</h4>
+													<p>
+														<a href="nominacion.php?id=<?php echo $nom["idNOMINACION"]?>"><i class="fa fa-eye"></i> Ver</a>
+													</p>
+												</div>
+											</div>
+											<?php } ?>
+									 	</div>	
+									</div>
+								<?php } ?>	
 							</section>
 							
 						</div>
