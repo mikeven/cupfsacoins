@@ -63,11 +63,16 @@
 		return $lista;
 	}
 	/* --------------------------------------------------------- */
-	function iniciarSesion( $usuario, $dbh ){
+	function iniciarSesion( $dbh, $usuario ){
+		// Inicia sesión con los datos de usuario
+
 		session_start();
 		$idresult = 0; 
-		$q = "select * from usuario where email = '$usuario[email]' and password = '$usuario[password]'";
-		//echo $q;
+		if( isset( $usuario["token"] ) )
+			$q = "select * from usuario where email = '$usuario[email]' and token_ingreso = '$usuario[token]'";
+		else
+			$q = "select * from usuario where email = '$usuario[email]' and password = '$usuario[password]'";
+		
 		$data 	= mysqli_query ( $dbh, $q );
 		$data_u = mysqli_fetch_array( $data );
 		$nrows 	= mysqli_num_rows( $data );
@@ -99,8 +104,10 @@
 		include( "bd.php" );
 		$usuario["email"] 		= $_POST["email"];
 		$usuario["password"] 	= $_POST["password"];
+		if( isset( $_POST["token"] ) )
+			$usuario["token"] 	= $_POST["token"];
 		
-		echo iniciarSesion( $usuario, $dbh );
+		echo iniciarSesion( $dbh, $usuario );
 	}
 	/* --------------------------------------------------------- */
 	//Cierre de sesión

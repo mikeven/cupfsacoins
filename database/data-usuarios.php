@@ -96,9 +96,9 @@
 	/* --------------------------------------------------------- */
 	function agregarUsuario( $dbh, $usuario ){
 		// Guarda el registro de un usuario nuevo
-		$q = "insert into usuario ( nombre, apellido, email, password, cargo, activo, idDepartamento,  
-		fecha_creacion ) values ( '$usuario[nombre]', '$usuario[apellido]', 
-		'$usuario[email]', '$usuario[password]', '$usuario[cargo]', 1, $usuario[departamento], NOW() )";
+		$q = "insert into usuario ( nombre, apellido, email, token_ingreso, password, cargo, activo, idDepartamento,  
+		fecha_creacion ) values ( '$usuario[nombre]', '$usuario[apellido]', '$usuario[email]', '$usuario[token_a]', 
+		'$usuario[password]', '$usuario[cargo]', 1, $usuario[departamento], NOW() )";
 		
 		$data = mysqli_query( $dbh, $q );
 		return mysqli_insert_id( $dbh );
@@ -202,18 +202,43 @@
 		return mysqli_query( $dbh, $q );
 	}
 	/* --------------------------------------------------------- */
+	function generarTokenAcceso( $usuario ){
+		// Devuelve el token de acceso para un usuario
+		$time_stamp = date_timestamp_get( date_create() ) ;
+		return md5( $usuario["email"].$time_stamp );
+	}
+	/* --------------------------------------------------------- */
+	function obtenerMensajeEvento( $dbh, $idm ){
+		// Devuelve el mensaje base para enviar por email de acuerdo a un evento
+
+		$q = "select asunto, texto from mailing where id = $idm";
+		
+		return mysqli_fetch_array( mysqli_query( $dbh, $q ) );
+	}
+	/* --------------------------------------------------------- */
+	function mensajeMail( $dbh, $usuario, $idmje ){
+		// Prepara los datos para enviar un mensaje por email
+		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
+		enviarMensajeEmail( $idmje, $mensaje, $usuario );
+	}
+	/* --------------------------------------------------------- */
 	if( isset( $_POST["form_nu"] ) ){
 		// Solicitud para registrar nuevo usuario
 
 		include( "bd.php" );	
+		include( "../fn/fn-mailing.php" );
 		
 		parse_str( $_POST["form_nu"], $usuario );
 		$usuario = escaparCampos( $dbh, $usuario );
 		if( isset( $usuario["rol"] ) ){
+
+			$usuario["token_a"] = generarTokenAcceso( $usuario );
 			$id = agregarUsuario( $dbh, $usuario );
 			$usuario["idusuario"] = $id;
 			
 			if( ( $id != 0 ) && ( $id != "" ) ){
+
+				mensajeMail( $dbh, $usuario, 22 );
 				asociarRolesUsuario( $dbh, $usuario );
 				$res["exito"] = 1;
 				$res["mje"] = "Registro de usuario exitoso";

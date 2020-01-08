@@ -36,6 +36,9 @@
 
 		if( in_array( $idm, array( 15 ) ) )
 			$receptor = $datos["usuario"]["email"];			// usuario quien realiza canje
+
+		if( in_array( $idm, array( 22 ) ) )
+			$receptor = $datos["email"];			// usuario quien realiza canje
 		
 		return $receptor;
 	}
@@ -117,6 +120,19 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
+	function mensajeTipoAT( $plantilla, $asunto, $mbase, $datos ){
+		// Notificaciones sobre sustentación de nominaciones
+
+		$mbase = str_replace( "{usuario}", $datos["nombre"], $mbase );
+		
+		$plantilla = str_replace( "{asunto}", $asunto, $plantilla );
+		$plantilla = str_replace( "{mensaje}", $mbase, $plantilla );
+		$plantilla = str_replace( "{email}", $datos["email"], $plantilla );
+		$plantilla = str_replace( "{token}", $datos["token_a"], $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
 	function escribirMensaje( $idm, $mensaje, $plantilla, $datos ){
 		// Sustitución de elementos de la plantilla con los datos del mensaje
 
@@ -157,6 +173,12 @@
 		if( $idm == 16 ){
 			// Nominador envía sustento a VP solicitante
 			$sobre["mensaje"] 	= mensajeTipo6( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
+		}
+
+		if( $idm == 22 ){
+			// Envío de enlace de acceso a usuario
+			$plantilla = file_get_contents( "../fn/mailing/mailing_access_token.html" );
+			$sobre["mensaje"] 	= mensajeTipoAT( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
 		
 		return $sobre; 

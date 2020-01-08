@@ -65,16 +65,30 @@
 						<form id="loginform">
 							<div class="form-group mb-lg">
 								<input name="login" type="hidden" value="1"/>
+								<?php if( isset( $_GET["email"], $_GET["token"] ) ){ ?>
+									<input name="token" type="hidden" value="<?php echo $_GET['token']?>"/>
+								<?php } ?>
 								<label class="col-sm-3 control-label">Email</label>
 								<div class="col-sm-9">
-									<input type="email" name="email" class="form-control" placeholder="Email" required/>
+									<?php if( isset( $_GET['email'] ) ){ ?>
+										<input type="email" name="email" class="form-control" placeholder="Email" required 
+									value="<?php echo $_GET['email'] ?>"/>
+									<?php } else { ?>
+										<input type="email" name="email" class="form-control" placeholder="Email" required/>
+									<?php } ?>
 								</div>
 							</div>
 							<div class="form-group mb-lg">
 								<input name="login" type="hidden" value="1"/>
 								<label class="col-sm-3 control-label">Contraseña</label>
 								<div class="col-sm-9">
-									<input type="password" name="password" class="form-control" placeholder="Password" required/>
+									<?php if( isset( $_GET['token'] ) ){ ?>
+										<input type="password" name="password" class="form-control" 
+										placeholder="Password" required value="<?php echo $_GET['token'] ?>"/>
+									<?php } else { ?>
+										<input type="password" name="password" class="form-control" 
+										placeholder="Password" required/>
+									<?php } ?>
 								</div>
 							</div>
 
@@ -91,8 +105,7 @@
 						</form>
 					</div>
 				</div>
-
-				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2019. Ver 1.1</p>
+				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2020. Ver 1.1</p>
 			</div>
 		</section>
 		<!-- end: page -->
@@ -116,5 +129,10 @@
 		<script src="assets/javascripts/theme.init.js"></script>
 
 		<script src="js/fn-acceso.js"></script>
+		<script>
+			<?php if( isset( $_GET["email"], $_GET["token"] ) ){ ?>
+	        	$(document).ready(function () { log_in(); });
+	    	<?php } ?>
+	    </script>
 	</body>
 </html>

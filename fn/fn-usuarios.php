@@ -16,4 +16,16 @@
 		return $borrable;
 	}
 	/* --------------------------------------------------------- */
+	/*if( isset( $_GET["email"], $_GET["token"] ) ){
+		// Recibe los datos provenientes del enlace de acceso para iniciar sesión
+
+		include( "database/data-acceso.php" );
+
+		$usuario["email"] = $_GET["email"];
+		$usuario["token"] = $_GET["token"];
+
+		$sesion = iniciarSesion( $usuario, $dbh, "enlace" );
+		echo $sesion;
+	}*/
+	/* --------------------------------------------------------- */
 ?>
