@@ -53,6 +53,17 @@
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
+		<style type="text/css">
+			.tableatrib{
+				width: 50%; margin: 60px auto;
+			}
+			.tableatrib tbody td {
+				vertical-align: middle !important;
+			}
+			.tableatrib thead th {
+				text-align: center;
+			}
+		</style>
 	</head>
 	<?php 
 		/*if( isV( 'mp_nom_pers' ) ) {
