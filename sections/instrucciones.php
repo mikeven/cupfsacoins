@@ -16,7 +16,7 @@ Cada Atributo le da al ganador de la nominación una cantidad de CUPFSA Coins qu
 		<tbody>
 			<?php foreach ( $inicio_atributos as $a ) { ?>
 				<tr class="gradeX">
-					<td width="30%" align="center"><img width="50%" src="<?php echo $a["imagen"]; ?>"></td>
+					<td width="30%" align="center"><img width="25%" src="<?php echo $a["imagen"]; ?>"></td>
 					<td width="50%"><?php echo $a["nombre"]; ?></td>
 					<td width="20%" align="center"><?php echo $a["valor"]; ?></td>
 				</tr>

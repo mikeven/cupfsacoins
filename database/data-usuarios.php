@@ -208,7 +208,7 @@
 		return md5( $usuario["email"].$time_stamp );
 	}
 	/* --------------------------------------------------------- */
-	function obtenerMensajeEvento( $dbh, $idm ){
+	function obtenerMensajeEventoUsuario( $dbh, $idm ){
 		// Devuelve el mensaje base para enviar por email de acuerdo a un evento
 
 		$q = "select asunto, texto from mailing where id = $idm";
@@ -216,9 +216,9 @@
 		return mysqli_fetch_array( mysqli_query( $dbh, $q ) );
 	}
 	/* --------------------------------------------------------- */
-	function mensajeMail( $dbh, $usuario, $idmje ){
+	function mensajeMailUsuario( $dbh, $usuario, $idmje ){
 		// Prepara los datos para enviar un mensaje por email
-		$mensaje = obtenerMensajeEvento( $dbh, $idmje );
+		$mensaje = obtenerMensajeEventoUsuario( $dbh, $idmje );
 		enviarMensajeEmail( $idmje, $mensaje, $usuario );
 	}
 	/* --------------------------------------------------------- */
@@ -238,7 +238,7 @@
 			
 			if( ( $id != 0 ) && ( $id != "" ) ){
 
-				mensajeMail( $dbh, $usuario, 22 );
+				mensajeMailUsuario( $dbh, $usuario, 22 );
 				asociarRolesUsuario( $dbh, $usuario );
 				$res["exito"] = 1;
 				$res["mje"] = "Registro de usuario exitoso";

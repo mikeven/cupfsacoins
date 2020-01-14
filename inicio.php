@@ -55,7 +55,7 @@
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
 		<style type="text/css">
 			.tableatrib{
-				width: 50%; margin: 60px auto;
+				width: 50%; margin: 20px auto;
 			}
 			.tableatrib tbody td {
 				vertical-align: middle !important;
