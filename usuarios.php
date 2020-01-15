@@ -122,8 +122,11 @@
 												$roles = obtenerRolesUsuario( $dbh, $u["idUSUARIO"] ); 
 										?>
 										<tr class="gradeX">
-											
-											<td><?php echo $u["nombre"] ?></td>
+											<td>
+												<a href="usuario.php?id=<?php 
+													echo $u["idUSUARIO"] ?>"><?php echo $u["nombre"] ?>
+												</a>
+											</td>
 											<td><?php echo $u["apellido"] ?></td>
 											<td><?php echo $u["email"] ?></td>
 											<td>

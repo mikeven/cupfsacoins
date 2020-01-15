@@ -15,6 +15,7 @@
 	$esq_secciones["agregar_usuario"] = array(
 		array('id' => 'mp_titm_us', 'desc' => 'Menu ppal Usuarios'),
 		array('id' => 'pg_usuarios', 'desc' => 'Página consulta de usuarios'),
+		array('id' => 'pg_usuario', 'desc' => 'Página ficha de usuario'),
 		array('id' => 'pg_nvo_usuario', 'desc' => 'Página nuevo usuario')
 	);
 

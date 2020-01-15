@@ -108,7 +108,7 @@
 								<table class="table table-bordered table-striped mb-none listado_productos_gral" id="datatable-default">
 									<thead>
 										<tr>
-											<th><i class="fa fa-file-image-o"></i></th>
+											<th></th>
 											<th>Nombre</th>
 											<th>Descripción</th>
 											<th>Valor</th>

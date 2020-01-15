@@ -5,9 +5,18 @@
 	/* --------------------------------------------------------- */
 	function obtenerUsuarioPorId( $dbh, $id_u ){
 		// Devuelve el registro de un usuario dado su id
-		$q = "select idUSUARIO, nombre, apellido, email, cargo, idDepartamento, 
+		$q = "select idUSUARIO, nombre, apellido, email, cargo, idDepartamento, token_ingreso, 
 		activo, date_format(fecha_creacion,'%d/%m/%Y') as fregistro 
 		from usuario where idUSUARIO = $id_u";
+
+		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
+	}
+	/* --------------------------------------------------------- */
+	function obtenerDataUsuarioPorId( $dbh, $id_u ){
+		// Devuelve el registro de un usuario dado su id
+		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.token_ingreso, d.nombre as departamento,  
+		date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro from usuario u, departamento d 
+		where u.idDepartamento = d.idDepartamento and idUSUARIO = $id_u";
 
 		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
 	}
