@@ -128,15 +128,16 @@
 												<h3 class="text-semibold mt-sm">
 													<?php echo $usuario["nombre"]." ".$usuario["apellido"]; ?>
 												</h3>
-												<p>Departamento: <?php echo $usuario["departamento"]; ?></p>
-												<p>Fecha creación: <?php echo $usuario["fregistro"]; ?></p>
-												<p>
-													Roles: 	<?php  foreach ( $roles_u as $rl ){ ?>
+												<p><b>Email:</b> <?php echo $usuario["email"]; ?></p>
+												<p><b>Departamento:</b> <?php echo $usuario["departamento"]; ?></p>
+												<p><b>Fecha creación:</b> <?php echo $usuario["fregistro"]; ?></p>
+												<p><b>
+													Roles:</b> 	<?php  foreach ( $roles_u as $rl ){ ?>
 																<?php echo $rl["nombre"].'&nbsp&nbsp&nbsp'; ?>
 															<?php  } ?>
 												</p>
 												
-												<p>Enlace de ingreso: </p>
+												<p><b>Enlace de ingreso:</b></p>
 												<code><?php echo $lnk_login; ?></code>
 											</div>
 										</section>
