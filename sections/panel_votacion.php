@@ -29,7 +29,7 @@
 		<?php if( $mismo_dpto ) { ?>
 			<i class="fa fa-lock"></i> VP del departamento debe aprobar esta nominación
 		<?php } else { ?>
-			<i class="fa fa-lock"></i> VP del departamento debe validar para iniciar votación de esta nominación
+			<i class="fa fa-lock"></i> VP del departamento debe validar primero para votar esta nominación
 		<?php } ?>
 	<?php } ?>	
 <?php } ?>

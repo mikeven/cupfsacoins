@@ -1,10 +1,11 @@
 <div id="panel_aprobacion">
 	<hr class="solid short">
 	<div id="confirmar_seleccion">
-		
+		<?php if( $nominacion["idNOMINADOR"] != $idu ) {  ?>
 		<button id="btn_aprobar" type="button" data-a="aprobada"
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
 			<i class="fa fa-check"></i> Aprobar</button>
+		<?php } ?>
 		
 		<button id="btn_rechazar" type="button" data-a="rechazada"
 		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
@@ -78,7 +79,7 @@
 
 					<?php if( $nominacion["estado"] == "pendiente" ) { ?>
 
-						<i class="fa fa-lock"></i> VP del departamento debe validar esta nominación primero
+						<i class="fa fa-lock"></i> VP del departamento debe validar esta nominación para aprobarse
 						
 					<?php } ?>
 
