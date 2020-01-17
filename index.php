@@ -105,7 +105,7 @@
 						</form>
 					</div>
 				</div>
-				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2020. Ver 1.1</p>
+				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2020</p>
 			</div>
 		</section>
 		<!-- end: page -->
