@@ -32,7 +32,7 @@
 	function obtenerUsuariosRegistrados( $dbh ){
 		// Devuelve todos los registros de usuarios
 		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.cargo, d.nombre as departamento,  
-		u.activo, date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro 
+		u.activo, date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro, u.token_ingreso 
 		from usuario u, departamento d where u.idDepartamento = d.idDepartamento order by nombre asc";
 		
 		$data = mysqli_query( $dbh, $q );

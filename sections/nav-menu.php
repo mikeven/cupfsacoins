@@ -15,7 +15,7 @@
 			<ul class="nav nav-children">
 				<li><a href="usuarios.php">Ver usuarios</a></li>
 				<li><a href="nuevo_usuario.php">Nuevo usuario</a></li>
-				<li><a href="#!">Permisologías</a></li>
+				<li><a href="lista-usuarios.php">Enlaces de ingreso</a></li>
 			</ul>
 		</li>
 		<?php } ?>
