@@ -72,7 +72,7 @@
 
 				<section role="main" class="content-body">
 					<header class="page-header">
-						<h2><i class="fa fa-users" aria-hidden="true"></i> Usuarios</h2>
+						<h2><i class="fa fa-link" aria-hidden="true"></i> Enlaces de ingreso</h2>
 						<div class="right-wrapper pull-right">
 							<ol class="breadcrumbs">
 								<li>
@@ -80,7 +80,8 @@
 										<i class="fa fa-home"></i>
 									</a>
 								</li>
-								<li><span>Usuarios</span></li>
+								<li><span><a href="usuarios.php">Usuarios</a></span></li>
+								<li><span>Enlaces de ingreso</span></li>
 							</ol>
 							<a class="sidebar-right-null" data-open=""></a>
 						</div>

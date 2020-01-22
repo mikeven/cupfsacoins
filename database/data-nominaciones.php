@@ -238,7 +238,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerVotosNominacion( $dbh, $idn, $cond ){
-		//Devulve la cantidad de registros de votos de una nominación
+		//Devuelve la cantidad de registros de votos de una nominación
 		$c["todos"] = "";
 		$c["si"] = "and valor = 'si'";
 		$c["no"] = "and valor = 'no'";
