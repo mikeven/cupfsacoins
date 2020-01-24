@@ -21,7 +21,7 @@
 <!-- start: header -->
 <header class="header">
 	<div class="logo-container">
-		<a href="../" class="logo">
+		<a href="inicio.php" class="logo">
 			<img src="assets/images/logo_cupsfa.png" height="35" alt="JSOFT Admin" />
 		</a>
 		<div class="visible-xs toggle-sidebar-left" data-toggle-class="sidebar-left-opened" data-target="html" data-fire-event="sidebar-left-opened">

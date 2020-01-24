@@ -3,17 +3,17 @@
 	<div id="confirmar_seleccion">
 		<?php if( $nominacion["idNOMINADOR"] != $idu ) {  ?>
 		<button id="btn_aprobar" type="button" data-a="aprobada"
-		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
+		class="mb-xs mt-xs mr-xs btn btn-primary adminev" data-panel="adm">
 			<i class="fa fa-check"></i> Aprobar</button>
 		<?php } ?>
 		
 		<button id="btn_rechazar" type="button" data-a="rechazada"
-		class="mb-xs mt-xs mr-xs btn btn-primary adminev">
+		class="mb-xs mt-xs mr-xs btn btn-primary adminev" data-panel="adm">
 			<i class="fa fa-times"></i> Rechazar</button>
 
 		<?php if( solicitableSustento( $dbh, $idu, $nominacion, $mismo_dpto )  ) { ?>
 			<button id="btn_sustento" type="button" data-a="sustento"
-				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s">
+				class="mb-xs mt-xs mr-xs btn btn-primary adminev_s" data-panel="adm">
 			<i class="fa fa-file-o"></i> Solicitar sustento</button>
 		<?php } ?>
 

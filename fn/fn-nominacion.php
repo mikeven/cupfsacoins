@@ -9,7 +9,8 @@
     $idn = NULL;
     $nominacion = NULL;
     $idu = $_SESSION["user"]["idUSUARIO"];
-    $es_usrvp = esRol( $dbh, 4, $idu );
+    $es_usrvp = esRol( $dbh, 4, $idu );					//Rol 4: Vicepresidente ( VP )
+    $es_usadm = esRol( $dbh, 1, $idu );					//Rol 1: Administrador ( Admin )
     /* ----------------------------------------------------------- */
     if( isset( $_GET["id"] ) )
     	$idn = $_GET["id"];

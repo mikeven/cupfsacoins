@@ -244,7 +244,7 @@
 						</section>
 					</div>
 					
-					<?php if( mostrarResultadosNominacion( $es_usrvp, $votada ) ) { ?>
+					<?php if( mostrarResultadosNominacion( $es_usrvp, $es_usadm, $votada ) ) { ?>
 						<div class="col-sm-6 col-xs-12">
 							<section class="panel">
 								<header class="panel-heading">

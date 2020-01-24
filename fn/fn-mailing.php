@@ -38,7 +38,7 @@
 			$receptor = $datos["usuario"]["email"];			// usuario quien realiza canje
 
 		if( in_array( $idm, array( 22 ) ) )
-			$receptor = $datos["email"];			// usuario quien realiza canje
+			$receptor = $datos["email"];					// usuario quien realiza canje
 		
 		return $receptor;
 	}

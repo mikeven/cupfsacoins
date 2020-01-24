@@ -49,7 +49,7 @@
 		if( !isV( $pagina ) ) header('Location: inicio.php');
 	}
 	/* --------------------------------------------------------- */
-	function mostrarResultadosNominacion( $es_vp, $votada ){
+	function mostrarResultadosNominacion( $es_vp, $es_usadm, $votada ){
 		//Determina si es visible los resultados de votación de una nominación
 		$mostrar = false;
 
@@ -57,8 +57,12 @@
 			if( isV( "en_votar" ) ){				// Si puede votar
 				if( $votada )						// Si ya votó por la nominación
 					$mostrar = true;
+				else 
+					if( $es_usadm ) 				// Si es administrador
+						$mostrar = true;
 			}else
 				$mostrar = true;
+
 		}
 			
 		return $mostrar;
