@@ -13,7 +13,7 @@
 	}
 	/* --------------------------------------------------------- */
 	function obtenerDataUsuarioPorId( $dbh, $id_u ){
-		// Devuelve el registro de un usuario dado su id
+		// Devuelve el registro amplio de un usuario dado su id
 		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.token_ingreso, d.nombre as departamento,  
 		date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro from usuario u, departamento d 
 		where u.idDepartamento = d.idDepartamento and idUSUARIO = $id_u";
@@ -60,7 +60,7 @@
 	/* --------------------------------------------------------- */
 	function obtenerAdministrador( $dbh ){
 		// Obtiene el VP del departamento indicado por id
-		$q = "select idUSUARIO, nombre, email from usuario where idUSUARIO in 
+		$q = "select idUSUARIO, nombre, email, token_ingreso from usuario where idUSUARIO in 
 		(select idUSUARIO from usuario_rol where idROL = 1)";
 		
 		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
@@ -68,7 +68,7 @@
 	/* --------------------------------------------------------- */
 	function obtenerVPDepartamento( $dbh, $iddpto ){
 		// Obtiene el VP del departamento indicado por id
-		$q = "select idUSUARIO, nombre, email from usuario where idDepartamento = $iddpto and 
+		$q = "select idUSUARIO, nombre, email, token_ingreso from usuario where idDepartamento = $iddpto and 
 		idUSUARIO in (select idUSUARIO from usuario_rol where idROL = 4)";
 		
 		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );

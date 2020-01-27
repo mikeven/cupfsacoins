@@ -43,6 +43,30 @@
 		return $receptor;
 	}
 	/* ----------------------------------------------------------------------------------- */
+	function obtenerTokenReceptor( $idm, $datos ){
+		// Devuelve el token de ingreso del receptor del mensaje de acuerdo al id del caso
+		
+		if( in_array( $idm, array( 1, 4, 5, 6, 8, 10, 12, 13, 18 ) ) )
+			$token_r = $datos["token1"];							// nominador
+		
+		if( in_array( $idm, array( 2 ) ) )
+			$token_r = $datos["token2"];							// nominado
+		
+		if( in_array( $idm, array( 3, 16 ) ) )
+			$token_r = $datos["vp_dpto_ndo"]["token_ingreso"];		// vp del departamento del nominado
+		
+		if( in_array( $idm, array( 9, 11, 14, 17 ) ) )
+			$token_r = $datos["admin"]["token_ingreso"];			// administrador
+
+		if( in_array( $idm, array( 15 ) ) )
+			$token_r = $datos["usuario"]["token_ingreso"];			// usuario quien realiza canje
+
+		if( in_array( $idm, array( 22 ) ) )
+			$token_r = $datos["token_a"];							// usuario registrado
+		
+		return $token_r;
+	}
+	/* ----------------------------------------------------------------------------------- */
 	function mensajeTipo1( $plantilla, $asunto, $mbase, $datos, $vp_nominador ){
 		// Adjudicación de nominaciones, recibe nominado 
 
@@ -133,11 +157,20 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
+	function insertarTokenIngreso( $mensaje, $email, $token ){
+		// Inserta el enlace con el token de ingreso en el mensaje enviado por email
+		$mensaje = str_replace( "{email}", $email, $mensaje );
+		$mensaje = str_replace( "{token}", $token, $mensaje );
+
+		return $mensaje;
+	}
+	/* ----------------------------------------------------------------------------------- */
 	function escribirMensaje( $idm, $mensaje, $plantilla, $datos ){
 		// Sustitución de elementos de la plantilla con los datos del mensaje
 
 		$sobre["asunto"] 		= $mensaje["asunto"];
 		$sobre["receptor"] 		= obtenerReceptor( $idm, $datos );
+		$token_ingreso 			= obtenerTokenReceptor( $idm, $datos );
 		
 		if( $idm == 1 || $idm == 18 ){
 			//  1: Usuario no VP registra nueva nominación, notificación al nominador 
@@ -177,9 +210,12 @@
 
 		if( $idm == 22 ){
 			// Envío de enlace de acceso a usuario
+			$token_ingreso = $datos["token_a"];
 			$plantilla = file_get_contents( "../fn/mailing/mailing_access_token.html" );
 			$sobre["mensaje"] 	= mensajeTipoAT( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos );
 		}
+
+		$sobre["mensaje"] 	= insertarTokenIngreso( $sobre["mensaje"], $sobre["receptor"], $token_ingreso );
 		
 		return $sobre; 
 	}

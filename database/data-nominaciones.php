@@ -8,9 +8,9 @@
 	function obtenerNominacionPorId( $dbh, $idn ){
 		// Devuelve el registro de una nominacion dado su id
 		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
-		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, u1.email as email1,  
-		u2.apellido as apellido2, u2.email as email2, n.valor_atributo as valor, a.nombre as atributo, 
-		a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
+		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, u1.email as email1, 
+		u1.token_ingreso as token1, u2.apellido as apellido2, u2.email as email2, u2.token_ingreso as token2, 
+		n.valor_atributo as valor, a.nombre as atributo, a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
 		n.motivo_vp, n.sustento_vp, n.votable, n.obs_comite, n.obs_vp, n.obs_sustento, n.obs_sustento_vp, 
 		d1.idDepartamento as iddpto_nominador, d2.idDepartamento as iddpto_nominado, 
 		date_format(n.fecha_nominacion,'%d/%m/%Y') as fregistro, 
