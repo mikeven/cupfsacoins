@@ -334,4 +334,25 @@
 		echo json_encode( $respuesta );
 	}
 	/* --------------------------------------------------------- */
+	if( isset( $_POST["enl_ing"] ) ){
+		// Solicitud para enviar enlace de ingreso a usuario
+
+		include( "bd.php" );	
+		include( "../fn/fn-mailing.php" );
+		
+		$usuario = obtenerUsuarioPorId( $dbh, $_POST["enl_ing"] );
+		$usuario["token_a"] = $usuario["token_ingreso"];
+		mensajeMailUsuario( $dbh, $usuario, 22 );
+
+		if( $usuario ){
+			$res["exito"] = 1;
+			$res["mje"] = "Enlace enviado con éxito";
+		}else{
+			$res["exito"] = 0;
+			$res["mje"] = "Error al enviar enlace";
+		}
+
+		echo json_encode( $res );
+	}
+	/* --------------------------------------------------------- */
 ?>

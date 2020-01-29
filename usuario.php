@@ -129,7 +129,7 @@
 													<?php echo $usuario["nombre"]." ".$usuario["apellido"]; ?>
 												</h3>
 												<p><b>Email:</b> <?php echo $usuario["email"]; ?></p>
-												<p><b>Departamento:</b> <?php echo $usuario["departamento"]; ?></p>
+												<p><b>Departamento: </b> <?php echo $usuario["departamento"]; ?></p>
 												<p><b>Fecha creación:</b> <?php echo $usuario["fregistro"]; ?></p>
 												<p><b>
 													Roles:</b> 	<?php  foreach ( $roles_u as $rl ){ ?>
@@ -139,6 +139,14 @@
 												
 												<p><b>Enlace de ingreso:</b></p>
 												<code><?php echo $lnk_login; ?></code>
+											</div>
+											<div id="bot_enl_ing">
+												<a href="#!">
+												<button id="btn_enviar_lnk" type="button" 
+												data-u="<?php echo $usuario["idUSUARIO"]; ?>" 
+												class="mb-xs mt-xs mr-xs btn btn-primary adminev">
+													<i class="fa fa-link"></i> Enviar enlace de ingreso a usuario</button>
+												</a>
 											</div>
 										</section>
 										
@@ -208,7 +216,7 @@
 
 		<!-- Custom scripts -->
 		<script src="js/fn-ui.js"></script>		
-		<script src="js/fn-productos.js"></script>
+		<script src="js/fn-usuarios.js"></script>
 
 	</body>
 </html>

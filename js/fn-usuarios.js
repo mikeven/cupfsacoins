@@ -166,6 +166,29 @@ function eliminarUsuario(){
     });
 }
 /* --------------------------------------------------------- */
+function enviarEnlaceIngreso( idu ){
+	// Invocación asíncrona para enviar enlace de ingreso a usuario
+
+	var espera = "<img src='assets/images/loading.gif' width='35'>";
+
+	$.ajax({
+        type:"POST",
+        url:"database/data-usuarios.php",
+        data:{ enl_ing: idu },
+        beforeSend: function() {
+        	$( "#bot_enl_ing" ).html( espera );
+        },
+        success: function( response ){
+        	console.log( response );
+			res = jQuery.parseJSON( response );
+			if( res.exito == 1 )
+    			$( "#bot_enl_ing" ).html( res.mje );
+			else
+				notificar( "Usuarios", res.mje, "error" );
+        }
+    });
+}
+/* --------------------------------------------------------- */
 $(".listado_usuarios_gral").on( "click", ".eusuario", function (e) {
 	//Inicializa la ventana modal para confirmar la eliminación de un usuario
 	//alert( $(this).attr( "data-idu" ) );
@@ -181,3 +204,10 @@ $(".listado_usuarios_gral").on( "click", ".eusuario", function (e) {
 		eliminarUsuario();
 	});
 });
+/* --------------------------------------------------------- */
+$("#btn_enviar_lnk").on( "click", function (e) {
+	// Invoca la llamada al servidor para enviar enlace de ingreso a un usuario
+	var idu = $(this).attr( "data-u" );
+	enviarEnlaceIngreso( idu );
+});
+/* --------------------------------------------------------- */
