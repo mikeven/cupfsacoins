@@ -31,8 +31,8 @@
 	/* --------------------------------------------------------- */
 	function obtenerUsuariosRegistrados( $dbh ){
 		// Devuelve todos los registros de usuarios
-		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.cargo, d.nombre as departamento,  
-		u.activo, date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro, u.token_ingreso 
+		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.cargo, u.idDepartamento as iddpto, 
+		d.nombre as departamento, u.activo, date_format(u.fecha_creacion,'%d/%m/%Y') as fregistro, u.token_ingreso 
 		from usuario u, departamento d where u.idDepartamento = d.idDepartamento order by nombre asc";
 		
 		$data = mysqli_query( $dbh, $q );
@@ -332,27 +332,6 @@
 		else $respuesta = "Dirección de email ya registrada";
 
 		echo json_encode( $respuesta );
-	}
-	/* --------------------------------------------------------- */
-	if( isset( $_POST["enl_ing"] ) ){
-		// Solicitud para enviar enlace de ingreso a usuario
-
-		include( "bd.php" );	
-		include( "../fn/fn-mailing.php" );
-		
-		$usuario = obtenerUsuarioPorId( $dbh, $_POST["enl_ing"] );
-		$usuario["token_a"] = $usuario["token_ingreso"];
-		mensajeMailUsuario( $dbh, $usuario, 22 );
-
-		if( $usuario ){
-			$res["exito"] = 1;
-			$res["mje"] = "Enlace enviado con éxito";
-		}else{
-			$res["exito"] = 0;
-			$res["mje"] = "Error al enviar enlace";
-		}
-
-		echo json_encode( $res );
 	}
 	/* --------------------------------------------------------- */
 ?>
