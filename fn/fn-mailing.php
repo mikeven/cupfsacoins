@@ -13,10 +13,12 @@
         return $cabeceras;
 	}
 	/* ----------------------------------------------------------------------------------- */
-	function obtenerPlantillaMensaje(){
+	function obtenerPlantillaMensaje( $id_mensaje ){
 		// Devuelve la plantilla html de acuerdo al mensaje a ser enviado
-
-		return file_get_contents( "../fn/mailing/mailing_message.html" );
+		if( $id_mensaje == 2 )
+			return file_get_contents( "../fn/mailing/mailing_message_adjudicacion.html" );
+		else
+			return file_get_contents( "../fn/mailing/mailing_message.html" );
 	}
 	/* ----------------------------------------------------------------------------------- */
 	function obtenerReceptor( $idm, $datos ){
@@ -157,6 +159,20 @@
 		return $plantilla;
 	}
 	/* ----------------------------------------------------------------------------------- */
+	function mensajeADJ( $plantilla, $asunto, $datos ){
+		// Adjudicación de nominaciones, recibe nominado 
+		$url_atrimg = "https://coins.cupfsa.com/".$datos["imagen"];
+
+		$plantilla = str_replace( "{nominado}", $datos["nombre2"], $plantilla );
+		$plantilla = str_replace( "{nominador}", $datos["nombre1"], $plantilla );
+		$plantilla = str_replace( "{atributo}", strtoupper( $datos["atributo"] ), $plantilla );
+		$plantilla = str_replace( "{img_atributo}", $url_atrimg, $plantilla );
+		$plantilla = str_replace( "{dedicatoria}", $datos["dedicatoria"], $plantilla );
+		$plantilla = str_replace( "{coins}", $datos["valor"], $plantilla );
+		
+		return $plantilla;
+	}
+	/* ----------------------------------------------------------------------------------- */
 	function insertarTokenIngreso( $mensaje, $email, $token ){
 		// Inserta el enlace con el token de ingreso en el mensaje enviado por email
 		$mensaje = str_replace( "{email}", $email, $mensaje );
@@ -179,7 +195,8 @@
 		}
 		if( $idm == 2 ){
 			// Usuario VP registra nueva nominación, adjudicación inmediata al nominado
-			$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
+			//$sobre["mensaje"] 	= mensajeTipo1( $plantilla, $mensaje["asunto"], $mensaje["texto"], $datos, true );
+			$sobre["mensaje"] 	= mensajeADJ( $plantilla, $mensaje["asunto"], $datos );
 		}
 		if( $idm == 3 ){
 			// Nominación entre mismo departamento, VP recibe notificación
@@ -222,7 +239,8 @@
 	/* ----------------------------------------------------------------------------------- */
 	function enviarMensajeEmail( $id_mensaje, $mensaje, $datos ){
 		// Construcción del mensaje para enviar por email
-		$plantilla 	= obtenerPlantillaMensaje();
+		
+		$plantilla 	= obtenerPlantillaMensaje( $id_mensaje );
 		$sobre 		= escribirMensaje( $id_mensaje, $mensaje, $plantilla, $datos );
 		$cabeceras 	= obtenerCabecerasMensaje();
 

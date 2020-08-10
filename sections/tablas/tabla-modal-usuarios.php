@@ -15,7 +15,8 @@
 				<tr class="gradeX">
 					<td>
 						<a class="sel_persona" href="#!" 
-						data-idp="<?php echo $u["idUSUARIO"] ?>"><?php echo $u["nombre"]." ".$u["apellido"] ?> </a>
+						data-idp="<?php echo $u['idUSUARIO'] ?>" data-dpto="<?php echo $u['iddpto'] ?>">
+						<?php echo $u["nombre"]." ".$u["apellido"] ?> </a>
 					</td>
 					<td><?php echo $u["departamento"] ?></td>
 					<td><?php echo $u["email"] ?></td>

@@ -160,6 +160,14 @@
 									</div>
 									<?php } ?>
 								</div>
+								<div class="form-group">
+									<?php if( $nominacion["dedicatoria"] != "" ) { ?>
+									<label class="col-sm-4 text-right">Mensaje del nominador: </label>
+									<div class="col-sm-8 text-left">
+										<?php echo $nominacion["dedicatoria"]; ?>
+									</div>
+									<?php } ?>
+								</div>
 
 								<?php 
 									if( soyNominado( $idu, $nominacion ) == false )
@@ -240,6 +248,18 @@
 									</div>
 								</footer>
 							<?php } } ?>
+							<!-- ------------------------------------ #frm_adjudicacion -->
+							<?php if ( $nominacion["estado"] == "aprobada" && $nominacion["idNOMINADOR"] == $idu ) { 
+								// Nominación aprobada y el usuario en sesión es el nominador de la nominación actual
+							?>
+							<footer class="panel-footer panel_comentario_adj" style="display: none;">
+								<div class="row">
+									<div class="col-sm-12" align="right">
+										<button id="btn_adjudicacion" class="btn btn-primary" data-o="full">Enviar</button>
+									</div>
+								</div>
+							</footer>
+							<?php } ?>
 							<!-- ------------------------------------ PIE FORMULARIOS -->
 						</section>
 					</div>

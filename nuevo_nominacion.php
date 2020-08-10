@@ -13,7 +13,8 @@
     include( "fn/fn-acceso.php" );
     
     isAccesible( $pagina );
-    //print_r( $_SESSION["user"]["roles"] );
+    $es_usr_vp = esRol( $dbh, 4, $_SESSION["user"]["idUSUARIO"] );
+    
 ?>
 <!doctype html>
 <html class="fixed">
@@ -117,7 +118,11 @@
 										<div class="panel-body">
 											<div class="form-group">
 												<label class="col-sm-3 control-label">Persona <span class="required">*</span></label>
-												<input type="hidden" name="nva_nominacion" value="<?php echo $_SESSION["user"]["idUSUARIO"] ?>">
+												<input type="hidden" name="nva_nominacion" 
+												value="<?php echo $_SESSION["user"]["idUSUARIO"] ?>">
+												<input id="dpto_nominador" type="hidden" name="dpto_nominador" 
+												value="<?php echo $_SESSION["user"]["idDepartamento"] ?>">
+												<input id="ndor_vp" type="hidden" value="<?php echo $es_usr_vp; ?>">
 												<div class="col-sm-9">
 													<div class="input-group">
 														<span class="input-group-btn">
@@ -170,6 +175,16 @@
 													</div>
 												</div>
 											</div>
+
+											<div id="tx_dedicatoria" class="form-group" style="display: none;">
+												<label class="col-sm-3 control-label">Dedicatoria al nominado <span class="required">*</span></label>
+												<div class="col-sm-9">
+													<textarea class="form-control" rows="3" id="textareaAutosize_dedicatoria" 
+													name="dedicatoria" data-plugin-textarea-autosize="" 
+													style="overflow: hidden; overflow-wrap: break-word; resize: none; height: 74px; width: 100%;" required></textarea>
+												</div>
+											</div>
+
 										</div>
 										<footer class="panel-footer">
 											<div class="row">

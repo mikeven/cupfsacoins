@@ -7,7 +7,7 @@
 
 	function obtenerNominacionPorId( $dbh, $idn ){
 		// Devuelve el registro de una nominacion dado su id
-		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, 
+		$q = "select n.idNOMINACION, n.idNOMINADOR, n.idNOMINADO, n.idATRIBUTO, n.saludo_adjudicacion as dedicatoria, 
 		u1.nombre as nombre1, u1.apellido as apellido1, u2.nombre as nombre2, u1.email as email1, 
 		u1.token_ingreso as token1, u2.apellido as apellido2, u2.email as email2, u2.token_ingreso as token2, 
 		n.valor_atributo as valor, a.nombre as atributo, a.imagen, n.estado, n.motivo1, n.sustento1, n.motivo2, n.sustento2, 
@@ -137,10 +137,10 @@
 		// Guarda un nuevo registro de nominación
 
 		$q = "insert into nominacion ( idNOMINADOR, idNOMINADO, idATRIBUTO, 
-		valor_atributo, estado, motivo1, sustento1, fecha_nominacion ) values 
+		valor_atributo, estado, motivo1, sustento1, saludo_adjudicacion, fecha_nominacion ) values 
 		( $nominacion[idnominador], $nominacion[idnominado], $nominacion[idatributo], 
 		$nominacion[valor], '$nominacion[estado]', '$nominacion[motivo]', 
-		'$nominacion[sustento]', NOW() )";
+		'$nominacion[sustento]', '$nominacion[dedicatoria]', NOW() )";
 		
 		$data = mysqli_query( $dbh, $q );
 		return mysqli_insert_id( $dbh );
@@ -262,10 +262,19 @@
 		return $votacion;
 	}
 	/* --------------------------------------------------------- */
-	function adjudicarNominacion( $dbh, $idn ){
+	function adjudicarNominacion( $dbh, $nominacion ){
+		// Adjudica una nominación al nominado: hace disponible los coins
+		$q = "update nominacion set estado = 'adjudicada', fecha_adjudicacion = NOW(), 
+		saludo_adjudicacion = '$nominacion[comentario]' where idNOMINACION = $nominacion[idnominacion]";
+		
+		mysqli_query( $dbh, $q );
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
+	function adjudicarNominacionVP( $dbh, $idn ){
 		// Adjudica una nominación al nominado: hace disponible los coins
 		$q = "update nominacion set estado = 'adjudicada', fecha_adjudicacion = NOW() 
-		where idNOMINACION = $idn";
+				where idNOMINACION = $idn";
 		
 		mysqli_query( $dbh, $q );
 		return mysqli_affected_rows( $dbh );
@@ -279,7 +288,7 @@
 		$evaluacion["idnominacion"] 	= $nominacion["idNOMINACION"];
 
 		registrarEvaluacion( $dbh, $evaluacion, true );
-		adjudicarNominacion( $dbh, $nominacion["idNOMINACION"] );
+		adjudicarNominacionVP( $dbh, $nominacion["idNOMINACION"] );
 
 		postAdjudicacion( $dbh, $nominacion["idNOMINACION"], false );
 		// último parámetro en false: no incluir función mailing, ya fue incluida anteriormente en el 
@@ -437,7 +446,7 @@
 			// Nominador y nominado son del mismo departamento
 			if( $nominador_es_vp ){	
 				// VP nomina a usuario de su departamento
-				mensajeMail( $dbh, $nominacion, 2 );		// Notifica reconocimiento al nominado
+				//mensajeMail( $dbh, $nominacion, 2 );		// Notifica reconocimiento al nominado
 			} 
 			else{
 				if( $vp_nominado ){
@@ -478,6 +487,7 @@
 		$nominacion["idatributo"] 	= $_POST["atributo"];
 		$nominacion["valor"] 		= $_POST["valor_atributo"];
 		$nominacion["motivo"] 		= $_POST["motivo"];
+		$nominacion["dedicatoria"] 	= $_POST["dedicatoria"];
 		$nominacion["sustento"]		= "";
 		$nominacion["estado"] 		= "pendiente";
 		$vp_nominado 				= false;
@@ -512,6 +522,7 @@
 		}
 
 		echo json_encode( $res );
+
 	}
 	/* --------------------------------------------------------- */
 	if( isset( $_POST["votar"] ) ){
@@ -625,13 +636,15 @@
 	if( isset( $_POST["adjudicar"] ) ){
 		//Solicitud para adjudicar una nominación
 		include( "bd.php" );
+
+		parse_str( $_POST["adjudicar"], $nominacion );
 		
-		$rsp = adjudicarNominacion( $dbh, $_POST["adjudicar"] );
+		$rsp = adjudicarNominacion( $dbh, $nominacion );
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
 			$res["mje"] = "Nominación adjudicada";
-			postAdjudicacion( $dbh, $_POST["adjudicar"], true );			
+			postAdjudicacion( $dbh, $nominacion["idnominacion"], true );			
 		} else {
 			$res["exito"] = 0;
 			$res["mje"] = "Error al adjudicar nominación";

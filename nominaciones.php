@@ -158,7 +158,7 @@
 											<?php echo $enl; ?></a>
 											
 											<?php if ( $nom["estado"] == "aprobada" 
-												    && $nom["idNOMINADOR"] == $idu ) { 
+												    && $nom["idNOMINADOR"] == $idu && false ) { 
 												// Nominación aprobada y usuario en sesión es el nominador
 											?>
 												| <a href="#!" class="adjudicacion" href="#!" 

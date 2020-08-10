@@ -132,11 +132,26 @@ $("#atributo").on('change', function (e) {
 	var valor = $( 'option:selected', $(this) ).attr("data-v");
 	$("#valattr").val( valor );
 });
+/* --------------------------------------------------------- */
+function mostrarDedicatoria( id_dpto_nominado ){
+	// Muestra el campo dedicatoria si el nominador es VP y nomina a un usuario del mismo departamento. 
 
+	var id_dpto_nominador = $("#dpto_nominador").val();
+	var es_vp = $( "#ndor_vp" ).val();
+	
+	if( id_dpto_nominador == id_dpto_nominado && es_vp ) 
+		$("#tx_dedicatoria").show("slow");
+	else
+		$("#tx_dedicatoria").hide("slow");
+}
+/* --------------------------------------------------------- */
 $(".sel_persona").on('click', function (e) {
 	// Asigna el valor del id de la persona seleccionada al campo oculto, 
 	// muestra el nombre de la persona seleccionada y cierra la ventana emergente
-	var idp = $(this).attr("data-idp");
+	var idp 		= $(this).attr("data-idp");
+
+	mostrarDedicatoria( $(this).attr("data-dpto") );
+
 	$("#idpersona").val( idp );
 	$("#persona_seleccion").val( $(this).html() );
 	$("#btn_cerrar_usuarios").click();
@@ -231,6 +246,8 @@ function actualizarVisualAdjudicacion( origen ){
 
 	if( origen == "full" ){
 		/*$(".enc_nom").addClass( "bg-quartenary" );*/
+		$("#panel_comentario_adj").fadeOut( 1000 );
+		$(".panel_comentario_adj").fadeOut( 1000 );
 		$(".adjudicacion").removeClass( "adjudicacion" );
 		$(".accion-adj").html("<i class='fa fa-gift'></i> Adjudicada");
 		$(".panel-heading-icon").html("<i class='fa fa-gift' style='color:#734ba9'></i>");
@@ -243,10 +260,12 @@ function adjudicarNominacion( origen, idn ){
 	// Invocación asíncrona para adjudicar una nominación
 	
 	var espera = "<img src='../assets/images/loading.gif' width='30'>";
+	var fs = $('#frm_adjudicacion').serialize();
+	console.log( fs );
 	$.ajax({
         type:"POST",
         url:"database/data-nominaciones.php",
-        data:{ adjudicar: idn  },
+        data:{ adjudicar: fs },
         beforeSend: function() {
         	$(".accion-adj").html( espera );
         },
@@ -256,6 +275,7 @@ function adjudicarNominacion( origen, idn ){
 			if( res.exito == 1 ){
 				actualizarVisualAdjudicacion( origen );
 				notificar( "Nominación", res.mje, "success" );
+				recargarPag( 3000 );
 			}
 			else
 				notificar( "Nominación", res.mje, "error" );
@@ -271,11 +291,17 @@ $(".adminev, .adminev_s, .vp_ev").on('click', function (e) {
 	$(this).prop( "disabled", true );
 });
 /* --------------------------------------------------------- */ 
-$(".adjudicacion").on('click', function (e) {
+$("#btn_adjudicacion").on('click', function (e) {
 	// Inicia la invocación para adjudicar una nominación
 	var origen = $(this).attr( "data-o" );
 	var idn = $(this).attr( "data-idn" );
 	adjudicarNominacion( origen, idn );
+});
+/* --------------------------------------------------------- */
+$(".adjudicacion").on('click', function (e) {
+	// Muestra el cuadro de texto para 
+	$(".panel_comentario_adj").fadeIn(300);
+
 });
 /* --------------------------------------------------------- */
 function tooltipSuiche( valor, suiche ){
