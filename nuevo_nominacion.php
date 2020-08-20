@@ -177,7 +177,7 @@
 											</div>
 
 											<div id="tx_dedicatoria" class="form-group" style="display: none;">
-												<label class="col-sm-3 control-label">Dedicatoria al nominado <span class="required">*</span></label>
+												<label class="col-sm-3 control-label"> Dedícale unas palabras a tu nominado <span class="required">*</span></label>
 												<div class="col-sm-9">
 													<textarea class="form-control" rows="3" id="textareaAutosize_dedicatoria" 
 													name="dedicatoria" data-plugin-textarea-autosize="" 
