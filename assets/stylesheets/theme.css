@@ -1424,7 +1424,7 @@ html.fixed .visible-xl-inline-block {
 
 /* Header */
 .header {
-	background-color: #000;
+	background-color: #f2f2f2; /*#000*/
 	/*background-image: -webkit-linear-gradient(#f6f6f6 0%, white 45%);*/
 	/*background-image: linear-gradient(#f6f6f6 0%, white 45%);*/
 	border-bottom: 1px solid #282828;
@@ -5053,7 +5053,7 @@ html.header-dark .notifications > li .notification-icon i {
 }
 
 .userbox .name {
-	color: #f3f3f3;
+	color: #666; /*f3f3f3*/
 	font-size: 13px;
 	font-size: 1.3rem;
 	line-height: 1.2em;

@@ -7,8 +7,8 @@
 	    height: auto;
 	    line-height: 12px;
 	    text-align: center;
-	    color: #fff;
-	    background-color: rgba(0, 0, 0, 0.1);
+	    color: #999;
+	    /*background-color: rgba(0, 0, 0, 0.1);*/
 	}
 
 	#userbox .dropdown-menu{

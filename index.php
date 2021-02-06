@@ -49,17 +49,17 @@
 	<?php 
 		$usuarios = obtenerUsuariosRegistrados( $dbh );
 	?>
-	<body>
+	<body style="background: #ecedf0">
 		<!-- start: page -->
 		<section class="body-sign">
 			<div class="center-sign">
 				<a href="/" class="logo pull-left">
-					<img src="assets/images/logo_cupsfa.png" height="35" alt="CUPFSA"/>
+					<img src="assets/images/logo_cupsfa.png" height="60" alt="CUPFSA"/>
 				</a>
 
 				<div class="panel panel-sign">
 					<div class="panel-title-sign mt-xl text-right">
-						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> Ingresar</h2>
+						<h2 class="title text-uppercase text-bold m-none"><i class="fa fa-user mr-xs"></i> Ingreso</h2>
 					</div>
 					<div class="panel-body">
 						<form id="loginform">
@@ -105,7 +105,7 @@
 						</form>
 					</div>
 				</div>
-				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2020</p>
+				<p class="text-center text-muted mt-md mb-md">Cupfsa Coins 2021</p>
 			</div>
 		</section>
 		<!-- end: page -->
