@@ -76,7 +76,7 @@
 	</div>
 	<?php } ?>
 
-	<!-- --------- OBSERVACIÓN DEL ADMIN (Comité) -->
+	<!-- --------- OBSERVACIÓN DEL ADMIN (COMITE) -->
 	<?php if( $nominacion["obs_comite"] != "" ) { ?>
 	<div class="form-group">
 		<label class="col-sm-4 text-right">Obs del comité: 

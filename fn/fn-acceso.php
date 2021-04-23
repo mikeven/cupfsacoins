@@ -58,7 +58,7 @@
 				if( $votada )						// Si ya votó por la nominación
 					$mostrar = true;
 				else 
-					if( $es_usadm ) 				// Si es administrador
+					if( $es_usadm ) 
 						$mostrar = true;
 			}else
 				$mostrar = true;

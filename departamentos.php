@@ -1,16 +1,17 @@
 <?php
     /*
-     * Cupfsa Coins - Usuarios
+     * Cupfsa Coins - Departamentos
      * 
      */
     session_start();
-
-    $pagina = "pg_usuarios";
+    $pagina = "pg_departamentos";
     ini_set( 'display_errors', 1 );
+
     include( "database/bd.php" );
-    include( "database/data-usuarios.php" );
     include( "database/data-acceso.php" );
-    include( "fn/fn-usuarios.php" );
+    include( "database/data-departamentos.php" );
+    include( "database/data-usuarios.php" );
+    include( "fn/fn-departamentos.php" );
     include( "fn/fn-acceso.php" );
 
     isAccesible( $pagina );
@@ -21,16 +22,16 @@
 		<!-- Basic -->
 		<meta charset="UTF-8">
 
-		<title>Usuarios :: Cupfsa Coins</title>
+		<title>Departamentos :: Cupfsa Coins</title>
 		<meta name="keywords" content="CUPFSA Coins" />
-		<meta name="description" content="CUPFSA Coins lista de usuarios">
+		<meta name="description" content="CUPFSA Coins lista de departamentos">
 		<meta name="author" content="mikeven@gmail.com">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- Web Fonts  -->
-		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">-->
+		<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">
 
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
@@ -51,12 +52,15 @@
 
 		<!-- Theme Custom CSS -->
 		<link rel="stylesheet" href="assets/stylesheets/theme-custom.css">
+		<style> 
+			#response{ float: right; }
+		</style>
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
 	</head>
 	<?php 
-		$usuarios = obtenerUsuariosRegistrados( $dbh );
+		$departamentos = obtenerDepartamentosRegistrados( $dbh );
 	?>
 	<body>
 		<section class="body">
@@ -72,7 +76,7 @@
 
 				<section role="main" class="content-body">
 					<header class="page-header">
-						<h2><i class="fa fa-users" aria-hidden="true"></i> Usuarios</h2>
+						<h2><i class="fa fa-sitemap"></i> Departamentos</h2>
 						<div class="right-wrapper pull-right">
 							<ol class="breadcrumbs">
 								<li>
@@ -80,75 +84,81 @@
 										<i class="fa fa-home"></i>
 									</a>
 								</li>
-								<li><span>Usuarios</span></li>
+								<li><span>Departamentos</span></li>
 							</ol>
 							<a class="sidebar-right-null" data-open=""></a>
 						</div>
 					</header>
 
 					<!-- start: page -->
+					<div class="col-sm-5">
+						<section class="panel">
+							<form id="frm_ndpto" class="form-horizontal">
+								<header class="panel-heading">
+									<h2 class="panel-title">Nuevo departamento</h2>
+								</header>
+								<div class="panel-body">
+									<div class="panel-body">
+										<div class="form-group">
+											<input type="hidden" name="idusesion" value="<?php echo $accesos_usess['idUSUARIO']?>">
+											<label class="col-sm-4 control-label">Nombre <span class="required">*</span></label>
+											<div class="col-sm-8">
+												<div class="input-group">
+													<span class="input-group-addon">
+														<i class="fa fa-tag"></i>
+													</span>
+													<input type="text" name="nombre" 
+													class="form-control" placeholder="Ej.: Finanzas" required/>
+												</div>
+											</div>
+										</div>
+
+									</div>
+								</div>
+								<footer class="panel-footer">
+									<div class="row">
+										<div class="col-sm-12" align="right">
+											<button id="btn_nvo_dpto" 
+											class="btn btn-primary">Guardar</button>
+											<div id="response"></div>
+										</div>
+									</div>
+								</footer>
+							</form>
+						</section>
+					</div>
+					<div class="col-sm-7">
 						<section class="panel">
 							<header class="panel-heading">
 								<h2 class="panel-title">
-									Usuarios registrados
+									Departamentos registrados
 								</h2>
 							</header>
 							<div class="panel-body">
-								<div class="row">
-									<div class="col-sm-6">
-										<div class="mb-md">
-											<a href="nuevo_usuario.php">
-											<button id="btn_nuevou" class="btn btn-primary">Nuevo <i class="fa fa-plus"></i></button>
-											</a>
-										</div>
-									</div>
-								</div>
 								<table class="table table-bordered table-striped mb-none 
-								listado_usuarios_gral" id="datatable-default">
+								listado_departamentos_gral" id="datatable-default">
 									<thead>
 										<tr>
-											
 											<th>Nombre</th>
-											<th>Apellido</th>
-											<th>Email</th>
-											<th>Rol</th>
-											<th>Departamento</th>
 											<th>Acciones</th>
 										</tr>
 									</thead>
 									<tbody>
-										<?php 
-											foreach ( $usuarios as $u ) {
-												$roles = obtenerRolesUsuario( $dbh, $u["idUSUARIO"] ); 
-										?>
+										<?php foreach ( $departamentos as $d ) { ?>
 										<tr class="gradeX">
-											<td>
-												<a href="usuario.php?id=<?php 
-													echo $u["idUSUARIO"] ?>"><?php echo $u["nombre"] ?>
-												</a>
-											</td>
-											<td><?php echo $u["apellido"] ?></td>
-											<td><?php echo $u["email"] ?></td>
-											<td>
-												<?php foreach ( $roles as $r ) { ?>
-													<div> <?php echo $r["nombre"] ?></div>
-												<?php } ?>
-											</td>
-											<td><?php echo $u["departamento"] ?></td>
-											<td>
-												<a href="editar_usuario.php?id=<?php 
-												echo $u["idUSUARIO"] ?>" 
-												class="on-default edit-row">
+											<td><?php echo $d["nombre"]; ?></td>
+											<td class="actions">
+												<a href="editar_departamento.php?id=<?php echo $d['idDepartamento'] ?>" 
+													class="on-default edit-row">
 													<i class="fa fa-pencil"></i>
 												</a>
 											<?php 
-											if( esBorrable( $dbh, $u["idUSUARIO"] ) ) { ?>
-												<a href="#modalAnim" class="mb-xs mt-xs mr-xs eusuario modal-with-move-anim" 
-												data-idu="<?php echo $u["idUSUARIO"]; ?>" 
-												style="margin-left: 10px;" 
-												id="eu<?php echo $u["idUSUARIO"]; ?>">
-													<i class="fa fa-trash-o"></i>
-												</a>
+												if( esBorrable( $dbh, $d["idDepartamento"] ) ) { ?>
+													<a href="#modalAnim" class="mb-xs mt-xs mr-xs edpto modal-with-move-anim" 
+													data-idd="<?php echo $d['idDepartamento'] ?>" 
+													style="margin-left: 10px;" id="ed<?php echo $d['idDepartamento'] ?>" title="Eliminar">
+														<i class="fa fa-trash-o"></i>
+													</a>
 											<?php } ?>
 											</td>
 										</tr>
@@ -157,13 +167,15 @@
 								</table>
 							</div>
 						</section>
+					</div>
 					<!-- end: page -->
 				</section>
 			</div>
+
 		</section>
 
 		<?php include( "sections/modals/confirmar-accion.html" ); ?>
-		<input id="idusuario" type="hidden">
+		<input id="iddepartamento" type="hidden">
 
 		<!-- Vendor -->
 		<script src="assets/vendor/jquery/jquery.js"></script>
@@ -174,12 +186,12 @@
 		<script src="assets/vendor/magnific-popup/magnific-popup.js"></script>
 		<script src="assets/vendor/jquery-placeholder/jquery.placeholder.js"></script>
 		<script src="assets/vendor/jquery-validation/jquery.validate.js"></script>
-		<script src="assets/vendor/pnotify/pnotify.custom.js"></script>
 		
 		<!-- Specific Page Vendor -->
 		<script src="assets/vendor/select2/select2.js"></script>
 		<script src="assets/vendor/jquery-datatables/media/js/jquery.dataTables.js"></script>
 		<script src="assets/vendor/jquery-datatables-bs3/assets/js/datatables.js"></script>
+		<script src="assets/vendor/pnotify/pnotify.custom.js"></script>
 		
 		<!-- Theme Base, Components and Settings -->
 		<script src="assets/javascripts/theme.js"></script>
@@ -191,9 +203,10 @@
 		<script src="assets/javascripts/theme.init.js"></script>
 		<script src="js/init.modals.js"></script>
 
-		<!-- Examples -->
+		<!-- Custom scripts -->
 		<script src="js/init-tables-default.js"></script>
-		<script src="js/fn-ui.js"></script>	
-		<script src="js/fn-usuarios.js"></script>
+		<script src="js/fn-ui.js"></script>
+		<script src="js/fn-departamentos.js"></script>
+		
 	</body>
 </html>

@@ -1,18 +1,21 @@
 <?php
     /*
-     * Cupfsa Coins - Nuevo producto
+     * Cupfsa Coins - Ficha de perfil cuenta de usuario
      * 
      */
     session_start();
-    $pagina = "pg_mod_producto";
+
+    $pagina = "pg_miperfil";
     ini_set( 'display_errors', 1 );
     include( "database/bd.php" );
-    include( "database/data-acceso.php" );
+    include( "database/data-departamentos.php" );
     include( "database/data-usuarios.php" );
-    include( "database/data-productos.php" );
+    include( "database/data-acceso.php" );
     include( "fn/fn-acceso.php" );
-    
-    isAccesible( $pagina );
+    include( "fn/fn-misc.php" );
+
+    $usuario 					= $_SESSION["user"];
+    $usuario["departamento"] 	= obtenerDepartamentoPorId( $dbh, $usuario["idDepartamento"] )["nombre"];
 ?>
 <!doctype html>
 <html class="fixed">
@@ -20,16 +23,16 @@
 		<!-- Basic -->
 		<meta charset="UTF-8">
 
-		<title>Nuevo producto :: Cupfsa Coins</title>
+		<title>Perfil :: Cupfsa Coins</title>
 		<meta name="keywords" content="CUPFSA Coins" />
-		<meta name="description" content="CUPFSA Coins registrar producto">
+		<meta name="description" content="CUPFSA Coins Perfil de usuario">
 		<meta name="author" content="mikeven@gmail.com">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
 
 		<!-- Web Fonts  -->
-		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css"> -->
+		<!--<link href="http://fonts.googleapis.com/css?family=Open+Sans:300,400,600,700,800|Shadows+Into+Light" rel="stylesheet" type="text/css">-->
 
 		<!-- Vendor CSS -->
 		<link rel="stylesheet" href="assets/vendor/bootstrap/css/bootstrap.css" />
@@ -39,21 +42,17 @@
 
 		<!-- Specific Page Vendor CSS -->
 		<link rel="stylesheet" href="assets/vendor/jquery-ui/css/ui-lightness/jquery-ui-1.10.4.custom.css" />
+		<link rel="stylesheet" href="assets/vendor/pnotify/pnotify.custom.css" />
 		<link rel="stylesheet" href="assets/vendor/select2/select2.css" />
 		<link rel="stylesheet" href="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.css" />
 		<link rel="stylesheet" href="assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.css" />
-		<link rel="stylesheet" href="assets/vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css" />
-		<link rel="stylesheet" href="assets/vendor/pnotify/pnotify.custom.css" />
-
-		<link rel="stylesheet" href="assets/vendor/dropzone/css/basic.css" />
-		<link rel="stylesheet" href="assets/vendor/dropzone/css/dropzone.css" />
-		<link rel="stylesheet" href="assets/vendor/bootstrap-markdown/css/bootstrap-markdown.min.css" />
-
+		<!--<link rel="stylesheet" href="assets/vendor/bootstrap-colorpicker/css/bootstrap-colorpicker.css" />
+		<link rel="stylesheet" href="assets/vendor/bootstrap-timepicker/css/bootstrap-timepicker.css" />
 		<link rel="stylesheet" href="assets/vendor/dropzone/css/basic.css" />
 		<link rel="stylesheet" href="assets/vendor/dropzone/css/dropzone.css" />
 		<link rel="stylesheet" href="assets/vendor/bootstrap-markdown/css/bootstrap-markdown.min.css" />
 		<link rel="stylesheet" href="assets/vendor/summernote/summernote.css" />
-		<link rel="stylesheet" href="assets/vendor/summernote/summernote-bs3.css" />
+		<link rel="stylesheet" href="assets/vendor/summernote/summernote-bs3.css" />-->
 		<link rel="stylesheet" href="assets/vendor/codemirror/lib/codemirror.css" />
 		<link rel="stylesheet" href="assets/vendor/codemirror/theme/monokai.css" />
 
@@ -68,23 +67,13 @@
 
 		<!-- Head Libs -->
 		<script src="assets/vendor/modernizr/modernizr.js"></script>
-
-		<style>
-			.frm_imgupl .control-label{
-				text-align: right;
-			}
-
-			.dropzone {
-			    min-height: 250px;
-			}
-
-			.dz-message{
-				border: 2px dotted #CCC;
-			}
-
-			#response{ float: right; }
+		<style type="text/css">
+			#frm_mpassword{ display: none; }
+			.password_instrucciones{ font-size: 12px; color: #999;  }
+			.password_instrucciones ul li{ list-style:none; }
 		</style>
 	</head>
+	
 	<body>
 		<section class="body">
 
@@ -99,17 +88,16 @@
 
 				<section role="main" class="content-body">
 					<header class="page-header">
-						<h2><i class="fa fa-cube" aria-hidden="true"></i> Nuevo producto</h2>
+						<h2><i class="fa fa-user" aria-hidden="true"></i> Mi perfil</h2>
 					
 						<div class="right-wrapper pull-right">
 							<ol class="breadcrumbs">
 								<li>
-									<a href="index.html">
+									<a href="inicio.php">
 										<i class="fa fa-home"></i>
 									</a>
 								</li>
-								<li><span><a href="productos.php">Productos</a></span></li>
-								<li><span>Nuevo producto</span></li>
+								<li><span>Mi perfil</span></li>
 							</ol>
 					
 							<a class="sidebar-right-null" data-open=""></a>
@@ -118,84 +106,127 @@
 
 					<!-- start: page -->
 						<div class="row">
-							<div class="col-sm-8">	
+							<div class="col-sm-5 col-xs-12">
 								<section class="panel">
-									<header class="panel-heading">
-										<h2 class="panel-title">Datos de nuevo producto</h2>
+									<header class="panel-heading bg-dark">
+										<div class="panel-heading-icon">
+											<i class="fa fa-user 2x"></i>
+										</div>
 									</header>
-									<div class="panel-body">
+									<div class="panel-body text-center">
 										
-										<form id="frm_nproducto" class="form-horizontal form-bordered">
-											<div class="form-group">
-												<label class="col-sm-3 control-label">Nombre <span class="required">*</span></label>
-												<div class="col-sm-9">
-													<div class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-tag"></i>
-														</span>
-														<input type="text" name="nombre" class="form-control" placeholder="Ej.: Crema de afeitar" required/>
-													</div>
-												</div>
-											</div>
-
-											<div class="form-group">
-												<label class="col-sm-3 control-label">Valor <span class="required">*</span></label>
-												<div class="col-sm-9">
-													<div class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-shopping-cart"></i>
-														</span>
-														<input type="text" name="valor" class="form-control" onkeypress="return isNumberKey(event)" placeholder="Ej.: 780" maxlength="3" required/>
-													</div>
-												</div>
-												
-											</div>
-
-											<div class="form-group">
-												<label class="col-sm-3 control-label">Descripción</label>
-												<div class="col-sm-9">
-													<div class="input-group">
-														<span class="input-group-addon">
-															<i class="fa fa-list-alt"></i>
-														</span>
-														<input type="text" name="descripcion" class="form-control" placeholder="Ej.: Presentación de 80 ml."/>
-													</div>
-												</div>
-											</div>
-											<input id="url_img" type="hidden" name="imagen">
-										</form>
-										<hr class="solid short">
 										<div class="form-group">
-											<label class="col-sm-3 text-right">Imagen</label>
-											<div class="frm_imgupl">
-												<div class="col-sm-9">
-													<form action="database/data-productos.php" class="dropzone dz-square" 
-														id="myAwesomeDropzone">
-														<div class="dz-message" align="center">
-															Haga clic o arrastre la imagen aquí
-														</div>
-													</form>
-												</div>
+											<label class="col-sm-4 text-right">Nombre: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo $usuario["nombre"]; ?>
 											</div>
 										</div>
+										<div class="form-group">
+											<label class="col-sm-4 text-right">Apellido: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo $usuario["apellido"]; ?>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 text-right">Email: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo $usuario["email"]; ?>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 text-right">Departamento: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo $usuario["departamento"]; ?>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 text-right">Rol: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo hrolesUsuario( $accesos_usess["roles"] ); ?>
+											</div>
+										</div>
+										<div class="form-group">
+											<label class="col-sm-4 text-right">Mis Coins: </label>
+											<div class="col-sm-8 text-left">
+												<?php echo $coins_usuario; ?> coins
+											</div>
+										</div>
+										<!-- -------------------------------------------------------------------- -->
+										
+										<hr class="solid short">
 
+										<!-- -------------------------------------------------------------------- -->
+										<div class="form-group">
+											<a href="#!" id="lnk_act_password">
+												<i class="fa fa-edit"></i> Cambiar contraseña
+											</a>
+										</div>
+										<form id="frm_mpassword" class="form-horizontal form-bordered">
+											<input type="hidden" name="idusuario" value="<?php echo $usuario['idUSUARIO']?>">
+											<div class="password_instrucciones">
+												La nueva contraseña debe contener: 
+												<ul>
+													<li>Mínimo 8 caracteres</li>
+													<li>Una letra mayúscula</li>
+													<li>Una letra minúscula</li>
+													<li>Un caracter numérico</li>
+													<li>Un caracter especial: (@#$%&*)</li>
+												</ul>
+											</div>											
+											<div class="panel-body">
+												<div class="form-group">
+													<label class="col-sm-4 control-label">Contraseña <span class="required">*</span></label>
+													<div class="col-sm-8">
+														<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-lock"></i>
+															</span>
+															<input type="password" id="password" name="password" 
+															class="form-control" required/>
+														</div>
+													</div>
+												</div>
+
+												<div class="form-group">
+													<label class="col-sm-4 control-label">Confirmar contraseña <span class="required">*</span></label>
+													<div class="col-sm-8">
+														<div class="input-group">
+															<span class="input-group-addon">
+																<i class="fa fa-lock"></i>
+															</span>
+															<input type="password" name="password_confirmada" class="form-control" required/>
+														</div>
+													</div>
+													
+												</div>
+
+												<div class="form-group">
+													<button id="btn_mod_passw" class="btn btn-primary">Guardar</button>
+													<div id="response"></div>
+												</div>
+
+											</div>
+											
+										</form>
+										
 									</div>
-									<footer class="panel-footer">
+									<!-- ------------------------------------- PIE PERFIL -->
+									<footer class="panel-footer panel_comentario">
 										<div class="row">
 											<div class="col-sm-12" align="right">
-												<button id="btn_nvo_prod" class="btn btn-primary" type="button">Guardar</button>
-												<div id="response"></div>
+												
 											</div>
 										</div>
 									</footer>
+									<!-- ------------------------------------- PIE PERFIL -->
 								</section>
-							</div>	
+							</div>
+							
 						</div>
 						
 					<!-- end: page -->
 				</section>
 			</div>
-
 		</section>
 
 		<!-- Vendor -->
@@ -209,19 +240,20 @@
 		
 		<!-- Specific Page Vendor -->
 		<script src="assets/vendor/jquery-ui/js/jquery-ui-1.10.4.custom.js"></script>
+		<script src="assets/vendor/pnotify/pnotify.custom.js"></script>
 		<script src="assets/vendor/jquery-ui-touch-punch/jquery.ui.touch-punch.js"></script>
 		<script src="assets/vendor/select2/select2.js"></script>
 		<script src="assets/vendor/bootstrap-multiselect/bootstrap-multiselect.js"></script>
 		<script src="assets/vendor/jquery-maskedinput/jquery.maskedinput.js"></script>
 		<script src="assets/vendor/bootstrap-tagsinput/bootstrap-tagsinput.js"></script>
+		<!--
 		<script src="assets/vendor/bootstrap-colorpicker/js/bootstrap-colorpicker.js"></script>
 		<script src="assets/vendor/bootstrap-timepicker/js/bootstrap-timepicker.js"></script>
 		<script src="assets/vendor/fuelux/js/spinner.js"></script>
 		<script src="assets/vendor/dropzone/dropzone.js"></script>
-		<script src="assets/vendor/pnotify/pnotify.custom.js"></script>
 		<script src="assets/vendor/bootstrap-markdown/js/markdown.js"></script>
 		<script src="assets/vendor/bootstrap-markdown/js/to-markdown.js"></script>
-		<script src="assets/vendor/bootstrap-markdown/js/bootstrap-markdown.js"></script>
+		<script src="assets/vendor/bootstrap-markdown/js/bootstrap-markdown.js"></script>-->
 		<script src="assets/vendor/codemirror/lib/codemirror.js"></script>
 		<script src="assets/vendor/codemirror/addon/selection/active-line.js"></script>
 		<script src="assets/vendor/codemirror/addon/edit/matchbrackets.js"></script>
@@ -232,6 +264,7 @@
 		<script src="assets/vendor/summernote/summernote.js"></script>
 		<script src="assets/vendor/bootstrap-maxlength/bootstrap-maxlength.js"></script>
 		<script src="assets/vendor/ios7-switch/ios7-switch.js"></script>
+
 		<script src="assets/vendor/jquery-validation/jquery.validate.js"></script>
 		
 		<!-- Theme Base, Components and Settings -->
@@ -243,32 +276,20 @@
 		<!-- Theme Initialization Files -->
 		<script src="assets/javascripts/theme.init.js"></script>
 
-
-		<!-- Examples -->
-		<script src="assets/javascripts/forms/examples.advanced.form.js" /></script>
-		<script src="js/fn-productos.js"></script>
+		<!-- Func. particular -->
 		<script src="js/fn-ui.js"></script>
+		<script src="js/fn-usuarios.js"></script>
 		<script type="text/javascript">
-			$( document ).ready(function() {
-				Dropzone.options.myAwesomeDropzone = {
-				  maxFiles: 1,
-				  accept: function(file, done) {
-				    console.log(file);
-				    done();
-				  },
-				  init: function() {
-				    this.on("maxfilesexceeded", function( file ){
-				        notificar( "Producto", "Solo una imagen es permitida", "error" );
-				    });
-				    this.on("success", function(){
-				        var args = Array.prototype.slice.call(arguments);
-						$("#url_img").val( args[1] );
-				    });
-				  }
-				};
-			});
+			/*$.validator.addMethod(
+				"regex",
+				function(value, element, regexp) {
+			    	var re = new RegExp(regexp);
+			    	return this.optional(element) || re.test(value);
+			  	},
+			  	"Debe cumplir con el formato"
+			);
 
+			$("#password").rules("add", { regex: "^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&]).*$" })*/
 		</script>
-
 	</body>
 </html>

@@ -6,19 +6,7 @@
 				<span>Inicio</span>
 			</a>
 		</li>
-		<?php if( isV( 'mp_titm_us' ) ) { ?>
-		<li class="nav-parent ">
-			<a>
-				<i class="fa fa-users" aria-hidden="true"></i>
-				<span>Usuarios</span>
-			</a>
-			<ul class="nav nav-children">
-				<li><a href="usuarios.php">Ver usuarios</a></li>
-				<li><a href="nuevo_usuario.php">Nuevo usuario</a></li>
-				<li><a href="lista-usuarios.php">Enlaces de ingreso</a></li>
-			</ul>
-		</li>
-		<?php } ?>
+		
 		<li class="nav-parent">
 			<a>
 				<i class="fa fa-bookmark" aria-hidden="true"></i>
@@ -35,32 +23,39 @@
 				<li> <a href="nominaciones.php?param=hechas">Realizadas</a> </li>
 				<li> <a href="nominaciones.php?param=recibidas">Recibidas</a> </li>
 				<?php } ?>
-				<?php if( isV( 'mp_ver_atrib' ) ) { ?>
-					<li> <a href="atributos.php"> Atributos </a> </li>
-				<?php } ?>
 			</ul>
 		</li>
 		<?php if( isV( 'mp_titm_pro' ) ) { ?>
-		<li class="nav-parent">
-			<a>
-				<i class="fa fa-cubes" aria-hidden="true"></i>
-				<span>Productos</span>
-			</a>
-			<ul class="nav nav-children">
-				<?php if( isV( 'mp_ver_pro' ) ) { ?>
-					<li> <a href="productos.php">Ver productos</a> </li>
-				<?php } ?>
-				<?php if( isV( 'mp_ag_pro' ) ) { ?>
-					<li><a href="nuevo_producto.php">Nuevo producto</a> </li>
-				<?php } ?>	
-				<?php if( isV( 'mp_ver_canj' ) ) { ?>
-					<li> <a href="canjes.php"> Canjes </a> </li>
-				<?php } ?>
-				<?php if( isV( 'mp_ver_miscanj' ) ) { ?>
-					<li> <a href="mis-canjes.php"> Mis Canjes </a> </li>
-				<?php } ?>	
-			</ul>
-		</li>
+			<li class="nav-parent">
+				<a>
+					<i class="fa fa-cubes" aria-hidden="true"></i>
+					<span>Productos</span>
+				</a>
+				<ul class="nav nav-children">
+					<?php if( isV( 'mp_ver_pro' ) ) { ?>
+						<li> <a href="productos.php">Ver productos</a> </li>
+					<?php } ?>
+					<?php if( isV( 'mp_ver_canj' ) ) { ?>
+						<li> <a href="canjes.php"> Canjes </a> </li>
+					<?php } ?>
+					<?php if( isV( 'mp_ver_miscanj' ) ) { ?>
+						<li> <a href="mis-canjes.php"> Mis Canjes </a> </li>
+					<?php } ?>	
+				</ul>
+			</li>
+		<?php } ?>
+		<?php if( isV( 'mp_manten' ) ) { ?>
+			<li class="nav-parent">
+				<a>
+					<i class="fa fa-database" aria-hidden="true"></i>
+					<span>Mantenimiento</span>
+				</a>
+				<ul class="nav nav-children">
+					<li> <a href="atributos.php"> Atributos </a> </li>
+					<li> <a href="departamentos.php"> Departamentos </a> </li>
+					<li> <a href="usuarios.php"> Usuarios </a> </li>
+				</ul>
+			</li>
 		<?php } ?>
 	</ul>
 </nav>

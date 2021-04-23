@@ -26,9 +26,9 @@
 		<meta charset="UTF-8">
 
 		<title>Editar producto :: Cupfsa Coins</title>
-		<meta name="keywords" content="HTML5 Admin Template" />
-		<meta name="description" content="Porto Admin - Responsive HTML5 Template">
-		<meta name="author" content="okler.net">
+		<meta name="keywords" content="CUPFSA Coins" />
+		<meta name="description" content="CUPFSA Coins editar datos de productos">
+		<meta name="author" content="mikeven@gmail.com">
 
 		<!-- Mobile Metas -->
 		<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
@@ -133,7 +133,7 @@
 										
 										<form id="frm_mproducto" class="form-horizontal form-bordered">
 											<div class="form-group">
-												<input type="hidden" name="idproducto" 
+												<input id="idproducto" type="hidden" name="idproducto" 
 												value="<?php echo $producto["idPRODUCTO"]?>">
 												<label class="col-sm-3 control-label">Nombre <span class="required">*</span></label>
 												<div class="col-sm-9">
@@ -154,8 +154,8 @@
 														<span class="input-group-addon">
 															<i class="fa fa-shopping-cart"></i>
 														</span>
-														<input type="text" name="valor" class="form-control" onkeypress="return isNumberKey(event)" placeholder="Ej.: 780" maxlength="3" required 
-														value="<?php echo $producto["valor"]?>"/>
+														<input type="text" name="valor" class="form-control" 
+														onkeypress="return isNumberKey(event)" placeholder="Ej.: 780" maxlength="3" required value="<?php echo $producto["valor"]?>"/>
 													</div>
 												</div>
 												

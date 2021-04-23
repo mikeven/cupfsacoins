@@ -32,17 +32,17 @@
 	<!-- start: search & user box -->
 	<div class="header-right">
 
-		<form action="pages-search-results.html" class="search nav-form hidden">
+		<!--<form action="pages-search-results.html" class="search nav-form hidden">
 			<div class="input-group input-search">
 				<input type="text" class="form-control" name="q" id="q" placeholder="Search...">
 				<span class="input-group-btn">
 					<button class="btn btn-default" type="submit"><i class="fa fa-search"></i></button>
 				</span>
 			</div>
-		</form>
+		</form>-->
 
 		<span class="separator hidden"></span>
-
+		<!--
 		<ul class="notifications hidden">
 			<li>
 				<a href="#" class="dropdown-toggle notification-icon" data-toggle="dropdown">
@@ -203,6 +203,7 @@
 				</div>
 			</li>
 		</ul>
+		-->
 
 		<span class="separator"></span>
 
@@ -229,7 +230,9 @@
 			<div class="dropdown-menu">
 				<ul class="list-unstyled">
 					<li class="divider"></li>
-					
+					<li>
+						<a role="menuitem" tabindex="-1" href="miperfil.php"><i class="fa fa-user"></i> Mi Perfil</a>
+					</li>
 					<li>
 						<a role="menuitem" tabindex="-1" href="inicio.php?logout"><i class="fa fa-power-off"></i> Salir</a>
 					</li>

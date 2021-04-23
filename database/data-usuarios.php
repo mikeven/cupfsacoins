@@ -124,6 +124,15 @@
 		return mysqli_affected_rows( $dbh );
 	}
 	/* --------------------------------------------------------- */
+	function actualizarPassWordUsuario( $dbh, $usuario ){
+		// Actualiza contraseña de un usuario
+		$q = "update usuario set password = '$usuario[password]', fecha_modificado = NOW() 
+				where idUSUARIO = $usuario[idusuario]";
+		
+		$data = mysqli_query( $dbh, $q );
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
 	function agregarAsociacionRolUsuario( $dbh, $idu, $idr ){
 		// Registra la asociación de un usuario con su rol
 		$q = "insert into usuario_rol ( idUSUARIO, idROL ) values ( $idu, $idr )";
@@ -289,6 +298,29 @@
 		}else{
 			$res["exito"] = 0;
 			$res["mje"] = "No se especificaron roles de usuario";
+		}
+
+		echo json_encode( $res );
+	}
+	/* --------------------------------------------------------- */
+	if( isset( $_POST["form_actpass"] ) ){
+		// Solicitud para actualizar contraseña
+
+		include( "bd.php" );	
+		
+		parse_str( $_POST["form_actpass"], $usuario );
+		
+		$usuario = escaparCampos( $dbh, $usuario );
+		$rsp = actualizarPassWordUsuario( $dbh, $usuario );
+		
+		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
+			$res["exito"] = 1;
+			$res["mje"] = "Contraseña actualizada";
+			$res["reg"] = $usuario;
+		} else {
+			$res["exito"] = 0;
+			$res["mje"] = "Error al actualizar contraseña";
+			$res["reg"] = NULL;
 		}
 
 		echo json_encode( $res );

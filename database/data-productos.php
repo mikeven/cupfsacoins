@@ -208,8 +208,8 @@
 
 		include( "bd.php" );
 		
-		$archivo_eliminado = eliminarArchivoImagen( $_POST["img"] );
-		$rsp = eliminarProducto( $dbh, $_POST["elim_prod"] );
+		$archivo_eliminado 	= eliminarArchivoImagen( $_POST["img"] );
+		$rsp 				= eliminarProducto( $dbh, $_POST["elim_prod"] );
 		
 		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
 			$res["exito"] = 1;
@@ -246,6 +246,7 @@
 	}
 	/* --------------------------------------------------------- */
 	if ( !empty( $_FILES ) ) {
+		// Recepción y carga de imagen de producto
 		include( "bd.php" );
 		$url = "";
 
@@ -261,16 +262,23 @@
 	}
 	/* --------------------------------------------------------- */
 	if( isset( $_POST["nombre"] ) ){
-		// Validación de nombre ya registrado
+		// Verificación de nombre disponible para producto
+
 		include ( "bd.php" );
+		$disponible = true;
+		$edicion 	= isset( $_POST["idproducto_edit"] );
 
 		$regs = obtenerProductosRegistrados( $dbh );
-		foreach ( $regs as $r ) { $nombres[] = $r["nombre"];  }
-		
-		if( !in_array( $_POST["nombre"], $nombres ) )  $respuesta = true;
-		else $respuesta = "Nombre de producto ya registrado";
-
-		echo json_encode( $respuesta );
+		foreach ( $regs as $r ) { 
+			if( $_POST["nombre"] == $r["nombre"] ){
+				if( $edicion && $_POST["idproducto_edit"] != $r["idPRODUCTO"] )
+					$disponible = "Nombre de producto ya registrado";
+				if( !$edicion )
+					$disponible = "Nombre de producto ya registrado";
+			} 
+		}
+	
+		echo json_encode( $disponible );
 	}
 	/* --------------------------------------------------------- */
 ?>
