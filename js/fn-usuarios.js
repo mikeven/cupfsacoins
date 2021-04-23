@@ -42,7 +42,7 @@
 		    agregarUsuario();
 		}
 	});
-	/* -------------------------------- */
+	
 	$("#frm_musuario").validate({
 		highlight: function( label ) {
 			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
@@ -76,6 +76,45 @@
 		},
 		submitHandler: function(form) {
 		    editarUsuario();
+		}
+	});
+	/* -------------------------------- */
+	$.validator.addMethod("regex", function(value, element, regexpr) {          
+     return regexpr.test(value);
+   	}, "La contraseña debe cumplir el formato requerido"); 
+
+	$("#frm_mpassword").validate({
+		highlight: function( label ) {
+			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+		},
+		success: function( label ) {
+			$(label).closest('.form-group').removeClass('has-error');
+			label.remove();
+		},
+		rules: {
+		    password: {
+	            required: true,
+	            minlength: 8,
+	            regex: /^.*(?=.{8,})(?=.*\d)(?=.*[a-z])(?=.*[A-Z])(?=.*[@#$%&*]).*$/
+	        },
+	        password_confirmada: {
+	            required: true,
+	            minlength: 8,
+	            equalTo: "#password"
+	        }
+		},
+		onkeyup: false,
+		errorPlacement: function( error, element ) {
+			var placement = element.closest('.input-group');
+			if (!placement.get(0)) {
+				placement = element;
+			}
+			if (error.text() !== '') {
+				placement.after(error);
+			}
+		},
+		submitHandler: function(form) {
+			actualizarPassword();
 		}
 	});
 
@@ -137,6 +176,34 @@ function editarUsuario(){
 			}
 			else
 				notificar( "Modificar usuario", res.mje, "error" );
+
+			$("#response").html( "" );
+        }
+    });
+}
+/* --------------------------------------------------------- */
+function actualizarPassword(){
+	// Invocación asíncrona para actualizar password de usuario
+	var fs = $('#frm_mpassword').serialize();
+	var espera = "<img src='assets/images/loading.gif' width='35'>";	
+
+	$.ajax({
+        type:"POST",
+        url:"database/data-usuarios.php",
+        data:{ form_actpass: fs },
+        beforeSend: function() {
+        	$("#response").html( espera );
+        	$("#btn_mod_passw").fadeOut( 200 );
+        },
+        success: function( response ){
+        	console.log( response );
+			res = jQuery.parseJSON( response );
+			if( res.exito == 1 ){
+				notificar( "Perfil de usuario", res.mje, "success" );
+				setTimeout( function() { location.reload(); }, 3000 );
+			}
+			else
+				notificar( "Perfil de usuario", res.mje, "error" );
 
 			$("#response").html( "" );
         }
@@ -210,4 +277,11 @@ $("#btn_enviar_lnk").on( "click", function (e) {
 	var idu = $(this).attr( "data-u" );
 	enviarEnlaceIngreso( idu );
 });
+/* --------------------------------------------------------- */
+$("#lnk_act_password").on( "click", function (e) {
+	// Invoca la llamada al servidor para enviar enlace de ingreso a un usuario
+	$("#frm_mpassword").fadeToggle();
+});
+
+
 /* --------------------------------------------------------- */

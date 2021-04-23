@@ -10,7 +10,7 @@
 	'use strict';
 
 	// basic
-	$("#frm_nproducto, #frm_mproducto").validate({
+	$("#frm_nproducto").validate({
 		highlight: function( label ) {
 			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
 		},
@@ -37,7 +37,48 @@
 				placement.after(error);
 			}
 		},
-		
+		submitHandler: function (form) {
+            // Formulario validado
+            agregarProducto();
+            return false; 
+            // block the default form action if using ajax
+        }
+	});
+
+	$("#frm_mproducto").validate({
+		highlight: function( label ) {
+			$(label).closest('.form-group').removeClass('has-success').addClass('has-error');
+		},
+		success: function( label ) {
+			$(label).closest('.form-group').removeClass('has-error');
+			label.remove();
+		},
+		rules: {
+		    valor: { digits: true },
+		    nombre: {
+		        remote: {
+		        	data: { idproducto_edit: $('#idproducto').val() },
+		        	url: "database/data-productos.php",
+		        	method: 'POST'       	
+				}
+			}
+		},
+		onkeyup: false,
+		errorPlacement: function( error, element ) {
+			var placement = element.closest('.input-group');
+			if (!placement.get(0)) {
+				placement = element;
+			}
+			if (error.text() !== '') {
+				placement.after(error);
+			}
+		},
+		submitHandler: function (form) {
+            // Formulario validado
+            editarProducto();
+            return false; 
+            // block the default form action if using ajax
+        }
 	});
 
 	// validation summary
@@ -109,6 +150,7 @@ function editarProducto(){
 			if( res.exito == 1 ){
 				$("#response").fadeOut();
 				var idr = res.reg.idproducto;
+				notificar( "Producto", res.mje, "success" );
     			enviarRespuesta( res, "redireccion", "producto.php?id=" + idr );
 			}
 			else
@@ -163,14 +205,6 @@ $("#btn_nvo_prod").on('click', function (e) {
 	
 });
 /* --------------------------------------------------------- */
-$("#frm_nproducto").on('submit', function(e) {
-	// Evita el envío del formulario al ser validado
-    if ( $("#frm_nproducto").valid() ) {
-        e.preventDefault();
-        agregarProducto();
-    }
-});
-/* --------------------------------------------------------- */
 $("#btn_mod_prod").on('click', function (e) {
 	// Invoca el envío del formulario de edición de producto
 	$("#frm_mproducto").submit();
@@ -182,14 +216,6 @@ $(".listado_productos_gral").on( "click", ".eprod", function (e) {
 	$("#idproducto").val( $(this).attr( "data-idp" ) );
 	$("#img_producto").attr( "src", $(this).attr( "data-imgsrc" ) );
     iniciarBotonEliminarProducto();
-});
-/* --------------------------------------------------------- */
-$("#frm_mproducto").on('submit', function(e) {
-	// Evita el envío del formulario al ser validado
-    if ( $("#frm_mproducto").valid() ) {
-        e.preventDefault();
-        editarProducto();
-    }
 });
 /* --------------------------------------------------------- */
 $("#btn_canje").on('click', function (e) {
