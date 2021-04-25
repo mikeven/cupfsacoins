@@ -12,6 +12,13 @@
 		return mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
 	}
 	/* --------------------------------------------------------- */
+	function obtenerUsuarioPorToken( $dbh, $token ){
+		//Devuelve los datos de un usuario dado su token
+		$q = "select * from usuario where token_ingreso = '$token'";
+		$data_user = mysqli_fetch_array( mysqli_query ( $dbh, $q ) );
+		return $data_user;					
+	}
+	/* --------------------------------------------------------- */
 	function obtenerDataUsuarioPorId( $dbh, $id_u ){
 		// Devuelve el registro amplio de un usuario dado su id
 		$q = "select u.idUSUARIO, u.nombre, u.apellido, u.email, u.token_ingreso, d.nombre as departamento,  
@@ -346,7 +353,7 @@
 		echo json_encode( $res );
 	}
 	/* --------------------------------------------------------- */
-	if( isset( $_POST["email"] ) ){
+	if( isset( $_POST["email___"] ) ){
 		
 		include ( "bd.php" );
 		$id_u = "";
@@ -364,6 +371,13 @@
 		else $respuesta = "Dirección de email ya registrada";
 
 		echo json_encode( $respuesta );
+	}
+	/* --------------------------------------------------------- */
+	//Obtener datos de usuario a partir de token
+	if( isset( $_GET["token"] ) ){
+
+		$usuario = obtenerUsuarioPorToken( $dbh, $_GET["token"] );
+
 	}
 	/* --------------------------------------------------------- */
 ?>

@@ -63,6 +63,71 @@
 		return $lista;
 	}
 	/* --------------------------------------------------------- */
+	function enviarPasswordEmail( $e_mail, $token ){
+		// Envía un mensaje por email con contraseña de usuario
+
+		$asunto = "Reestablecimiento de contraseña";
+		$oemail = "digital@cupfsa.com";
+		
+		$cabeceras = "Reply-To: CUPFSA COINS <$oemail>\r\n"; 
+  		$cabeceras .= "Return-Path: CUPFSA COINS <$oemail>\r\n";
+  		$cabeceras .= "From: CUPFSA COINS <$oemail>\r\n"; 
+		$cabeceras .= "Organization: CUPFSA COINS\r\n";
+	  	$cabeceras .= "X-Priority: 3\r\n";
+	  	$cabeceras .= "X-Mailer: PHP". phpversion() ."\r\n"; 
+		$cabeceras .= 'MIME-Version: 1.0' . "\r\n";
+		$cabeceras .= 'Content-type: text/html; charset=UTF-8' . "\r\n";
+        
+        $mensaje = "Se ha solicitado reestablecer su contraseña desde CUPFSA COINS <br>";
+        $mensaje .= "=================================================================== <br>";
+        $mensaje .= "<br><br>";
+        $mensaje .= "<p>Para generar una nueva contraseña haga clic en el siguiente enlace: </p>";
+        $mensaje .= "<br>";
+        $mensaje .= "<a href='https://coins.cupfsa.com/reestablecer-password.php?token=$token'>Reestablecer contraseña</a>";
+
+		return mail( $e_mail, $asunto, $mensaje, $cabeceras );
+	}
+	/* --------------------------------------------------------- */
+	function actualizarTokenUsuario( $dbh, $idu, $token ){
+		// Actualiza la fecha de último inicio de sesión de un usuario
+		$q = "update usuario set token_ingreso = '$token' where idUSUARIO = $idu";
+		
+		$data = mysqli_query( $dbh, $q );
+		return mysqli_affected_rows( $dbh );
+	}
+	/* --------------------------------------------------------- */
+	function obtenerNuevoTokenUsuario( $valor ){
+		//Genera un código provisional enviado por email para confirmar y verificar cuenta
+		$fecha 	= date_create();
+		$date 	= date_timestamp_get( $fecha );
+		return sha1( md5( $date.$valor ) );
+	}
+	/* --------------------------------------------------------- */
+	function checkEmailLogin( $dbh, $email ){
+		// Devuelve válido si email está registrado
+
+		$rsp["valido"] = false;
+		$rsp["reg"] = NULL;
+
+		$q = "select * from usuario where email = '$email'";		
+		$data 	= mysqli_query ( $dbh, $q );
+		$data_u = mysqli_fetch_array( $data );
+		$nrows 	= mysqli_num_rows( $data );
+
+		if( $nrows > 0 ) {
+
+			$rsp["valido"] 	= true;
+			$rsp["reg"] 	= $data_u;
+			if( $rsp["reg"]["token_ingreso"] == NULL ){
+				// Si no existe un token de ingreso previo, se genera y asigna uno nuevo
+				$rsp["reg"]["token_ingreso"] = obtenerNuevoTokenUsuario( $data_u["password"] );
+				actualizarTokenUsuario( $dbh,  $rsp["reg"]["idUSUARIO"], $rsp["reg"]["token"] );
+			}
+		}
+
+		return $rsp;
+	}
+	/* --------------------------------------------------------- */
 	function iniciarSesion( $dbh, $usuario ){
 		// Inicia sesión con los datos de usuario
 
@@ -110,6 +175,49 @@
 		echo iniciarSesion( $dbh, $usuario );
 	}
 	/* --------------------------------------------------------- */
+	// Recuperar contraseña (asinc)
+	if( isset( $_POST["usr_passwrecover"] ) ){ 
+		// Invocación desde: js/fn-acceso.js
+		include( "bd.php" );
+
+		$rsp = checkEmailLogin( $dbh, $_POST["email"] );
+		if( $rsp["valido"] ){
+			$envio = enviarPasswordEmail( $_POST["email"], $rsp["reg"]["token_ingreso"] );
+			$res["exito"] = 1;
+			$res["mje"] = "Se ha enviado un mensaje a su email con instrucciones para reestablecer su contraseña";
+		} else {
+			$res["exito"] = 0;
+			$res["mje"] = "No existe cuenta asociada a este correo electrónico";
+		}
+		
+		echo json_encode( $res );
+	}
+	/* --------------------------------------------------------- */
+	if( isset( $_POST["resetpwd"] ) ){ 
+		// Invocación desde: js/fn-acceso.js
+		include( "bd.php" );
+		include( "data-usuarios.php" );
+
+		parse_str( $_POST["resetpwd"], $usuario );
+		
+		$token 	= obtenerNuevoTokenUsuario( $usuario["password"] );
+		actualizarTokenUsuario( $dbh, $usuario["idusuario"], $token );
+		
+		$rsp 	= actualizarPassWordUsuario( $dbh, $usuario );
+		
+		if( ( $rsp != 0 ) && ( $rsp != "" ) ){
+			$res["exito"] = 1;
+			$res["mje"] = "Contraseña reestablecida con éxito. "."<a href='index.php'>Iniciar Sesión</a>";
+			$res["reg"] = $usuario;
+		} else {
+			$res["exito"] = 0;
+			$res["mje"] = "Error al reestablecer contraseña";
+			$res["reg"] = NULL;
+		}
+		
+		echo json_encode( $res );
+	}
+	/* --------------------------------------------------------- */
 	//Cierre de sesión
 	if( isset( $_GET["logout"] ) ){
 		
@@ -118,5 +226,6 @@
 		echo "<script> window.location = 'index.php'</script>";		
 	}
 	/* --------------------------------------------------------- */
-	checkSession();
+	if( !isset( $_POST["usr_passwrecover"] ) && !isset( $_POST["resetpwd"] ) )
+		checkSession();
 ?>
